@@ -30,7 +30,7 @@ class BoardView(APIView):
         else:
             board = self.get_object(pk)
 
-            if board is None:
+            if board is None or board.is_deleted:
                 return Response({'error': '해당 보드가 존재하지 않습니다.'}, status=status.HTTP_404_NOT_FOUND)
             
             serializer = BoardSerializer(board)
@@ -64,7 +64,7 @@ class BoardView(APIView):
 
                         if tag_serializer.is_valid():
                             tag = tag_serializer.save()
-                            
+
                         else:
                             return Response(tag_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
                     # 태그를 보드와 태그 테이블의 연관(중간) 테이블의 관계 데이터로 추가
@@ -78,6 +78,10 @@ class BoardView(APIView):
     def put(self, request, pk):
         board = get_object_or_404(Board, id=pk)
 
+        # 현재 유저가 보드 작성자인지 확인
+        if board.user_id != request.user:
+            return Response({'error': '본인이 작성한 게시물만 수정할 수 있습니다.'}, status=status.HTTP_403_FORBIDDEN)
+        
         data = request.data.copy()
 
         tags_data = None
@@ -127,7 +131,11 @@ class BoardView(APIView):
     ## 보드 삭제
     def delete(self, request, pk):
         board = get_object_or_404(Board, id=pk)
-
+        
+        # 현재 유저가 게시물 작성자인지 확인
+        if board.user_id != request.user:
+            return Response({'error': '본인이 작성한 게시물만 삭제할 수 있습니다.'}, status=status.HTTP_403_FORBIDDEN)
+        
         # is_deleted 필드 값을 True로 변경
         board.is_deleted = True 
         board.save()
