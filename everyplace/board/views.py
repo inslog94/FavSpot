@@ -2,7 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Board, BoardTag
+from pin.models import Pin
 from .serializers import BoardSerializer, BoardTagSerializer
+from pin.serializers import PinSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import authentication_classes, permission_classes
@@ -33,9 +35,17 @@ class BoardView(APIView):
             if board is None or board.is_deleted:
                 return Response({'error': '해당 보드가 존재하지 않습니다.'}, status=status.HTTP_404_NOT_FOUND)
             
-            serializer = BoardSerializer(board)
+            # 해당 보드와 연결된 모든 핀(Pin) 객체들 반환
+            pins = Pin.objects.filter(board_id=pk)
+            pin_serializer = PinSerializer(pins, many=True)
+            board_serializer = BoardSerializer(board)
 
-            return Response(serializer.data)
+            data = {
+                'board': board_serializer.data,
+                'pins': pin_serializer.data
+            }
+
+            return Response(data)
 
     ## 보드 생성
     def post(self, request):
@@ -131,7 +141,7 @@ class BoardView(APIView):
     ## 보드 삭제
     def delete(self, request, pk):
         board = get_object_or_404(Board, id=pk)
-        
+
         # 현재 유저가 게시물 작성자인지 확인
         if board.user_id != request.user:
             return Response({'error': '본인이 작성한 게시물만 삭제할 수 있습니다.'}, status=status.HTTP_403_FORBIDDEN)
