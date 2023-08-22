@@ -27,7 +27,7 @@ class BoardView(APIView):
         else:
             board = self.get_object(pk)
             if board is None:
-                return Response({'error': 'Board not found'}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'error': '해당 보드가 존재하지 않습니다.'}, status=status.HTTP_404_NOT_FOUND)
             serializer = BoardSerializer(board)
             return Response(serializer.data)
 
@@ -75,19 +75,31 @@ class BoardView(APIView):
             serializer.save()
 
             if tags_data:
-                # 기존 태그 연결을 삭제
-                board.tags.clear()
-                for tag_data in tags_data:
-                    try:
-                        tag = BoardTag.objects.get(content=tag_data)
-                    except BoardTag.DoesNotExist:
-                        tag_serializer = BoardTagSerializer(data={'content': tag_data})
-                        if tag_serializer.is_valid():
-                            tag = tag_serializer.save()
-                        else:
-                            return Response(tag_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                    # 새로운 태그를 연결
-                    board.tags.add(tag)
+              # 새로운 태그를 연결
+              new_tags = []
+              for tag_data in tags_data:
+                  try:
+                      tag = BoardTag.objects.get(content=tag_data)
+                  except BoardTag.DoesNotExist:
+                      tag_serializer = BoardTagSerializer(data={'content': tag_data})
+                      if tag_serializer.is_valid():
+                          tag = tag_serializer.save()
+                      else:
+                          return Response(tag_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                  new_tags.append(tag)
+
+              # 현재 태그를 가져옴
+              current_tags = board.tags.all()
+
+              # 기존 태그 중 제거할 태그를 삭제
+              tags_to_remove = set(current_tags) - set(new_tags)
+              for tag in tags_to_remove:
+                  board.tags.remove(tag)
+
+              # 새로운 태그 중 추가할 태그를 추가
+              tags_to_add = set(new_tags) - set(current_tags)
+              for tag in tags_to_add:
+                  board.tags.add(tag)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
