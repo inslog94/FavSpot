@@ -5,12 +5,17 @@ from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 from json.decoder import JSONDecodeError
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.google import views as google_view
 from allauth.socialaccount.providers.kakao import views as kakao_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from .models import User
+from .serializers import UserSerializer
 
 state = os.getenv('STATE')
 BASE_URL = os.getenv('BASE_URL')
@@ -174,3 +179,28 @@ class KakaoLogin(SocialLoginView):
     adapter_class = kakao_view.KakaoOAuth2Adapter
     client_class = OAuth2Client
     callback_url = KAKAO_CALLBACK_URI
+
+# 일반 회원가입
+class SignupView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            # create_user 메서드를 이용하여 유저 생성
+            user = User.objects.create_user(
+                email=serializer.validated_data['email'],
+                password=serializer.validated_data['password'],
+                nickname=serializer.validated_data.get('nickname', ''),
+                profile_img=serializer.validated_data.get('profile_img', None)
+            )
+            print("user 생성", user, user.email, user.password, user.nickname)
+            # 유저에 대한 RefreshToken 발급
+            refresh = RefreshToken.for_user(user)
+            
+            response = JsonResponse({'Signup': 'success'}, status=status.HTTP_201_CREATED)
+            response.set_cookie('access_token', str(refresh.access_token), httponly=True, secure=True)
+            response.set_cookie('refresh_token', str(refresh), httponly=True, secure=True)
+            return response
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
