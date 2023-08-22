@@ -54,3 +54,17 @@ class PinView(APIView):
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({"detail": "핀을 수정할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+
+    # 핀 삭제
+    def delete(self, request, pk):
+        pin = get_object_or_404(Pin, pk=pk)
+        pin_content = get_object_or_404(PinContent, pin_id=pin)
+
+        if request.user == pin.user_id:
+            pin.is_deleted = True
+            pin_content.is_deleted = True
+            pin.save()
+            pin_content.save()
+
+            return Response({"detail": "핀을 삭제 처리하였습니다."}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail": "핀을 삭제할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
