@@ -225,3 +225,14 @@ class LoginView(APIView):
                 return response
             return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         return Response({'detail': 'Email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+# 로그아웃
+class LogoutView(APIView):
+    
+    def get(self, request):
+        requests.post(LOGOUT_URL, json={"refresh": request.COOKIES['refresh_token']})
+        
+        response = JsonResponse({'Logout': 'success'}, status=status.HTTP_200_OK)
+        response.delete_cookie('access_token')
+        response.delete_cookie('refresh_token')
+        return response
