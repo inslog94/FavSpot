@@ -2,6 +2,7 @@ import os
 import requests
 from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from json.decoder import JSONDecodeError
 from rest_framework import status
@@ -204,3 +205,23 @@ class SignupView(APIView):
             return response
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# 일반 로그인
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        if email and password:
+            user = authenticate(email=email, password=password)
+            if user:
+                # 인증된 유저에 대한 RefreshToken 발급
+                refresh = RefreshToken.for_user(user)
+                
+                response = JsonResponse({'Login': 'success'}, status=status.HTTP_200_OK)
+                response.set_cookie('access_token', str(refresh.access_token), httponly=True, secure=True)
+                response.set_cookie('refresh_token', str(refresh), httponly=True, secure=True)
+                return response
+            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'detail': 'Email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
