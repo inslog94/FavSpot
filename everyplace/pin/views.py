@@ -13,6 +13,10 @@ User = get_user_model()
 # Create your views here.
 class PinCreateView(APIView):
     def post(self, request):
+
+        # 로그인 되어있는 아이디로 pin 생성
+        request.data['user_id'] = request.user.id
+
         pin_serializer = PinSerializer(data=request.data)
         pin_content_serializer = PinContentSerializer(data=request.data)
 
@@ -20,6 +24,7 @@ class PinCreateView(APIView):
 
             pin = pin_serializer.save()
 
+            # 생성된 pin과 연결된 pin content 생성
             pin_content_data = pin_content_serializer.validated_data
             pin_content_data['pin_id'] = pin
             pin_content = pin_content_serializer.create(pin_content_data)
