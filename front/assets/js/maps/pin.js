@@ -43,8 +43,6 @@ export function displaySearchPins(data) {
 
     // 검색 결과 표시
     pinListSetUp(pins);
-    // map 위치 조정
-    mapRangeSetup(pins);
     // 마커 표시
     displayMarkers(pins);
 }
@@ -58,9 +56,9 @@ export function displayPins(data) {
     let pins = convertDataToPins(data);
 
     pinListSetUp(pins);
-    mapRangeSetup(pins);
     displayMarkers(pins);
 }
+
 
 export function convertKaKaoDataToPins(dataList) {
 

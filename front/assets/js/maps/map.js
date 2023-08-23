@@ -1,4 +1,4 @@
-import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, TEST_MARKERS } from './data.js';
+import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS } from './data.js';
 import { markerInfoEventSetup } from './event.js';
 
 function displayMarker(pin) {
@@ -22,6 +22,7 @@ export function zoomInLocation(location) {
     MAP.panTo(location);
 }
 
+// 현재 위치 기반 지도 표시
 export function displayGeoLocationMap() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -36,19 +37,21 @@ export function displayGeoLocationMap() {
     }
 }
 
-export function displayMarkers(markers) {
+// marker 목록 표시
+export function displayMarkers(dataList) {
     
-    markers.forEach(function(_marker) {
+    dataList.forEach(function(data) {
         let marker = new kakao.maps.Marker({
             map: MAP,
-            position: _marker.location,
-            title: _marker.title
+            position: data.position,
+            title: data.title
         })
 
         markerInfoEventSetup(marker, PIN_INFO_WINDOW);
         displayMarker(marker);
         MARKERS.push(marker);
     });
+    mapRangeSetup(MARKERS);
 }
 
 export function removeAllMarker() {
@@ -56,14 +59,16 @@ export function removeAllMarker() {
         marker.setMap(null);
         MARKERS.length = 0;
     });
+
 }
 
-export function mapRangeSetup(pins) {
+// pin 목록 기반 지도 범위 설정
+export function mapRangeSetup(markers) {
 
     let bounds = new kakao.maps.LatLngBounds();
 
-    pins.forEach(function(pin) {
-        bounds.extend(pin.location);
+    markers.forEach(function(marker) {
+        bounds.extend(marker.getPosition());
     });
 
     MAP.setBounds(bounds);
