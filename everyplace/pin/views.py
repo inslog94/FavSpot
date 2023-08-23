@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import Pin, PinContent, Category
@@ -13,7 +13,21 @@ User = get_user_model()
 
 # Create your views here.
 class PinView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    # 핀 상세정보 조회
+    def get(self, request, pk):
+        pin = get_object_or_404(Pin, pk=pk, is_deleted=False)
+        pin_content = get_object_or_404(
+            PinContent, pin_id=pin, is_deleted=False)
+
+        pin_serializer = PinSerializer(pin)
+        pin_content_serializer = PinContentSerializer(pin_content)
+
+        return Response({
+            'pin': pin_serializer.data,
+            'pin_content': pin_content_serializer.data
+        }, status=status.HTTP_200_OK)
 
     # 핀 생성
     def post(self, request):
