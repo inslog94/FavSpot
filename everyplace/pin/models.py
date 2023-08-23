@@ -11,10 +11,7 @@ class Pin(models.Model):
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     
     # 연결시킬 Board id
-    board_id = models.ForeignKey(Board, on_delete=models.CASCADE)
-    
-    # 생성한 user id
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    board_id = models.ManyToManyField(Board)
     
     # 상호명 : 예) 노티드 청담
     title = models.CharField(max_length=50)
