@@ -68,11 +68,10 @@ def google_callback(request):
         social_user = SocialAccount.objects.get(user=user)
         # 가입된 유저의 Provider가 google이 아니면 에러 발생(Kakao 계정이라는 뜻)
         if social_user.provider != 'google':
-            return JsonResponse({'err_msg': 'Kakao로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'err_msg': 'Kakao로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
         
     except SocialAccount.DoesNotExist:
-        print('일반 회원 가입')
-        return JsonResponse({'err_msg': '소셜 로그인 계정이 아닙니다. 일반 로그인을 이용해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'err_msg': '소셜 로그인 계정이 아닙니다. 일반 로그인을 이용해주세요.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
     
     except User.DoesNotExist:
         pass
@@ -145,10 +144,10 @@ def kakao_callback(request):
         social_user = SocialAccount.objects.get(user=user)
         # 가입된 유저의 Provider가 kakao가 아니면 에러 발생(Google 계정이라는 뜻)
         if social_user.provider != 'kakao':
-            return JsonResponse({'err_msg': 'Google로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'err_msg': 'Google로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
         
     except SocialAccount.DoesNotExist:
-        return JsonResponse({'err_msg': '소셜 로그인 계정이 아닙니다. 일반 로그인을 이용해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'err_msg': '소셜 로그인 계정이 아닙니다. 일반 로그인을 이용해주세요.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
 
     except User.DoesNotExist:
         pass
@@ -180,6 +179,7 @@ class SignupView(APIView):
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
+        email = serializer.initial_data.get('email')
         if serializer.is_valid():
             # create_user 메서드를 이용하여 유저 생성
             user = User.objects.create_user(
@@ -188,7 +188,6 @@ class SignupView(APIView):
                 nickname=serializer.validated_data.get('nickname', ''),
                 profile_img=serializer.validated_data.get('profile_img', None)
             )
-            print("user 생성", user, user.email, user.password, user.nickname)
             # 유저에 대한 RefreshToken 발급
             refresh = RefreshToken.for_user(user)
             # Cookies에 HTTP Only, Secure 속성으로 토큰을 저장하여 응답
@@ -196,6 +195,19 @@ class SignupView(APIView):
             response.set_cookie('access_token', str(refresh.access_token), httponly=True, secure=True)
             response.set_cookie('refresh_token', str(refresh), httponly=True, secure=True)
             return response
+        
+        try:
+            # 가입된 유저인지 체크
+            user = User.objects.get(email=email)
+            # 가입된 유저라면 소셜 로그인 계정인지 체크
+            social_user = SocialAccount.objects.get(user=user)
+            # 가입된 유저의 Provider를 체크하여 가입된 서비스 정보와 함께 BAD_REQUEST 응답 반환
+            if social_user.provider == 'google':
+                return JsonResponse({'err_msg': 'Google로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
+            elif social_user.provider == 'kakao':
+                return JsonResponse({'err_msg': 'Kakao로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
+        except:
+            pass
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -205,6 +217,20 @@ class LoginView(APIView):
 
     def post(self, request):
         email = request.data.get('email')
+        
+        try:
+            # 가입된 유저인지 체크
+            user = User.objects.get(email=email)
+            # 가입된 유저라면 소셜 로그인 계정인지 체크
+            social_user = SocialAccount.objects.get(user=user)
+            # 가입된 유저의 Provider를 체크하여 가입된 서비스 정보와 함께 BAD_REQUEST 응답 반환
+            if social_user.provider == 'google':
+                return JsonResponse({'err_msg': 'Google로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
+            elif social_user.provider == 'kakao':
+                return JsonResponse({'err_msg': 'Kakao로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
+        except:
+            pass
+        
         password = request.data.get('password')
         if email and password:
             user = authenticate(email=email, password=password)
