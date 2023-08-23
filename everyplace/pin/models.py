@@ -47,7 +47,7 @@ def pin_photo_upload_path(instance, filename):
 # 핀에 연결될 내용(간단한 텍스트, 사진)
 class PinContent(models.Model):
     # 연결시킬 Pin id
-    pin_id = models.OneToOneField(Pin, on_delete=models.CASCADE)
+    pin_id = models.ForeignKey(Pin, on_delete=models.CASCADE)
 
     # 생성한 user id
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
