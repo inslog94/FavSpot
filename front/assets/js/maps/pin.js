@@ -1,5 +1,5 @@
 import { MAP, PIN_INFO_WINDOW, $pinList, $menuBox, $pagination } from "./data.js";
-import { removeAllMarker, displayMarkers } from "./map.js";
+import { removeAllMarker, displayMarkers, mapRangeSetup } from "./map.js";
 
 // 검색 결과 페이징
 export function displayPagination(pagination) {
@@ -44,7 +44,7 @@ export function displaySearchPins(data) {
     // 검색 결과 표시
     pinListSetUp(pins);
     // map 위치 조정
-    boundsSetup(pins);
+    mapRangeSetup(pins);
     // 마커 표시
     displayMarkers(pins);
 }
@@ -58,7 +58,7 @@ export function displayPins(data) {
     let pins = convertDataToPins(data);
 
     pinListSetUp(pins);
-    boundsSetup(pins);
+    mapRangeSetup(pins);
     displayMarkers(pins);
 }
 
@@ -109,17 +109,6 @@ function pinListSetUp(pins) {
 
     $menuBox.scrollTop = 0;
     $pinList.appendChild(fragment);
-}
-
-function boundsSetup(pins) {
-
-    let bounds = new kakao.maps.LatLngBounds();
-
-    pins.forEach(function(pin) {
-        bounds.extend(pin.location);
-    });
-
-    MAP.setBounds(bounds);
 }
 
 function getListItem(index, places) {

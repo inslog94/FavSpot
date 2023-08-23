@@ -45,5 +45,14 @@ export function removeAllMarker() {
     });
 }
 
+export function mapRangeSetup(pins) {
 
+    let bounds = new kakao.maps.LatLngBounds();
+
+    pins.forEach(function(pin) {
+        bounds.extend(pin.location);
+    });
+
+    MAP.setBounds(bounds);
+}
 
