@@ -23,6 +23,7 @@ function mapSetup() {
         MARKER.setPosition(location);
         MARKER.setMap(MAP);
     });
+
 }
 
 // 마커 드래그 기능

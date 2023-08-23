@@ -21,7 +21,6 @@ export function displayGeoLocationMap() {
         });
         return;
     }
-    displayMap(CURRENT_POSITION);
 }
 
 export function displayMarkers(markers) {

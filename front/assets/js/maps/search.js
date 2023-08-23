@@ -1,23 +1,46 @@
 
-import { PLACE, $keyword } from "./data.js";
+import { PLACE, $keyword, CURRENT_POSITION } from "./data.js";
 import { displaySearchPins, displayPagination } from "./pin.js";
 
 export function searchPlaceAsKeyword() {
     let keyword = $keyword.value;
+    let options = {};
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         alert('키워드를 입력해주세요!');
         return false;
     }
 
-    PLACE.keywordSearch(keyword, searchPlaceAsKeywordCB);
+    if (keyword.startsWith('근처')) {
+        searchPlaceAsKeywordOnAround(keyword);
+        return;
+    } 
+
+    PLACE.keywordSearch(keyword, searchPlaceAsKeywordCB, options);
+    
+}
+
+function searchPlaceAsKeywordOnAround(keyword) {
+    navigator.permissions.query({ name: "geolocation" }).then((result) => {
+        if (result.state === 'denied') {
+            alert('위치 액세스 차단으로 인해 검색할 수 없습니다');
+            return false;
+        }
+
+        let options = {
+            location: CURRENT_POSITION,
+            radius: 10000,
+            sort: kakao.maps.services.SortBy.DISTANCE
+        }
+
+        PLACE.keywordSearch(keyword, searchPlaceAsKeywordCB, options);
+    });
 }
 
 function searchPlaceAsKeywordCB(data, status, pagination) {
 
     if (status === kakao.maps.services.Status.OK) {
 
-        console.log(data);
         displaySearchPins(data);
 
         displayPagination(pagination);
