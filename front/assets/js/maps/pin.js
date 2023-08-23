@@ -68,7 +68,7 @@ export function convertKaKaoDataToPins(dataList) {
         let pin = {};
 
         pin.title = data.place_name;
-        pin.location = new kakao.maps.LatLng(data.y, data.x);
+        pin.position = new kakao.maps.LatLng(data.y, data.x);
         pin.addressName = data.address_name;
         pin.categoryGroupCode = data.category_group_code;
         pin.categoryGroupName = data.category_group_name;

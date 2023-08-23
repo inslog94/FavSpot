@@ -1,5 +1,5 @@
 import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER } from './data.js';
-import { markerInfoEventSetup } from './event.js';
+import { markerHoverEvent } from './event.js';
 
 function displayMarker(pin) {
     pin.setMap(MAP);
@@ -38,16 +38,16 @@ export function displayGeoLocationMap() {
 }
 
 // marker 목록 표시
-export function displayMarkers(dataList) {
+export function displayMarkers(markers) {
     
-    dataList.forEach(function(data) {
+    markers.forEach(function(_marker) {
         let marker = new kakao.maps.Marker({
             map: MAP,
-            position: data.position,
-            title: data.title
+            position: _marker.position,
+            title: _marker.title
         })
 
-        markerInfoEventSetup(marker, PIN_INFO_WINDOW);
+        markerHoverEvent(marker, PIN_INFO_WINDOW);
         displayMarker(marker);
         MARKERS.push(marker);
     });
@@ -58,9 +58,9 @@ export function displayMarkers(dataList) {
 export function removeAllMarker() {
     MARKERS.forEach(function(marker) {
         marker.setMap(null);
-        MARKERS.length = 0;
     });
 
+    MARKERS.length = 0;
     CLUSTERER.clear();
 }
 
