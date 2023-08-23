@@ -4,7 +4,7 @@ from rest_framework import status
 from .models import Board, BoardTag
 from pin.models import Pin
 from .serializers import BoardSerializer, BoardTagSerializer
-from pin.serializers import PinSerializer
+from pin.serializers import SimplePinSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import authentication_classes, permission_classes
@@ -37,7 +37,9 @@ class BoardView(APIView):
             
             # 해당 보드와 연결된 모든 핀(Pin) 객체들 반환
             pins = Pin.objects.filter(board_id=pk)
-            pin_serializer = PinSerializer(pins, many=True)
+
+            pin_serializer = SimplePinSerializer(pins, many=True)
+            
             board_serializer = BoardSerializer(board)
 
             data = {
