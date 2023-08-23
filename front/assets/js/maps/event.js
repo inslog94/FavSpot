@@ -1,6 +1,6 @@
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, MAP_LEVEL, PIN_INFO_WINDOW, MARKERS, TEST_MARKERS} from './data.js';
+import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, TEST_MARKERS} from './data.js';
 import { displayGeoLocationMap, displayMarkers } from './map.js';
-
+import { searchPlaceAsKeyword } from './search.js';
 
 // 지도 초기화
 function mapSetup() {
@@ -51,11 +51,22 @@ export function markerHideEventSetup(marker, infoWindow) {
     });
 }
 
+// KAKAO AIP 키워드 검색 이벤트 처리
+function keywordSearchSetup() {
+    $keywordSearchBtn.addEventListener('click', searchPlaceAsKeyword);
+    $keyword.addEventListener('keydown', (e)=>{
+        if (e.key === 'Enter') {
+            searchPlaceAsKeyword();
+        }
+    })
+}
+
 // 전체 기능 초기화
 window.onload = function init() {
     displayGeoLocationMap();
     mapSetup();
     markerSetup();
     markerHideEventSetup(MARKER, PIN_INFO_WINDOW);
+    keywordSearchSetup();
     displayMarkers(TEST_MARKERS);
 }

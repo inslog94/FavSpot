@@ -37,7 +37,6 @@ export function displayMarkers(markers) {
         displayMarker(marker);
         MARKERS.push(marker);
     });
-    console.log(MARKERS);
 }
 
 export function removeAllMarker() {

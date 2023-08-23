@@ -32,9 +32,16 @@ export let TEST_MARKERS = [
 export const $container = document.getElementById('map');
 export const MAP_OPTIONS = { center: CURRENT_POSITION, level: MAP_LEVEL};
 export const MAP = new kakao.maps.Map($container, MAP_OPTIONS);
+
+export const $pinList = document.getElementById('pinList');
+export const $menuBox = document.getElementById('menu_wrap');
+export const $keyword = document.getElementById('keyword');
+export const $pagination = document.getElementById('pagination');
+export const $keywordSearchBtn = document.getElementById('keywordSearchBtn');
+
 export const MARKER = new kakao.maps.Marker({
-        clickable: true,
+        clickable: true
 });
 export const MARKERS = [];
 
-
+export const PLACE = new kakao.maps.services.Places();
