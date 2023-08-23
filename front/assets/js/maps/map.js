@@ -1,4 +1,4 @@
-import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS } from './data.js';
+import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER } from './data.js';
 import { markerInfoEventSetup } from './event.js';
 
 function displayMarker(pin) {
@@ -52,6 +52,7 @@ export function displayMarkers(dataList) {
         MARKERS.push(marker);
     });
     mapRangeSetup(MARKERS);
+    CLUSTERER.addMarkers(MARKERS);
 }
 
 export function removeAllMarker() {
@@ -60,6 +61,7 @@ export function removeAllMarker() {
         MARKERS.length = 0;
     });
 
+    CLUSTERER.clear();
 }
 
 // pin 목록 기반 지도 범위 설정

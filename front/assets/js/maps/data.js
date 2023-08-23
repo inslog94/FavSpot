@@ -10,25 +10,6 @@ export const CURRENT_POSITION = new kakao.maps.LatLng(DEFAULT_LATITUDE, DEFAULT_
 export const INIT_MAP_LEVEL = 3;
 export const PIN_INFO_WINDOW = new kakao.maps.InfoWindow({});
 
-export let TEST_MARKERS = [
-    { 
-        title: '한국공해문제연구소 터', 
-        location: new kakao.maps.LatLng(37.57469181101134, 127.00159049478967)
-    },
-    {
-        title: '조양교터', 
-        location: new kakao.maps.LatLng(37.57469181101134, 127.00159049478967)
-    },
-    {
-        title: '연동교회', 
-        location: new kakao.maps.LatLng(37.57469181101134, 127.00159049478967)
-    },
-    {
-        title: '얼데인',
-        location: new kakao.maps.LatLng(37.57469181101134, 127.00159049478967)
-    }
-];
-
 export const $container = document.getElementById('map');
 export const MAP_OPTIONS = { center: CURRENT_POSITION, level: INIT_MAP_LEVEL};
 export const MAP = new kakao.maps.Map($container, MAP_OPTIONS);
@@ -45,3 +26,8 @@ export const MARKER = new kakao.maps.Marker({
 export const MARKERS = [];
 
 export const PLACE = new kakao.maps.services.Places();
+export const CLUSTERER = new kakao.maps.MarkerClusterer({
+    map:MAP,
+    averageCenter: true,
+    minLevel: 3
+});

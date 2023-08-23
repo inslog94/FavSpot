@@ -1,6 +1,5 @@
-
 import { PLACE, $keyword, CURRENT_POSITION } from "./data.js";
-import { displaySearchPins, displayPagination } from "./pin.js";
+import { displaySearchPlace, displayPagination } from "./pin.js";
 
 export function searchPlaceAsKeyword() {
     let keyword = $keyword.value;
@@ -41,7 +40,7 @@ function searchPlaceAsKeywordCB(data, status, pagination) {
 
     if (status === kakao.maps.services.Status.OK) {
 
-        displaySearchPins(data);
+        displaySearchPlace(data);
 
         displayPagination(pagination);
 

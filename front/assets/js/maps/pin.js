@@ -31,7 +31,7 @@ export function displayPagination(pagination) {
 }
 
 // 카카오 검색 API pin 표시
-export function displaySearchPins(data) {
+export function displaySearchPlace(data) {
     
     // 마커 지우기, 검색 결과 표시, map 조정
 
