@@ -1,6 +1,7 @@
 import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS } from './data.js';
 import { displayGeoLocationMap, displayMarkers } from './map.js';
 import { searchPlaceAsKeyword } from './search.js';
+import { TEST_MARKERS } from './test_data.js';
 
 // 지도 초기화
 function mapSetup() {
@@ -88,5 +89,5 @@ window.onload = function init() {
     // markerSetup();
     // markerHideEventSetup(MARKER, PIN_INFO_WINDOW);
     keywordSearchSetup();
-    displayMarkers();
+    displayMarkers(TEST_MARKERS);
 }
