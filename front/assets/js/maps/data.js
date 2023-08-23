@@ -29,5 +29,6 @@ export const PLACE = new kakao.maps.services.Places();
 export const CLUSTERER = new kakao.maps.MarkerClusterer({
     map:MAP,
     averageCenter: true,
-    minLevel: 3
+    minLevel: 3,
+    minClusterSize: 3
 });
