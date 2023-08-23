@@ -9,6 +9,19 @@ function displayMap(position) {
     MAP.setCenter(position);
 }
 
+export function zoomIn() {
+    let mapLevel = MAP.getLevel();
+
+    MAP.setLevel(mapLevel - 1);
+}
+
+export function zoomInLocation(location) {
+    let mapLevel = MAP.getLevel();
+
+    MAP.setLevel(mapLevel - 1);
+    MAP.panTo(location);
+}
+
 export function displayGeoLocationMap() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
