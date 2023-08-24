@@ -17,6 +17,8 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from .models import User
 from .serializers import UserSerializer
+from board.models import Board
+from board.serializers import BoardSerializer
 
 state = os.getenv('STATE')
 BASE_URL = os.getenv('BASE_URL')
@@ -255,3 +257,20 @@ class LogoutView(APIView):
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
         return response
+
+# 유저정보
+class UserInfoView(APIView):
+    
+    def get(self, request, pk=None):
+        # 본인인지 다른 유저인지 구분
+        if not pk:
+            user = request.user
+        else:
+            user = User.objects.get(id=pk)
+        
+        # 유저 프로필
+        user_serializer = UserSerializer(user)
+        # 유저가 작성한 보드 내역
+        boards = Board.objects.filter(user_id=user.id)
+        board_serializer = BoardSerializer(boards, many=True)
+        return JsonResponse({'User': user_serializer.data, 'Boards': board_serializer.data}, status=status.HTTP_200_OK)
