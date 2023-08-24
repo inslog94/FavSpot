@@ -1,10 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import Pin, PinContent, Category
-from board.models import Board
+from django.db.models import Q
+from .models import Pin, PinContent
 from .serializers import PinSerializer, PinContentSerializer
 from django.contrib.auth import get_user_model
 
@@ -18,7 +18,9 @@ class PinView(APIView):
     # ## pin 상세정보 조회
     def get(self, request, pk):
         pin = get_object_or_404(Pin, pk=pk, is_deleted=False)
-        pin_contents = PinContent.objects.filter(pin_id=pin, is_deleted=False)
+        # pin content 중 내용이 없는 객체는 보여주지 않음. 최신순으로 정렬
+        pin_contents = PinContent.objects.filter(
+            pin_id=pin, is_deleted=False).exclude(Q(text__isnull=True, photo='')).order_by('-created_at')
 
         pin_serializer = PinSerializer(pin)
         pin_contents_serializer = PinContentSerializer(pin_contents, many=True)
