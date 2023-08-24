@@ -15,7 +15,7 @@ User = get_user_model()
 class PinView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    # 핀 상세정보 조회
+    # ## pin 상세정보 조회
     def get(self, request, pk):
         pin = get_object_or_404(Pin, pk=pk, is_deleted=False)
         pin_contents = PinContent.objects.filter(pin_id=pin, is_deleted=False)
@@ -28,33 +28,70 @@ class PinView(APIView):
             'pin_contents': pin_contents_serializer.data
         }, status=status.HTTP_200_OK)
 
-    # 핀 생성
+    # ## pin 생성
     def post(self, request):
-        # 로그인 되어있는 아이디로 pin 생성
+        # 로그인 되어있는 아이디로 pin content 생성
         request.data['user_id'] = request.user.id
 
-        pin_serializer = PinSerializer(data=request.data)
-        pin_content_serializer = PinContentSerializer(data=request.data)
+        # request에서 필요한 데이터 가져오기
+        title = request.data.get('title')
+        lat_lng = request.data.get('lat_lng')
+        board_id = request.data.get('board_id')
 
-        if pin_serializer.is_valid() and pin_content_serializer.is_valid():
+        # 상호명, 좌표 기준으로 같은 pin이 있는지 확인
+        existing_pin = Pin.objects.filter(title=title, lat_lng=lat_lng).first()
 
+        # pin이 이미 존재할 시 board에 추가
+        if existing_pin:
+            existing_pin.board_id.add(board_id)
+            existing_pin.save()
+            pin_serializer = PinSerializer(existing_pin)
+
+            # 존재하는 pin과 연결된 pin content 생성
+            pin_content_serializer = PinContentSerializer(data=request.data)
+            if pin_content_serializer.is_valid():
+                pin_content = pin_content_serializer.save(pin_id=existing_pin)
+
+                return Response({
+                    'pin': pin_serializer.data,
+                    'pin_content': pin_content_serializer.data,
+                    'message': '해당 장소의 핀을 사용합니다.'
+                }, status=status.HTTP_200_OK)
+            return Response({
+                'pin_errors': {},
+                'pin_content_errors': pin_content_serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # pin이 존재하지 않을 시 새로운 pin 생성
+        # board_id를 list형태로 변환
+        request_data = request.data.copy()
+        request_data["board_id"] = [request_data["board_id"]]
+        pin_serializer = PinSerializer(data=request_data)
+        pin_content_serializer = PinContentSerializer(data=request_data)
+
+        if pin_serializer.is_valid():
             pin = pin_serializer.save()
 
             # 생성된 pin과 연결된 pin content 생성
-            pin_content_data = pin_content_serializer.validated_data
-            pin_content_data['pin_id'] = pin
-            pin_content = pin_content_serializer.create(pin_content_data)
+            if pin_content_serializer.is_valid():
+                pin_content_data = pin_content_serializer.validated_data
+                pin_content_data['pin_id'] = pin
+                pin_content = pin_content_serializer.create(pin_content_data)
 
+                return Response({
+                    'pin': PinSerializer(pin).data,
+                    'pin_content': PinContentSerializer(pin_content).data
+                }, status=status.HTTP_201_CREATED)
             return Response({
-                'pin': PinSerializer(pin).data,
-                'pin_content': PinContentSerializer(pin_content).data
-            }, status=status.HTTP_201_CREATED)
+                'pin_errors': {},
+                'pin_content_errors': pin_content_serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
         return Response({
             'pin_errors': pin_serializer.errors,
-            'pin_content_errors': pin_content_serializer.errors
+            'pin_content_errors': {}
         }, status=status.HTTP_400_BAD_REQUEST)
 
-    # 핀 컨텐츠 수정
+    # ## pin content 수정
     def put(self, request, pk):
         pin_content = get_object_or_404(PinContent, pk=pk)
 
@@ -67,7 +104,7 @@ class PinView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({"detail": "핀 컨텐츠를 수정할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
 
-    # 핀 컨텐츠 삭제
+    # ## pin content 삭제
     def delete(self, request, pk):
         pin_content = get_object_or_404(PinContent, pk=pk)
 
