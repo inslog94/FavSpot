@@ -54,30 +54,26 @@ class PinView(APIView):
             'pin_content_errors': pin_content_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
-    # 핀 수정
+    # 핀 컨텐츠 수정
     def put(self, request, pk):
-        pin = get_object_or_404(Pin, pk=pk)
-        pin_content = get_object_or_404(PinContent, pin_id=pin)
+        pin_content = get_object_or_404(PinContent, pk=pk)
 
-        if request.user == pin.user_id:
+        if request.user == pin_content.user_id:
             serializer = PinContentSerializer(
                 pin_content, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"detail": "핀을 수정할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"detail": "핀 컨텐츠를 수정할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
 
-    # 핀 삭제
+    # 핀 컨텐츠 삭제
     def delete(self, request, pk):
-        pin = get_object_or_404(Pin, pk=pk)
-        pin_content = get_object_or_404(PinContent, pin_id=pin)
+        pin_content = get_object_or_404(PinContent, pk=pk)
 
-        if request.user == pin.user_id:
-            pin.is_deleted = True
+        if request.user == pin_content.user_id:
             pin_content.is_deleted = True
-            pin.save()
             pin_content.save()
 
-            return Response({"detail": "핀을 삭제 처리하였습니다."}, status=status.HTTP_204_NO_CONTENT)
-        return Response({"detail": "핀을 삭제할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"detail": "핀 컨텐츠를 삭제 처리하였습니다."}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail": "핀 컨텐츠를 삭제할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
