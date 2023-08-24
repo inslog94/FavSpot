@@ -40,13 +40,18 @@ class BoardView(APIView):
             # 최신순으로 정렬
             pins = Pin.objects.filter(board_id=pk).order_by('-created_at')
 
+            # 해당 보드와 연결된 모든 댓글(Comment) 객체들 반환
+            # 최신순으로 정렬
+            comments = BoardComment.objects.filter(board_id=pk, is_deleted=False).order_by('-created_at')
+            
             pin_serializer = SimplePinSerializer(pins, many=True)
-
+            comment_serializer = BoardCommentSerializer(comments, many=True)
             board_serializer = BoardSerializer(board)
 
             data = {
                 'board': board_serializer.data,
-                'pins': pin_serializer.data
+                'pins': pin_serializer.data,
+                'comments': comment_serializer.data
             }
 
             return Response(data)
