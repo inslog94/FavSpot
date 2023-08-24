@@ -18,15 +18,14 @@ class PinView(APIView):
     # 핀 상세정보 조회
     def get(self, request, pk):
         pin = get_object_or_404(Pin, pk=pk, is_deleted=False)
-        pin_content = get_object_or_404(
-            PinContent, pin_id=pin, is_deleted=False)
+        pin_contents = PinContent.objects.filter(pin_id=pin, is_deleted=False)
 
         pin_serializer = PinSerializer(pin)
-        pin_content_serializer = PinContentSerializer(pin_content)
+        pin_contents_serializer = PinContentSerializer(pin_contents, many=True)
 
         return Response({
             'pin': pin_serializer.data,
-            'pin_content': pin_content_serializer.data
+            'pin_contents': pin_contents_serializer.data
         }, status=status.HTTP_200_OK)
 
     # 핀 생성
