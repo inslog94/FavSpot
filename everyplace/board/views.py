@@ -36,7 +36,8 @@ class BoardView(APIView):
                 return Response({'error': '해당 보드가 존재하지 않습니다.'}, status=status.HTTP_404_NOT_FOUND)
             
             # 해당 보드와 연결된 모든 핀(Pin) 객체들 반환
-            pins = Pin.objects.filter(board_id=pk)
+            # 최신순으로 정렬
+            pins = Pin.objects.filter(board_id=pk).order_by('-created_at')
 
             pin_serializer = SimplePinSerializer(pins, many=True)
 
