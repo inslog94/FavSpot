@@ -1,5 +1,5 @@
 import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT } from './data.js';
-import { displayGeoLocationMap, displayMarkers } from './map.js';
+import { displayGeoLocationMap, displayMarkers, closeZoomInLocation } from './map.js';
 import { searchPlaceAsKeyword } from './search.js';
 import { TEST_MARKERS } from './test_data.js';
 
@@ -75,7 +75,7 @@ export function markerHoverEvent(marker, infoWindow) {
 }
 
 // 마커 클릭시 인포 윈도우 표시
-export function markerClickEvent(marker, infoWindow) {
+export function markerClickInfoEvent(marker, infoWindow) {
 
     let content = marker.getTitle();
     if (content === null || content === undefined || content.length <= 0) {
@@ -85,6 +85,18 @@ export function markerClickEvent(marker, infoWindow) {
     kakao.maps.event.addListener(marker, 'click', function() {
         infoWindow.setContent(content);
         infoWindow.open(MAP, marker);
+    });
+}
+
+export function markerClickZoomInEvent(marker) {
+    kakao.maps.event.addListener(marker, 'click', mouseEvent=> {
+
+        let mapLevel = MAP.getLevel();
+        
+        if(mapLevel > 5) {
+            let position = marker.getPosition();
+            closeZoomInLocation(position);
+        }
     });
 }
 
@@ -152,6 +164,7 @@ window.onload = function init() {
     mapSetup();
     // markerCreateEvent();
     // markerClickRemoveEvent(MARKER, PIN_INFO_WINDOW);
+    markerClickZoomInEvent(MARKER);
     keywordSearchSetup();
     displayMarkers(TEST_MARKERS);
     clusterClickEvent();
