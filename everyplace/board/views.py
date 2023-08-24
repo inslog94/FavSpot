@@ -39,7 +39,7 @@ class BoardView(APIView):
             pins = Pin.objects.filter(board_id=pk)
 
             pin_serializer = SimplePinSerializer(pins, many=True)
-            
+
             board_serializer = BoardSerializer(board)
 
             data = {
@@ -105,6 +105,26 @@ class BoardView(APIView):
         if serializer.is_valid():
             serializer.save()
 
+            # 핀 수정 작업 (추가 / 삭제)
+            new_pins = request.data.get('pins', []) # 새롭게 전달된 핀 목록
+            existing_pins = board.pin_set.all() # 기존에 존재하는 핀
+
+            for pin_id in new_pins:
+                try:
+                    pin = Pin.objects.get(id=pin_id)
+
+                    if pin not in existing_pins:
+                        board.pin_set.add(pin) # 기존에 없던 핀을 보드에 추가
+
+                except Pin.DoesNotExist:
+                    pass
+
+            # 기존에 있는 핀 중에서 전달된 핀 리스트에 없는 것은 삭제
+            for pin in existing_pins:
+                if pin.id not in new_pins:
+                    board.pin_set.remove(pin) # 기존에 있던 핀을 보드에서 제거
+                
+            # 태그 수정 작업 (추가 / 삭제)
             if tags_data:
               # 새로운 태그를 연결
               new_tags = []
