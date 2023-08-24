@@ -4,6 +4,12 @@ from . import views
 urlpatterns = [
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/', include('allauth.urls')),
+    # Signup
+    path('signup/', views.SignupView.as_view(), name='signup'),
+    # Login
+    path('login/', views.LoginView.as_view(), name='login'),
+    # Logout
+    path('logout/', views.LogoutView.as_view(), name='logout'),
     # Google Auth
     path('auth/google/login/', views.google_login, name='google_login'),
     path('auth/google/callback/', views.google_callback, name='google_callback'),
