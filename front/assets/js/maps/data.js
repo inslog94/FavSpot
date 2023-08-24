@@ -29,6 +29,20 @@ export const PLACE = new kakao.maps.services.Places();
 export const CLUSTERER = new kakao.maps.MarkerClusterer({
     map:MAP,
     averageCenter: true,
-    minLevel: 3,
-    minClusterSize: 3
+    minLevel: 2,
+    minClusterSize: 4,
+    disableClickZoom: true
 });
+export const CLUSTER_OVRELAY = new kakao.maps.CustomOverlay({
+    map: MAP,
+    clickable: true
+});
+export const CLUSTER_OVERLAY_CONTENT = document.createElement('div');
+CLUSTER_OVERLAY_CONTENT.classList.add('overlaybox');
+CLUSTER_OVERLAY_CONTENT.addEventListener('mouseover', (e)=>{
+    MAP.setZoomable(false);
+}, false);
+
+CLUSTER_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
+    MAP.setZoomable(true);
+}, false);

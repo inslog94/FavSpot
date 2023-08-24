@@ -1,4 +1,4 @@
-import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER } from './data.js';
+import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT } from './data.js';
 import { markerHoverEvent } from './event.js';
 
 function displayMarker(pin) {
@@ -61,6 +61,9 @@ export function removeAllMarker() {
     });
 
     MARKERS.length = 0;
+    CLUSTER_OVRELAY.setMap(null);
+    CLUSTER_OVRELAY.setContent(null);
+    CLUSTER_OVERLAY_CONTENT.textContent = "";
     CLUSTERER.clear();
 }
 
