@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Board, BoardTag
 from pin.models import Pin
-from .serializers import BoardSerializer, BoardTagSerializer
+from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer
 from pin.serializers import SimplePinSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -11,6 +11,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from django.shortcuts import get_object_or_404
 
 
+# Board View
 class BoardView(APIView):
     ## 특정 보드 상세 조회 메소드
     def get_object(self, pk):
@@ -174,3 +175,25 @@ class BoardView(APIView):
         board.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+## BoardComment View
+class BoardCommentView(APIView):
+    ## 보드 댓글 작성
+    def post(self, request, pk):
+        try:
+            board = Board.objects.get(pk=pk)
+        except Board.DoesNotExist:
+            return Response({"error": "해당 보드가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data.copy()
+        data['board_id'] = board.id
+        data['user_id'] = request.user.id
+
+        comment_serializer = BoardCommentSerializer(data=data)
+        
+        if comment_serializer.is_valid():
+            comment_serializer.save()
+            return Response(comment_serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
