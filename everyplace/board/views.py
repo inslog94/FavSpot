@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Board, BoardTag
+from .models import Board, BoardTag, BoardComment
 from pin.models import Pin
 from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer
 from pin.serializers import SimplePinSerializer
@@ -179,7 +179,7 @@ class BoardView(APIView):
 
 ## BoardComment View
 class BoardCommentView(APIView):
-    ## 보드 댓글 작성
+    ## 보드 댓글 생성
     def post(self, request, pk):
         try:
             board = Board.objects.get(pk=pk)
@@ -197,3 +197,16 @@ class BoardCommentView(APIView):
             return Response(comment_serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    ## 보드 댓글 삭제
+    def delete(self, request, pk):
+        comment = get_object_or_404(BoardComment, id=pk)
+
+        if request.user != comment.user_id:
+            return Response({"error": "본인이 작성한 댓글만 삭제할 수 있습니다."}, status=status.HTTP_403_FORBIDDEN)
+
+        # is_deleted 필드 값을 True로 변경
+        comment.is_deleted = True
+        comment.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

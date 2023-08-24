@@ -10,4 +10,5 @@ urlpatterns = [
 
     # BoardComment
     path('<int:pk>/comment/', views.BoardCommentView.as_view(), name='boardcomment_create'),
+    path('comment/<int:pk>/', views.BoardCommentView.as_view(), name='boardcomment_delete'),
 ]
