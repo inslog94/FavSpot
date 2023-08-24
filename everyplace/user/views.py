@@ -2,15 +2,21 @@ import os
 import requests
 from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from json.decoder import JSONDecodeError
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.google import views as google_view
 from allauth.socialaccount.providers.kakao import views as kakao_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from .models import User
+from .serializers import UserSerializer
 
 state = os.getenv('STATE')
 BASE_URL = os.getenv('BASE_URL')
@@ -56,38 +62,34 @@ def google_callback(request):
     Signup or Signin Request
     """
     try:
+        # 가입된 유저인지 체크
         user = User.objects.get(email=email)
-        # 기존에 가입된 유저의 Provider가 google이 아니면 에러 발생, 맞으면 로그인
-        # 다른 SNS로 가입된 유저
+        # 가입된 유저라면 소셜 로그인 계정인지 체크
         social_user = SocialAccount.objects.get(user=user)
-        if social_user is None:
-            return JsonResponse({'err_msg': 'email exists but not social user'}, status=status.HTTP_400_BAD_REQUEST)
+        # 가입된 유저의 Provider가 google이 아니면 에러 발생(Kakao 계정이라는 뜻)
         if social_user.provider != 'google':
-            return JsonResponse({'err_msg': 'no matching social type'}, status=status.HTTP_400_BAD_REQUEST)
-        # 기존에 Google로 가입된 유저
-        data = {'access_token': access_token, 'code': code}
-        accept = requests.post(
-            f"{BASE_URL}auth/google/login/finish/", data=data)
-        accept_status = accept.status_code
-        if accept_status != 200:
-            return JsonResponse({'err_msg': 'failed to signin'}, status=accept_status)
-        accept_json = accept.json()
-        accept_json.pop('user', None)
+            return JsonResponse({'err_msg': 'Kakao로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
         
-        return JsonResponse(accept_json)
-
+    except SocialAccount.DoesNotExist:
+        return JsonResponse({'err_msg': '소셜 로그인 계정이 아닙니다. 일반 로그인을 이용해주세요.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
+    
     except User.DoesNotExist:
-        # 기존에 가입된 유저가 없으면 새로 가입
-        data = {'access_token': access_token, 'code': code}
-        accept = requests.post(
-            f"{BASE_URL}auth/google/login/finish/", data=data)
-        accept_status = accept.status_code
-        if accept_status != 200:
-            return JsonResponse({'err_msg': 'failed to signup'}, status=accept_status)
-        accept_json = accept.json()
-        accept_json.pop('user', None)
-        
-        return JsonResponse(accept_json)
+        pass
+    
+    # 가입하지 않은 유저거나 기존에 Google로 가입된 유저의 경우 로그인 처리
+    data = {'access_token': access_token, 'code': code}
+    accept = requests.post(
+        f"{BASE_URL}auth/google/login/finish/", data=data)
+    accept_status = accept.status_code
+    if accept_status != 200:
+        return JsonResponse({'err_msg': 'failed to signup'}, status=accept_status)
+    accept_json = accept.json()
+    accept_json.pop('user', None)
+    # Cookies에 HTTP Only, Secure 속성으로 토큰을 저장하여 응답
+    response = JsonResponse({'Google_login': 'success'}, status=status.HTTP_201_CREATED)
+    response.set_cookie('access_token', accept_json['access_token'], httponly=True, secure=True)
+    response.set_cookie('refresh_token', accept_json['refresh_token'], httponly=True, secure=True)
+    return response
 
 
 class GoogleLogin(SocialLoginView):
@@ -136,41 +138,120 @@ def kakao_callback(request):
     Signup or Signin Request
     """
     try:
+        # 가입된 유저인지 체크
         user = User.objects.get(email=email)
-        # 기존에 가입된 유저의 Provider가 kakao가 아니면 에러 발생, 맞으면 로그인
-        # 다른 SNS로 가입된 유저
+        # 가입된 유저라면 소셜 로그인 계정인지 체크
         social_user = SocialAccount.objects.get(user=user)
-        if social_user is None:
-            return JsonResponse({'err_msg': 'email exists but not social user'}, status=status.HTTP_400_BAD_REQUEST)
+        # 가입된 유저의 Provider가 kakao가 아니면 에러 발생(Google 계정이라는 뜻)
         if social_user.provider != 'kakao':
-            return JsonResponse({'err_msg': 'no matching social type'}, status=status.HTTP_400_BAD_REQUEST)
-        # 기존에 Kakao로 가입된 유저
-        data = {'access_token': access_token, 'code': code}
-        accept = requests.post(
-            f"{BASE_URL}auth/kakao/login/finish/", data=data)
-        accept_status = accept.status_code
-        if accept_status != 200:
-            return JsonResponse({'err_msg': 'failed to signin'}, status=accept_status)
-        accept_json = accept.json()
-        accept_json.pop('user', None)
-
-        return JsonResponse(accept_json)
+            return JsonResponse({'err_msg': 'Google로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
+        
+    except SocialAccount.DoesNotExist:
+        return JsonResponse({'err_msg': '소셜 로그인 계정이 아닙니다. 일반 로그인을 이용해주세요.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
 
     except User.DoesNotExist:
-        # 기존에 가입된 유저가 없으면 새로 가입
-        data = {'access_token': access_token, 'code': code}
-        accept = requests.post(
-            f"{BASE_URL}auth/kakao/login/finish/", data=data)
-        accept_status = accept.status_code
-        if accept_status != 200:
-            return JsonResponse({'err_msg': 'failed to signup'}, status=accept_status)
-        accept_json = accept.json()
-        accept_json.pop('user', None)
-
-        return JsonResponse(accept_json)
+        pass
+    
+    # 가입하지 않은 유저거나 기존에 Kakao로 가입된 유저의 경우 로그인 처리
+    data = {'access_token': access_token, 'code': code}
+    accept = requests.post(
+        f"{BASE_URL}auth/kakao/login/finish/", data=data)
+    accept_status = accept.status_code
+    if accept_status != 200:
+        return JsonResponse({'err_msg': 'failed to signup'}, status=accept_status)
+    accept_json = accept.json()
+    accept_json.pop('user', None)
+    # Cookies에 HTTP Only, Secure 속성으로 토큰을 저장하여 응답
+    response = JsonResponse({'Kakao_login': 'success'}, status=status.HTTP_201_CREATED)
+    response.set_cookie('access_token', accept_json['access_token'], httponly=True, secure=True)
+    response.set_cookie('refresh_token', accept_json['refresh_token'], httponly=True, secure=True)
+    return response
 
 
 class KakaoLogin(SocialLoginView):
     adapter_class = kakao_view.KakaoOAuth2Adapter
     client_class = OAuth2Client
     callback_url = KAKAO_CALLBACK_URI
+
+# 일반 회원가입
+class SignupView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        email = serializer.initial_data.get('email')
+        if serializer.is_valid():
+            # create_user 메서드를 이용하여 유저 생성
+            user = User.objects.create_user(
+                email=serializer.validated_data['email'],
+                password=serializer.validated_data['password'],
+                nickname=serializer.validated_data.get('nickname', ''),
+                profile_img=serializer.validated_data.get('profile_img', None)
+            )
+            # 유저에 대한 RefreshToken 발급
+            refresh = RefreshToken.for_user(user)
+            # Cookies에 HTTP Only, Secure 속성으로 토큰을 저장하여 응답
+            response = JsonResponse({'Signup': 'success'}, status=status.HTTP_201_CREATED)
+            response.set_cookie('access_token', str(refresh.access_token), httponly=True, secure=True)
+            response.set_cookie('refresh_token', str(refresh), httponly=True, secure=True)
+            return response
+        
+        try:
+            # 가입된 유저인지 체크
+            user = User.objects.get(email=email)
+            # 가입된 유저라면 소셜 로그인 계정인지 체크
+            social_user = SocialAccount.objects.get(user=user)
+            # 가입된 유저의 Provider를 체크하여 가입된 서비스 정보와 함께 BAD_REQUEST 응답 반환
+            if social_user.provider == 'google':
+                return JsonResponse({'err_msg': 'Google로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
+            elif social_user.provider == 'kakao':
+                return JsonResponse({'err_msg': 'Kakao로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
+        except:
+            pass
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# 일반 로그인
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        
+        try:
+            # 가입된 유저인지 체크
+            user = User.objects.get(email=email)
+            # 가입된 유저라면 소셜 로그인 계정인지 체크
+            social_user = SocialAccount.objects.get(user=user)
+            # 가입된 유저의 Provider를 체크하여 가입된 서비스 정보와 함께 BAD_REQUEST 응답 반환
+            if social_user.provider == 'google':
+                return JsonResponse({'err_msg': 'Google로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
+            elif social_user.provider == 'kakao':
+                return JsonResponse({'err_msg': 'Kakao로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
+        except:
+            pass
+        
+        password = request.data.get('password')
+        if email and password:
+            user = authenticate(email=email, password=password)
+            if user:
+                # 인증된 유저에 대한 RefreshToken 발급
+                refresh = RefreshToken.for_user(user)
+                # Cookies에 HTTP Only, Secure 속성으로 토큰을 저장하여 응답
+                response = JsonResponse({'Login': 'success'}, status=status.HTTP_200_OK)
+                response.set_cookie('access_token', str(refresh.access_token), httponly=True, secure=True)
+                response.set_cookie('refresh_token', str(refresh), httponly=True, secure=True)
+                return response
+            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'detail': 'Email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+# 로그아웃
+class LogoutView(APIView):
+    
+    def get(self, request):
+        requests.post(LOGOUT_URL, json={"refresh": request.COOKIES['refresh_token']})
+        # Cookies에 저장되었던 토큰 제거하여 응답
+        response = JsonResponse({'Logout': 'success'}, status=status.HTTP_200_OK)
+        response.delete_cookie('access_token')
+        response.delete_cookie('refresh_token')
+        return response

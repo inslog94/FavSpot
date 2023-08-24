@@ -9,7 +9,7 @@ class Board(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     
     # 연결시킬 Tag(들)
-    tags = models.ManyToManyField('BoardTag')
+    tags = models.ManyToManyField('BoardTag', null=True, blank=True)
     
     # 보드명
     title = models.CharField(max_length=50)
