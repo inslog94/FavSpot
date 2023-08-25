@@ -233,7 +233,7 @@ class BoardCommentView(APIView):
 
 ## BoardLike View
 class BoardLikeView(APIView):
-    ## 좋아요 등록
+    ## 보드 좋아요 등록
     def post(self, request, pk):
         board = get_object_or_404(Board, pk=pk)
         user = request.user
@@ -250,7 +250,7 @@ class BoardLikeView(APIView):
         
         return Response(serializer.error, status=400)
     
-    ## 좋아요 해제
+    ## 보드 좋아요 해제
     def delete(self, request, pk):
         user = request.user
         board_like = get_object_or_404(BoardLike, pk=pk,  user_id=user.id)
@@ -263,3 +263,18 @@ class BoardLikeView(APIView):
         board_like.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    ## 보드 좋아요 목록 조회
+    def get(self, request):
+        user = request.user
+
+        # 유저가 좋아요한 보드 목록을 필터링하여 BoardLike 모델 객체들 추출
+        # 최신순 정렬된 상태로 추출
+        board_likes = BoardLike.objects.filter(user_id=user.id, is_deleted=False).order_by('-created_at')
+
+        # 추출한 객체들의 id값 리스트로 저장
+        boards = [board_like.board_id for board_like in board_likes]
+
+        serializer = BoardSerializer(instance=boards, many=True)
+
+        return Response(serializer.data)
