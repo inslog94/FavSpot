@@ -43,6 +43,9 @@ class BoardView(APIView):
             # 해당 보드와 연결된 모든 댓글(Comment) 객체들 반환
             # 최신순으로 정렬
             comments = BoardComment.objects.filter(board_id=pk, is_deleted=False).order_by('-created_at')
+
+            # 해당 보드에 대한 좋아요 개수 출력
+            likes_count = BoardLike.objects.filter(board_id=pk, is_deleted=False).count()
             
             pin_serializer = SimplePinSerializer(pins, many=True)
             comment_serializer = BoardCommentSerializer(comments, many=True)
@@ -50,6 +53,7 @@ class BoardView(APIView):
 
             data = {
                 'board': board_serializer.data,
+                'likes_count': likes_count,
                 'pins': pin_serializer.data,
                 'comments': comment_serializer.data
             }
