@@ -15,7 +15,7 @@ from allauth.socialaccount.providers.google import views as google_view
 from allauth.socialaccount.providers.kakao import views as kakao_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
-from .models import User
+from .models import User, Follow
 from .serializers import UserSerializer
 from board.models import Board
 from board.serializers import BoardSerializer
@@ -321,3 +321,19 @@ class UserInfoView(APIView):
             return JsonResponse({'Profile Update': serializer.data}, status=status.HTTP_200_OK)
         
         return JsonResponse({'err_msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+# 유저 팔로우
+class UserFollow(APIView):
+    
+    def post(self, request):
+        # 팔로우할 user 가져오기
+        user_id = request.data.get('user_id')
+        followed_user = User.objects.get(id=user_id)
+        
+        # 기존에 팔로우 내역이 있는지 조회(중복 생성 방지) - is_deleted가 True인 경우엔 새로 생성
+        follow, created = Follow.objects.get_or_create(following_user=request.user, followed_user=followed_user, is_deleted=False)
+        
+        if created:
+            return JsonResponse({'Follow': 'success'}, status=status.HTTP_201_CREATED)
+        
+        return JsonResponse({'Follow': '이미 팔로우한 유저입니다.'}, status=status.HTTP_400_BAD_REQUEST)
