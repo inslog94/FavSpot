@@ -24,11 +24,11 @@ class BoardSerializer(serializers.ModelSerializer):
 class BoardCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardComment
-        fields = ('board_id', 'user_id', 'content', 'created_at', 'is_deleted')
+        fields = ('id', 'board_id', 'user_id', 'content', 'created_at', 'is_deleted')
 
 
 # BoardLike
 class BoardLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardLike
-        fields = ('board_id', 'user_id', 'created_at', 'is_deleted')
+        fields = ('id', 'board_id', 'user_id', 'created_at', 'is_deleted')

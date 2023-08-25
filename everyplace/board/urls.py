@@ -14,4 +14,5 @@ urlpatterns = [
 
     # BoardLike
     path('<int:pk>/like/', views.BoardLikeView.as_view(), name='boardlike_create'),
+    path('like/<int:pk>/', views.BoardLikeView.as_view(), name='boardlike_delete'),
 ]

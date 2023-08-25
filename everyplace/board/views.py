@@ -236,3 +236,17 @@ class BoardLikeView(APIView):
             return Response(serializer.data, status=201)
         
         return Response(serializer.error, status=400)
+    
+    ## 좋아요 해제
+    def delete(self, request, pk):
+        user = request.user
+        board_like = get_object_or_404(BoardLike, pk=pk,  user_id=user.id)
+
+        # 이미 해제된 경우 -> 에러 응답 반환
+        if board_like.is_deleted:
+            return Response({'error': '이미 이 보드에 좋아요가 해제되었습니다.'})
+        
+        board_like.is_deleted = True
+        board_like.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
