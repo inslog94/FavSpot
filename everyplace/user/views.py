@@ -16,7 +16,7 @@ from allauth.socialaccount.providers.kakao import views as kakao_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from .models import User, Follow
-from .serializers import UserSerializer
+from .serializers import UserSerializer, FollowingSerializer
 from board.models import Board
 from board.serializers import BoardSerializer
 
@@ -348,3 +348,18 @@ class UserFollow(APIView):
         follow.save()
         
         return JsonResponse({'UnFollow': 'success'}, status=status.HTTP_204_NO_CONTENT)
+
+
+# 팔로잉 목록 조회
+class UserFollowing(APIView):
+    
+    def get(self, request, pk=None):
+        if not pk:
+            user_id = request.user.id
+        else:
+            user_id = pk
+        
+        # 특정 유저가 팔로우하는 리스트를 가져와 유저 정보와 함께 응답
+        following = Follow.objects.filter(following_user_id=user_id, is_deleted=False)
+        serializer = FollowingSerializer(following, many=True)
+        return JsonResponse({'Following List': serializer.data}, status=status.HTTP_200_OK)
