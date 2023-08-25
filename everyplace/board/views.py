@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Board, BoardTag, BoardComment
+from .models import Board, BoardTag, BoardComment, BoardLike
 from pin.models import Pin
-from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer
+from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer, BoardLikeSerializer
 from pin.serializers import SimplePinSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -20,6 +20,10 @@ class BoardView(APIView):
         
         except Board.DoesNotExist:
             return None
+        
+    ## 로그인 된 유저의 좋아요 여부 판단 메소드
+    def is_board_liked_by_user(self,user_id ,board_id):
+        return BoardLike.objects.filter(user_id=user_id, board_id=board_id, is_deleted=False).exists()
 
     def get(self, request, pk=None):
         ## 보드 전체 목록 조희
@@ -43,6 +47,13 @@ class BoardView(APIView):
             # 해당 보드와 연결된 모든 댓글(Comment) 객체들 반환
             # 최신순으로 정렬
             comments = BoardComment.objects.filter(board_id=pk, is_deleted=False).order_by('-created_at')
+
+            # 해당 보드에 대한 로그인된 유저의 좋아요 여부 출력
+            # is_board_liked_by_user 메소드의 반환 값으로 확인
+            user_liked = self.is_board_liked_by_user(request.user.id, pk)
+
+            # 해당 보드에 대한 좋아요 개수 출력
+            likes_count = BoardLike.objects.filter(board_id=pk, is_deleted=False).count()
             
             pin_serializer = SimplePinSerializer(pins, many=True)
             comment_serializer = BoardCommentSerializer(comments, many=True)
@@ -50,6 +61,8 @@ class BoardView(APIView):
 
             data = {
                 'board': board_serializer.data,
+                'user_liked': user_liked,
+                'likes_count': likes_count,
                 'pins': pin_serializer.data,
                 'comments': comment_serializer.data
             }
@@ -133,35 +146,36 @@ class BoardView(APIView):
                 
             # 태그 수정 작업 (추가 / 삭제)
             if tags_data:
-              # 새로운 태그를 연결
-              new_tags = []
-
-              for tag_data in tags_data:
-                  try:
-                      tag = BoardTag.objects.get(content=tag_data)
-
-                  except BoardTag.DoesNotExist:
-                      tag_serializer = BoardTagSerializer(data={'content': tag_data})
-
-                      if tag_serializer.is_valid():
-                          tag = tag_serializer.save()
-                      else:
-                          return Response(tag_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                      
-                  new_tags.append(tag)
-
-              # 현재 태그를 가져옴
-              current_tags = board.tags.all()
-
-              # 기존 태그 중 제거할 태그를 삭제
-              tags_to_remove = set(current_tags) - set(new_tags)
-              for tag in tags_to_remove:
-                  board.tags.remove(tag)
-
-              # 새로운 태그 중 추가할 태그를 추가
-              tags_to_add = set(new_tags) - set(current_tags)
-              for tag in tags_to_add:
-                  board.tags.add(tag)
+                # 새로운 태그를 연결
+                new_tags = []
+                
+                for tag_data in tags_data:
+                    try:
+                        tag = BoardTag.objects.get(content=tag_data)
+                        
+                    except BoardTag.DoesNotExist:
+                        tag_serializer = BoardTagSerializer(data={'content': tag_data})
+                        
+                        if tag_serializer.is_valid():
+                            tag = tag_serializer.save()
+                            
+                        else:
+                            return Response(tag_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                        
+                    new_tags.append(tag)
+                    
+                # 현재 태그를 가져옴
+                current_tags = board.tags.all()
+                
+                # 기존 태그 중 제거할 태그를 삭제
+                tags_to_remove = set(current_tags) - set(new_tags)
+                for tag in tags_to_remove:
+                    board.tags.remove(tag)
+                    
+                # 새로운 태그 중 추가할 태그를 추가
+                tags_to_add = set(new_tags) - set(current_tags)
+                for tag in tags_to_add:
+                    board.tags.add(tag)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -180,7 +194,7 @@ class BoardView(APIView):
         board.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
 
 ## BoardComment View
 class BoardCommentView(APIView):
@@ -215,3 +229,52 @@ class BoardCommentView(APIView):
         comment.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+## BoardLike View
+class BoardLikeView(APIView):
+    ## 보드 좋아요 등록
+    def post(self, request, pk):
+        board = get_object_or_404(Board, pk=pk)
+        user = request.user
+
+        # 이미 좋아요한 경우 -> 에러 응답 반환
+        if BoardLike.objects.filter(board_id=board.id, user_id=user.id).exists():
+            return Response({'error': '이미 이 보드에 좋아요를 눌렀습니다.'}, status=400)
+        
+        serializer = BoardLikeSerializer(data={'board_id': board.id, 'user_id': user.id})
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        
+        return Response(serializer.error, status=400)
+    
+    ## 보드 좋아요 해제
+    def delete(self, request, pk):
+        user = request.user
+        board_like = get_object_or_404(BoardLike, pk=pk,  user_id=user.id)
+
+        # 이미 해제된 경우 -> 에러 응답 반환
+        if board_like.is_deleted:
+            return Response({'error': '이미 이 보드에 좋아요가 해제되었습니다.'})
+        
+        board_like.is_deleted = True
+        board_like.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    ## 보드 좋아요 목록 조회
+    def get(self, request):
+        user = request.user
+
+        # 유저가 좋아요한 보드 목록을 필터링하여 BoardLike 모델 객체들 추출
+        # 최신순 정렬된 상태로 추출
+        board_likes = BoardLike.objects.filter(user_id=user.id, is_deleted=False).order_by('-created_at')
+
+        # 추출한 객체들의 id값 리스트로 저장
+        boards = [board_like.board_id for board_like in board_likes]
+
+        serializer = BoardSerializer(instance=boards, many=True)
+
+        return Response(serializer.data)
