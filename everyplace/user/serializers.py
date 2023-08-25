@@ -19,3 +19,14 @@ class FollowingSerializer(serializers.ModelSerializer):
     # 유저 정보 추가
     def get_followed_user_info(self, obj):
         return UserSerializer(obj.followed_user).data
+
+
+class FollowerSerializer(serializers.ModelSerializer):
+    following_user_info = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Follow
+        fields = ('id', 'following_user', 'followed_user', 'following_user_info')
+    # 유저 정보 추가
+    def get_following_user_info(self, obj):
+        return UserSerializer(obj.following_user).data
