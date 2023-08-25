@@ -9,8 +9,15 @@ class PinSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pin
-        fields = ['category', 'user_id', 'board_id',
-                'title', 'new_address', 'old_address', 'lat_lng']
+        fields = ['category', 'board_id',
+                  'title', 'new_address', 'old_address', 'lat_lng']
+
+
+class PinContentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PinContent
+        fields = ['user_id', 'text', 'photo']
 
 
 # 보드 상세보기 시 표기 될 내용을 담은 serializer
