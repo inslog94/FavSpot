@@ -9,6 +9,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import authentication_classes, permission_classes
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 
 # Board View
@@ -277,4 +278,31 @@ class BoardLikeView(APIView):
 
         serializer = BoardSerializer(instance=boards, many=True)
 
+        return Response(serializer.data)
+
+
+## BoardSearch View
+class BoardSearchView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, format=None):
+        search_term = request.query_params.get('search', None)
+        search_field = request.query_params.get('search_field', None)
+
+        queryset = Board.objects.all()
+
+        if search_field and search_term:
+            # 보드 제목 또는 태그 내용으로 검색
+            if search_field == 'all':
+                queryset = queryset.filter(
+                    Q(title__icontains=search_term) | Q(tags__content__icontains=search_term))
+            # 보드 제목으로 검색
+            elif search_field == 'title':
+                queryset = queryset.filter(title__icontains=search_term)
+            # 태그 내용으로 검색
+            elif search_field == 'tag':
+                queryset = queryset.filter(
+                    tags__content__icontains=search_term)
+
+        serializer = BoardSerializer(queryset, many=True)
         return Response(serializer.data)
