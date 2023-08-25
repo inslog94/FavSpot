@@ -15,8 +15,8 @@ from allauth.socialaccount.providers.google import views as google_view
 from allauth.socialaccount.providers.kakao import views as kakao_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
-from .models import User
-from .serializers import UserSerializer
+from .models import User, Follow
+from .serializers import UserSerializer, FollowingSerializer, FollowerSerializer
 from board.models import Board
 from board.serializers import BoardSerializer
 
@@ -321,3 +321,58 @@ class UserInfoView(APIView):
             return JsonResponse({'Profile Update': serializer.data}, status=status.HTTP_200_OK)
         
         return JsonResponse({'err_msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+# 유저 팔로우, 팔로우 해제
+class UserFollow(APIView):
+    
+    def post(self, request):
+        # 팔로우할 user 가져오기
+        user_id = request.data.get('user_id')
+        followed_user = User.objects.get(id=user_id)
+        
+        # 기존에 팔로우 내역이 있는지 조회(중복 생성 방지) - is_deleted가 True인 경우엔 새로 생성
+        follow, created = Follow.objects.get_or_create(following_user=request.user, followed_user=followed_user, is_deleted=False)
+        
+        if created:
+            return JsonResponse({'Follow': 'success'}, status=status.HTTP_201_CREATED)
+        
+        return JsonResponse({'Follow': '이미 팔로우한 유저입니다.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self,request, pk):
+        # 팔로우 해제할 user 가져오기
+        followed_user = User.objects.get(id=pk)
+        
+        # 해당 유저 팔로우 해제 - is_deleted 필드 True로 변경
+        follow = Follow.objects.get(following_user=request.user, followed_user=followed_user, is_deleted=False)
+        follow.is_deleted = True
+        follow.save()
+        
+        return JsonResponse({'UnFollow': 'success'}, status=status.HTTP_204_NO_CONTENT)
+
+# 팔로잉 목록 조회
+class UserFollowing(APIView):
+    
+    def get(self, request, pk=None):
+        if not pk:
+            user_id = request.user.id
+        else:
+            user_id = pk
+        
+        # 특정 유저가 팔로우하는 리스트를 가져와 유저 정보와 함께 응답
+        following = Follow.objects.filter(following_user_id=user_id, is_deleted=False)
+        serializer = FollowingSerializer(following, many=True)
+        return JsonResponse({'Following List': serializer.data}, status=status.HTTP_200_OK)
+
+# 팔로워 목록 조회
+class UserFollower(APIView):
+    
+    def get(self, request, pk=None):
+        if not pk:
+            user= request.user
+        else:
+            user = User.objects.get(id=pk)
+        
+        # 특정 유저를 팔로우하는 리스트를 가져와 유저 정보와 함께 응답
+        follower = Follow.objects.filter(followed_user_id=user.id, is_deleted=False)
+        serializer = FollowerSerializer(follower, many=True)
+        return JsonResponse({'Follower List': serializer.data}, status=status.HTTP_200_OK)
