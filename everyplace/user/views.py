@@ -322,7 +322,7 @@ class UserInfoView(APIView):
         
         return JsonResponse({'err_msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-# 유저 팔로우
+# 유저 팔로우, 팔로우 해제
 class UserFollow(APIView):
     
     def post(self, request):
@@ -337,3 +337,14 @@ class UserFollow(APIView):
             return JsonResponse({'Follow': 'success'}, status=status.HTTP_201_CREATED)
         
         return JsonResponse({'Follow': '이미 팔로우한 유저입니다.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self,request, pk):
+        # 팔로우 해제할 user 가져오기
+        followed_user = User.objects.get(id=pk)
+        
+        # 해당 유저 팔로우 해제 - is_deleted 필드 True로 변경
+        follow = Follow.objects.get(following_user=request.user, followed_user=followed_user, is_deleted=False)
+        follow.is_deleted = True
+        follow.save()
+        
+        return JsonResponse({'UnFollow': 'success'}, status=status.HTTP_204_NO_CONTENT)
