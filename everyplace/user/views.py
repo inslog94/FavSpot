@@ -17,11 +17,14 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from .models import User
 from .serializers import UserSerializer
+from board.models import Board
+from board.serializers import BoardSerializer
 
 state = os.getenv('STATE')
 BASE_URL = os.getenv('BASE_URL')
 INDEX_URL = os.getenv('INDEX_URL')
 LOGOUT_URL = BASE_URL + 'auth/logout/'
+PASSWORD_CHANGE_URL = BASE_URL + 'auth/password/change/'
 GOOGLE_CALLBACK_URI = BASE_URL + 'auth/google/callback/'
 KAKAO_CALLBACK_URI = BASE_URL + 'auth/kakao/callback/'
 
@@ -255,3 +258,66 @@ class LogoutView(APIView):
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
         return response
+
+# 유저정보
+class UserInfoView(APIView):
+    
+    def get(self, request, pk=None):
+        # 본인인지 다른 유저인지 구분
+        if not pk:
+            user = request.user
+        else:
+            user = User.objects.get(id=pk)
+        
+        # 유저 프로필
+        user_serializer = UserSerializer(user)
+        # 유저가 작성한 보드 내역
+        boards = Board.objects.filter(user_id=user.id)
+        board_serializer = BoardSerializer(boards, many=True)
+        return JsonResponse({'User': user_serializer.data, 'Boards': board_serializer.data}, status=status.HTTP_200_OK)
+    
+    def patch(self, request):
+        # 비밀번호 수정 = 기존 비밀번호 검증 and (새 비밀번호 1 == 새 비밀번호 2)
+        user = request.user
+        password = request.data.get('password', None)
+        new_password1 = request.data.get('new_password1', None)
+        new_password2 = request.data.get('new_password2', None)
+        
+        # 기존 비밀번호 값이 전달되었다면 → 비밀번호 변경하려는 의도
+        if password:
+            password_check = authenticate(email=str(user), password=password)
+            if password_check:
+                if password == new_password1 == new_password2:
+                    return JsonResponse({'err_msg': "변경하려는 비밀번호가 기존 비밀번호와 동일합니다."}, status=status.HTTP_400_BAD_REQUEST)
+                
+                headers = {"Authorization": f"Bearer {request.COOKIES['access_token']}"}
+                change_password = {"new_password1": new_password1, "new_password2": new_password2}
+                res = requests.post(PASSWORD_CHANGE_URL, json=change_password, headers=headers)
+                
+                if res.status_code == 200:
+                    user.set_password(new_password1)
+                    user.save()
+                else:
+                    # 비밀번호 변경이 정상적으로 이루어지지 않은 이유를 담아 응답
+                    return JsonResponse({'err_msg': res.json()}, status=res.status_code)
+            else:
+                return JsonResponse({'err_msg': "기존 비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not password and (new_password1 or new_password2):
+            return JsonResponse({'err_msg': "비밀번호 변경 시 기존 비밀번호 확인이 필요합니다."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # 프로필 수정(기존 비밀번호 입력 없이 변경 가능)
+        nickname = request.data.get('nickname', None)
+        profile_img = request.data.get('profile_img', None)
+        
+        data = {
+            'nickname': nickname,
+            'profile_img': profile_img if profile_img else None
+        }
+        
+        serializer = UserSerializer(user, data=data, partial=True)
+        if serializer.is_valid():
+            profile_update = serializer.save()
+            return JsonResponse({'Profile Update': serializer.data}, status=status.HTTP_200_OK)
+        
+        return JsonResponse({'err_msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
