@@ -1,5 +1,5 @@
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT } from './data.js';
-import { displayGeoLocationMap, displayMarkers } from './map.js';
+import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL } from './data.js';
+import { displayGeoLocationMap, displayMarkers, closeZoomInLocation } from './map.js';
 import { searchPlaceAsKeyword } from './search.js';
 import { TEST_MARKERS } from './test_data.js';
 
@@ -20,17 +20,27 @@ function mapSetup() {
         CLUSTER_OVRELAY.setMap(null);
     });
 
+    // 지도 확대/축소 직전, 지도 레벨 저장
+    kakao.maps.event.addListener(MAP, 'zoom_start', () => {
+        BASE_MAP_LEVEL.value = MAP.getLevel();
+    });
+
     // 지도 확대/축소시 클러스터 오버레이 위치 조정
     kakao.maps.event.addListener(MAP, 'zoom_changed', () => {
-
         if (CLUSTER_OVRELAY.getContent() !== null) {
-            let mapLevel = MAP.getLevel();
             let overlayPosition = CLUSTER_OVRELAY.getPosition();
             let newOverlayPosition;
+            let mapLevel = MAP.getLevel();
+            
+            if (mapLevel == 1) {
+                CLUSTER_OVRELAY.setContent(null);
+                CLUSTER_OVRELAY.setMap(null);
+            }
 
-            if (mapLevel === 3) {
+            // 지도 축소
+            if (mapLevel > BASE_MAP_LEVEL.value) {
                 newOverlayPosition = new kakao.maps.LatLng(overlayPosition.getLat()+0.0003, overlayPosition.getLng());    
-            } else if (mapLevel === 2) {
+            } else { // 지도 확대
                 newOverlayPosition = new kakao.maps.LatLng(overlayPosition.getLat()-0.0003, overlayPosition.getLng());    
             }
 
@@ -75,7 +85,7 @@ export function markerHoverEvent(marker, infoWindow) {
 }
 
 // 마커 클릭시 인포 윈도우 표시
-export function markerClickEvent(marker, infoWindow) {
+export function markerClickInfoEvent(marker, infoWindow) {
 
     let content = marker.getTitle();
     if (content === null || content === undefined || content.length <= 0) {
@@ -85,6 +95,18 @@ export function markerClickEvent(marker, infoWindow) {
     kakao.maps.event.addListener(marker, 'click', function() {
         infoWindow.setContent(content);
         infoWindow.open(MAP, marker);
+    });
+}
+
+export function markerClickZoomInEvent(marker) {
+    kakao.maps.event.addListener(marker, 'click', mouseEvent=> {
+
+        let mapLevel = MAP.getLevel();
+        
+        if(mapLevel > 5) {
+            let position = marker.getPosition();
+            closeZoomInLocation(position);
+        }
     });
 }
 
@@ -152,6 +174,7 @@ window.onload = function init() {
     mapSetup();
     // markerCreateEvent();
     // markerClickRemoveEvent(MARKER, PIN_INFO_WINDOW);
+    markerClickZoomInEvent(MARKER);
     keywordSearchSetup();
     displayMarkers(TEST_MARKERS);
     clusterClickEvent();

@@ -13,6 +13,7 @@ export const PIN_INFO_WINDOW = new kakao.maps.InfoWindow({});
 export const $container = document.getElementById('map');
 export const MAP_OPTIONS = { center: CURRENT_POSITION, level: INIT_MAP_LEVEL};
 export const MAP = new kakao.maps.Map($container, MAP_OPTIONS);
+export const BASE_MAP_LEVEL = {value:MAP_OPTIONS.level};
 
 export const $pinList = document.getElementById('pinList');
 export const $menuBox = document.getElementById('menu_wrap');

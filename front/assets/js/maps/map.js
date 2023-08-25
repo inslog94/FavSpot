@@ -1,5 +1,5 @@
 import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT } from './data.js';
-import { markerHoverEvent } from './event.js';
+import { markerHoverEvent, markerClickZoomInEvent } from './event.js';
 
 function displayMarker(pin) {
     pin.setMap(MAP);
@@ -19,6 +19,11 @@ export function zoomInLocation(location) {
     let mapLevel = MAP.getLevel();
 
     MAP.setLevel(mapLevel - 1);
+    MAP.panTo(location);
+}
+
+export function closeZoomInLocation(location) {
+    MAP.setLevel(4);
     MAP.panTo(location);
 }
 
@@ -48,6 +53,7 @@ export function displayMarkers(markers) {
         })
 
         markerHoverEvent(marker, PIN_INFO_WINDOW);
+        markerClickZoomInEvent(marker);
         displayMarker(marker);
         MARKERS.push(marker);
     });
