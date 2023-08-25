@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Board, BoardTag
+from .models import Board, BoardTag, BoardComment
 from pin.models import Pin
-from .serializers import BoardSerializer, BoardTagSerializer
+from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer
 from pin.serializers import SimplePinSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -11,6 +11,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from django.shortcuts import get_object_or_404
 
 
+# Board View
 class BoardView(APIView):
     ## 특정 보드 상세 조회 메소드
     def get_object(self, pk):
@@ -39,13 +40,18 @@ class BoardView(APIView):
             # 최신순으로 정렬
             pins = Pin.objects.filter(board_id=pk).order_by('-created_at')
 
+            # 해당 보드와 연결된 모든 댓글(Comment) 객체들 반환
+            # 최신순으로 정렬
+            comments = BoardComment.objects.filter(board_id=pk, is_deleted=False).order_by('-created_at')
+            
             pin_serializer = SimplePinSerializer(pins, many=True)
-
+            comment_serializer = BoardCommentSerializer(comments, many=True)
             board_serializer = BoardSerializer(board)
 
             data = {
                 'board': board_serializer.data,
-                'pins': pin_serializer.data
+                'pins': pin_serializer.data,
+                'comments': comment_serializer.data
             }
 
             return Response(data)
@@ -172,5 +178,40 @@ class BoardView(APIView):
         # is_deleted 필드 값을 True로 변경
         board.is_deleted = True 
         board.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+## BoardComment View
+class BoardCommentView(APIView):
+    ## 보드 댓글 생성
+    def post(self, request, pk):
+        try:
+            board = Board.objects.get(pk=pk)
+        except Board.DoesNotExist:
+            return Response({"error": "해당 보드가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data.copy()
+        data['board_id'] = board.id
+        data['user_id'] = request.user.id
+
+        comment_serializer = BoardCommentSerializer(data=data)
+        
+        if comment_serializer.is_valid():
+            comment_serializer.save()
+            return Response(comment_serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    ## 보드 댓글 삭제
+    def delete(self, request, pk):
+        comment = get_object_or_404(BoardComment, id=pk)
+
+        if request.user != comment.user_id:
+            return Response({"error": "본인이 작성한 댓글만 삭제할 수 있습니다."}, status=status.HTTP_403_FORBIDDEN)
+
+        # is_deleted 필드 값을 True로 변경
+        comment.is_deleted = True
+        comment.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
