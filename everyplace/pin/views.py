@@ -16,8 +16,9 @@ class PinView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     # ## pin 상세정보 조회
-    def get(self, request, pk):
-        pin = get_object_or_404(Pin, pk=pk, is_deleted=False)
+    def get(self, request, title, lat_lng):
+        pin = get_object_or_404(
+            Pin, title=title, lat_lng=lat_lng, is_deleted=False)
         # pin content 중 내용이 없는 객체는 보여주지 않음. 최신순으로 정렬
         pin_contents = PinContent.objects.filter(
             pin_id=pin, is_deleted=False).exclude(Q(text__isnull=True, photo='')).order_by('-created_at')
