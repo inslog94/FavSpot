@@ -16,7 +16,7 @@
     <div class="map_wrap">
         <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
     
-        <div id="menu_wrap" class="bg_white">
+        <div id="search_result_box" class="bg_white">
             <div class="option">
                 <div>
                     키워드 : <input type="text" value="" id="keyword" size="15"> 
@@ -24,8 +24,29 @@
                 </div>
             </div>
             <hr>
-            <ul id="pinList"></ul>
-            <div id="pagination"></div>
+            <ul id="search_results"></ul>
+            <div id="search_pagination"></div>
+        </div>
+
+        <div id="pin_content_box">
+            <div id="pin_content_wrap">
+                <button id="pin_detail_close_btn">X</button>
+                <div id="pin_detail">
+                    <div>
+                        <span id="pin_detail_title">만푸쿠</span>
+                        <span id="pin_detail_category" class="gray_font">음식점</span>
+                    </div>
+                    <div id="pin_detail_address_box">
+                        <div><span class="gray_font">도로명</span><span id="pin_detail_road_address_name">서울 도로 어딘가</span></div>
+                        <div><span class="gray_font">지번</span><span id="pin_detail_address_name">서울 어딘가</span></div>
+                        <span id="pin_detail_phone">02-1234-5678</span>
+                    </div>
+                </div>
+                <ul id="pin_contents">
+                    
+                </ul>
+                <div id="contents_pagination">더보기</div>
+            </div>
         </div>
     </div>
 
