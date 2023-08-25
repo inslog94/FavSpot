@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Board, BoardTag, BoardComment
+from .models import Board, BoardTag, BoardComment, BoardLike
 from pin.models import Pin
-from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer
+from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer, BoardLikeSerializer
 from pin.serializers import SimplePinSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -133,35 +133,36 @@ class BoardView(APIView):
                 
             # 태그 수정 작업 (추가 / 삭제)
             if tags_data:
-              # 새로운 태그를 연결
-              new_tags = []
-
-              for tag_data in tags_data:
-                  try:
-                      tag = BoardTag.objects.get(content=tag_data)
-
-                  except BoardTag.DoesNotExist:
-                      tag_serializer = BoardTagSerializer(data={'content': tag_data})
-
-                      if tag_serializer.is_valid():
-                          tag = tag_serializer.save()
-                      else:
-                          return Response(tag_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                      
-                  new_tags.append(tag)
-
-              # 현재 태그를 가져옴
-              current_tags = board.tags.all()
-
-              # 기존 태그 중 제거할 태그를 삭제
-              tags_to_remove = set(current_tags) - set(new_tags)
-              for tag in tags_to_remove:
-                  board.tags.remove(tag)
-
-              # 새로운 태그 중 추가할 태그를 추가
-              tags_to_add = set(new_tags) - set(current_tags)
-              for tag in tags_to_add:
-                  board.tags.add(tag)
+                # 새로운 태그를 연결
+                new_tags = []
+                
+                for tag_data in tags_data:
+                    try:
+                        tag = BoardTag.objects.get(content=tag_data)
+                        
+                    except BoardTag.DoesNotExist:
+                        tag_serializer = BoardTagSerializer(data={'content': tag_data})
+                        
+                        if tag_serializer.is_valid():
+                            tag = tag_serializer.save()
+                            
+                        else:
+                            return Response(tag_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                        
+                    new_tags.append(tag)
+                    
+                # 현재 태그를 가져옴
+                current_tags = board.tags.all()
+                
+                # 기존 태그 중 제거할 태그를 삭제
+                tags_to_remove = set(current_tags) - set(new_tags)
+                for tag in tags_to_remove:
+                    board.tags.remove(tag)
+                    
+                # 새로운 태그 중 추가할 태그를 추가
+                tags_to_add = set(new_tags) - set(current_tags)
+                for tag in tags_to_add:
+                    board.tags.add(tag)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -180,7 +181,7 @@ class BoardView(APIView):
         board.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
 
 ## BoardComment View
 class BoardCommentView(APIView):
@@ -215,3 +216,23 @@ class BoardCommentView(APIView):
         comment.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+## BoardLike View
+class BoardLikeView(APIView):
+    ## 좋아요 등록
+    def post(self, request, pk):
+        board = get_object_or_404(Board, pk=pk)
+        user = request.user
+
+        # 이미 좋아요한 경우 -> 에러 응답 반환
+        if BoardLike.objects.filter(board_id=board.id, user_id=user.id).exists():
+            return Response({'error': '이미 이 보드에 좋아요를 눌렀습니다.'}, status=400)
+        
+        serializer = BoardLikeSerializer(data={'board_id': board.id, 'user_id': user.id})
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        
+        return Response(serializer.error, status=400)

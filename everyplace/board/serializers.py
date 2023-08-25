@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Board, BoardTag, BoardLike, BoardComment
+from .models import Board, BoardTag, BoardComment, BoardLike
 
 User = get_user_model()
 
@@ -25,3 +25,10 @@ class BoardCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardComment
         fields = ('board_id', 'user_id', 'content', 'created_at', 'is_deleted')
+
+
+# BoardLike
+class BoardLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BoardLike
+        fields = ('board_id', 'user_id', 'created_at', 'is_deleted')
