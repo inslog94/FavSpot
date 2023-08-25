@@ -20,6 +20,10 @@ class BoardView(APIView):
         
         except Board.DoesNotExist:
             return None
+        
+    ## 로그인 된 유저의 좋아요 여부 판단 메소드
+    def is_board_liked_by_user(self,user_id ,board_id):
+        return BoardLike.objects.filter(user_id=user_id, board_id=board_id, is_deleted=False).exists()
 
     def get(self, request, pk=None):
         ## 보드 전체 목록 조희
@@ -44,6 +48,10 @@ class BoardView(APIView):
             # 최신순으로 정렬
             comments = BoardComment.objects.filter(board_id=pk, is_deleted=False).order_by('-created_at')
 
+            # 해당 보드에 대한 로그인된 유저의 좋아요 여부 출력
+            # is_board_liked_by_user 메소드의 반환 값으로 확인
+            user_liked = self.is_board_liked_by_user(request.user.id, pk)
+
             # 해당 보드에 대한 좋아요 개수 출력
             likes_count = BoardLike.objects.filter(board_id=pk, is_deleted=False).count()
             
@@ -53,6 +61,7 @@ class BoardView(APIView):
 
             data = {
                 'board': board_serializer.data,
+                'user_liked': user_liked,
                 'likes_count': likes_count,
                 'pins': pin_serializer.data,
                 'comments': comment_serializer.data
