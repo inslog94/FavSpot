@@ -38,3 +38,24 @@
 .overlaybox{width: 130%; height: 120px; border: 1px solid lightgray; border-radius: 6px; background-color: white; overflow: scroll;}
 .overlayinfo:not(:last-child){height: 30px; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid lightgray;}
 .overlayinfo:last-child{height: 30px; display: flex; justify-content: center; align-items: center;}
+
+.marker_overlay_box {position: absolute;left: 0;bottom: 40px;width: 350px;height: 200px;margin-left: -173px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
+.marker_overlay_box * {padding: 0;margin: 0;}
+.marker_overlay_box .marker_overlay_content {width: 350px;height: 188px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
+.marker_overlay_box .marker_overlay_content:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
+.marker_overlay_content .title_box {padding: 10px 15px 15px 20px;height: 20px;background: #eee;border-bottom: 1px solid #ddd;}
+.marker_overlay_content .title_box .title {font-size: 18px;font-weight: bold;}
+.marker_overlay_content .title_box .category { margin-left: 5px; color: gray;}
+.marker_overlay_content .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
+.marker_overlay_content .close:hover {cursor: pointer;}
+.marker_overlay_content .body {position: relative; display: flex;}
+.marker_overlay_content .desc {position: relative;margin: 20px 0 0 20px;height: 75px;}
+.desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.desc .jibun {font-size: 11px;color: #888;margin-top: -0.5px;}
+.desc .phone {margin-top: 5px;}
+.desc .func {margin-top: 10px;}
+.desc .func .btn {display: block; width: 58px; height: 27px; background: #A74982; margin: 10px 20px 10px 0; padding: 0px; margin: 10px 20px 10px 0; text-align: center; color: #FFF; border: none; border-radius: 5px; transition: all 0.2s ;}
+.desc .func .btn:hover {width: 58px; height: 27px; background: #6D184B;}
+.marker_overlay_content .img {margin:10px 0 0 10px; width: 110px;height: 110px;border: 1px solid #ddd;color: #888;overflow: hidden;}
+.marker_overlay_content:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+.marker_overlay_content .link {color: #5085BB;}

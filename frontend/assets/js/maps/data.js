@@ -59,3 +59,24 @@ CLUSTER_OVERLAY_CONTENT.addEventListener('mouseover', (e)=>{
 CLUSTER_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
     MAP.setZoomable(true);
 }, false);
+
+
+export const MARKER_OVERLAY = new kakao.maps.CustomOverlay({
+    map: MAP,
+    clickable: true,
+});
+
+export const MARKER_OVERLAY_CONTENT_BOX = document.createElement('div');
+export const MARKER_OVERLAY_CONTENT = document.createElement('div');
+
+MARKER_OVERLAY_CONTENT_BOX.appendChild(MARKER_OVERLAY_CONTENT);
+MARKER_OVERLAY_CONTENT_BOX.classList.add('marker_overlay_box')
+MARKER_OVERLAY_CONTENT.classList.add('marker_overlay_content');
+
+MARKER_OVERLAY_CONTENT.addEventListener('mouseover', (e)=>{
+    MAP.setZoomable(false);
+}, false);
+
+MARKER_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
+    MAP.setZoomable(true);
+}, false);

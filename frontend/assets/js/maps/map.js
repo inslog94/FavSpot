@@ -1,5 +1,5 @@
 import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, $pinContentBox, $pinDetailTitle, $pinDetailCategory, $pinDetailRoadAddressName, $pinDetailAddressName, $pinDetailPhone, $pinContents } from './data.js';
-import { markerHoverEvent, markerClickZoomInEvent, markerDetailContentClickEvent } from './event.js';
+import { markerInfoHoverEvent, markerClickZoomInEvent, markerDetailContentClickEvent, markerInfoClickEvent } from './event.js';
 
 export function displayPinContents(pinInfo, contents, count, nextPageURL) {
     $pinContentBox.display = 'inline-block';
@@ -58,6 +58,10 @@ export function closeZoomInLocation(location) {
     MAP.panTo(location);
 }
 
+export function move(location) {
+    MAP.panTo(location);
+}
+
 // 현재 위치 기반 지도 표시
 export function displayGeoLocationMap() {
     if (navigator.geolocation) {
@@ -74,27 +78,24 @@ export function displayGeoLocationMap() {
 }
 
 // marker 목록 표시
-export function displayMarkers(markers) {
+export function displayMarkers() {
     
-    markers.forEach(function(_marker) {
-        let marker = new kakao.maps.Marker({
-            map: MAP,
-            position: _marker.position,
-            title: _marker.title
-        })
+    let markers = [];
 
-        markerHoverEvent(marker, PIN_INFO_WINDOW);
-        markerClickZoomInEvent(marker);
-        displayMarker(marker);
-        MARKERS.push(marker);
+    MARKERS.forEach(function(marker) {
+        markerInfoHoverEvent(marker.marker, PIN_INFO_WINDOW);
+        markerInfoClickEvent(marker);
+        markerClickZoomInEvent(marker.marker);
+        markers.push(marker.marker);
     });
-    mapRangeSetup(MARKERS);
-    CLUSTERER.addMarkers(MARKERS);
+    mapRangeSetup(markers);
+
+    CLUSTERER.addMarkers(markers);
 }
 
 export function removeAllMarker() {
     MARKERS.forEach(function(marker) {
-        marker.setMap(null);
+        marker.marker.setMap(null);
     });
 
     MARKERS.length = 0;
