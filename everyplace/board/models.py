@@ -19,7 +19,7 @@ class Board(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     # 보드 공개, 비공개 설정 
-    is_public = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=True)
     
     def __str__(self):
         return self.title
