@@ -101,10 +101,6 @@ export function markerInfoWindowEvent(marker, infoWindow) {
 
 export function markerDetailContentClickEvent(marker) {
 
-    kakao.maps.event.addListener(marker, 'click', function() {
-        let pinContents = getPinContents(marker);
-        displayPinContents(marker, pinContents);
-    });
 }
 
 export function markerClickZoomInEvent(marker) {

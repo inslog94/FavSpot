@@ -1,17 +1,17 @@
 import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, $pinContentBox, $pinDetailTitle, $pinDetailCategory, $pinDetailRoadAddressName, $pinDetailAddressName, $pinDetailPhone, $pinContents } from './data.js';
 import { markerHoverEvent, markerClickZoomInEvent, markerDetailContentClickEvent } from './event.js';
 
-export function displayPinContents(marker, pins) {
+export function displayPinContents(pinInfo, contents, count, nextPageURL) {
     $pinContentBox.display = 'inline-block';
 
-    $pinDetailTitle.innerText = marker.title;
-    $pinDetailCategory.innerText = marker.categoryGroupName;
-    $pinDetailRoadAddressName.innerText = marker.roadAddressName;
-    $pinDetailAddressName.innerText = marker.addressName;
-    $pinDetailPhone.innerText = marker.phone;
+    $pinDetailTitle.innerText = pinInfo.title;
+    $pinDetailCategory.innerText = pinInfo.category;
+    $pinDetailRoadAddressName.innerText = pinInfo.new_address;
+    $pinDetailAddressName.innerText = pinInfo.old_address;
+    // $pinDetailPhone.innerText = pinInfo.phone;
 
     let liEl, userEl, textEl, photoEl;
-    pins.forEach(pin=> {
+    contents.forEach(content=> {
         liEl = document.createElement('li');
         liEl.classList.add('pin_content');
 
@@ -19,9 +19,9 @@ export function displayPinContents(marker, pins) {
         textEl = document.createElement('div');
         photoEl = document.createElement('div');
 
-        userEl.innerText = pin.user_id;
-        textEl.innertText = pin.text;
-        photoEl.innerHTML = pin.photoEl;
+        userEl.innerText = content.user_id;
+        textEl.innertText = content.text;
+        photoEl.innerHTML = content.photoEl;
 
         liEl.appendChild(userEl);
         liEl.appendChild(textEl);
@@ -85,7 +85,6 @@ export function displayMarkers(markers) {
 
         markerHoverEvent(marker, PIN_INFO_WINDOW);
         markerClickZoomInEvent(marker);
-        markerDetailContentClickEvent(marker);
         displayMarker(marker);
         MARKERS.push(marker);
     });

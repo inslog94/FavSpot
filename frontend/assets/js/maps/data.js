@@ -4,7 +4,7 @@
 // lat (latitude) : 위도, y축
 // lng (longitude) : 경도, x축
 
-export const origin = 'localhost:8080';
+export const origin = 'http://127.0.0.1:8000';
 
 const DEFAULT_LATITUDE = 37.566968;
 const DEFAULT_LONGITUDE = 126.978154;
@@ -31,6 +31,7 @@ export const $pinDetailAddressName = document.getElementById('pin_detail_address
 export const $pinDetailPhone = document.getElementById('pin_detail_phone');
 export const $pinContents = document.getElementById('pin_contents');
 export const $pinContentBoxCloseBtn = document.getElementById('pin_detail_close_btn');
+export const PIN_CONTENTS_NEXT_ENDPOINT = {value:''};
 
 export const MARKER = new kakao.maps.Marker({
         clickable: true

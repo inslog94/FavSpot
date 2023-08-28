@@ -3,8 +3,8 @@ import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagin
 import { removeAllMarker, displayMarkers, mapRangeSetup } from "./map.js";
 
 // 서버로부터 pin 목록 가져옴
-export function getPinContents(marker) {
-    return pinContentsRequest(marker.title, marker.lat, marker.lng);
+export async function getPinContents(marker) {
+    return await pinContentsRequest(marker.getTitle(), marker.getPosition().getLat(), marker.getPosition().getLng());
 }
 
 // 검색 결과 페이징
