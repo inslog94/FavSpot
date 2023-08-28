@@ -14,7 +14,7 @@ class Pin(models.Model):
     board_id = models.ManyToManyField(Board)
 
     # 카카오api에서 지정한 place id
-    place_id = models.IntegerField()
+    place_id = models.CharField(max_length=50, blank=True)
 
     # 상호명 : 예) 노티드 청담
     title = models.CharField(max_length=50)
