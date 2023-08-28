@@ -1,12 +1,19 @@
-import { MAP, PIN_INFO_WINDOW, $pinList, $menuBox, $pagination } from "./data.js";
-import { removeAllMarker, displayMarkers, mapRangeSetup } from "./map.js";
+import { pinContentsRequest } from "../request/content.js";
+import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination, MARKERS } from "./data.js";
+import { displayMarkerDetailInfo, markerInfoClickEvent } from "./event.js";
+import { removeAllMarker, displayMarkers, mapRangeSetup, move } from "./map.js";
+
+// 서버로부터 pin 목록 가져옴
+export async function getPinContents(marker) {
+    return await pinContentsRequest(marker.getTitle(), marker.getPosition().getLat(), marker.getPosition().getLng());
+}
 
 // 검색 결과 페이징
 export function displayPagination(pagination) {
     let fragment = document.createDocumentFragment();
 
     // 기존 페이지 번호 삭제
-    removeAllChildNods($pagination);
+    removeAllChildNods($searchPagination);
 
     // 페이지 생성 및 클릭 이벤트 등록
     for (let i=1; i<=pagination.last; i++) {
@@ -27,7 +34,7 @@ export function displayPagination(pagination) {
         fragment.appendChild(page);
     }
 
-    $pagination.appendChild(fragment);
+    $searchPagination.appendChild(fragment);
 }
 
 // 카카오 검색 API pin 표시
@@ -36,39 +43,41 @@ export function displaySearchPlace(data) {
     // 마커 지우기, 검색 결과 표시, map 조정
 
     // 기존 검색 결과 목록 및 마커 제거
-    removeAllChildNods($pinList);
+    removeAllChildNods($searchResultList);
     removeAllMarker();
 
-    let pins = convertKaKaoDataToPins(data);
+    // MARKERS 값 설정, kakao result -> MARKERS
+    getMarkers(data);
 
     // 검색 결과 표시
-    pinListSetUp(pins);
+    pinListSetUp();
     // 마커 표시
-    displayMarkers(pins);
+    displayMarkers();
 }
 
 // 서버 API pin 표시
 export function displayPins(data) {
 
-    removeAllChildNods($pinList);
+    removeAllChildNods($searchResultList);
     removeAllMarker();
 
-    let pins = convertDataToPins(data);
+    getMarkers(data);
 
-    pinListSetUp(pins);
-    displayMarkers(pins);
+    pinListSetUp();
+    displayMarkers();
 }
 
-
-export function convertKaKaoDataToPins(dataList) {
-
-    let pins = [];
+// 전역변수 MARKERS 값 설정
+export function getMarkers(dataList) {
 
     dataList.forEach(function(data) {
+
         let pin = {};
 
         pin.title = data.place_name;
         pin.position = new kakao.maps.LatLng(data.y, data.x);
+        pin.lat = data.y;
+        pin.lng = data.x;
         pin.addressName = data.address_name;
         pin.categoryGroupCode = data.category_group_code;
         pin.categoryGroupName = data.category_group_name;
@@ -78,35 +87,38 @@ export function convertKaKaoDataToPins(dataList) {
         pin.placeURL = data.place_url;
         pin.roadAddressName = data.road_address_name;
 
-        pins.push(pin);
+        pin.marker = new kakao.maps.Marker({
+            map: MAP,
+            position: pin.position,
+            title: pin.title
+        });
+
+        MARKERS.push(pin);
     });
     
-    return pins;
 }
 
 function convertDataToPins(dataList) {
-    let pins = [];
 
     dataList.forEach(function(data) {
         let pin = {};
 
-        pins.push(pin);
+        MARKERS.push(pin);
     });
 
-    return pins;
 }
 
-function pinListSetUp(pins) {
+function pinListSetUp() {
 
     let fragment = document.createDocumentFragment();
 
-    for ( let i=0; i<pins.length; i++ ) {
-        let pin = getListItem(i, pins[i]);
+    for ( let i=0; i<MARKERS.length; i++ ) {
+        let pin = getListItem(i, MARKERS[i]);
         fragment.appendChild(pin);
     }
 
-    $menuBox.scrollTop = 0;
-    $pinList.appendChild(fragment);
+    $searchResultBox.scrollTop = 0;
+    $searchResultList.appendChild(fragment);
 }
 
 function getListItem(index, places) {
@@ -129,6 +141,11 @@ function getListItem(index, places) {
 
     el.innerHTML = itemStr;
     el.className = 'item';
+    // 리스트 요소 클릭시 오버레이 표시
+    el.addEventListener('click', ()=>{
+        move(places.position);
+        displayMarkerDetailInfo(places);
+    })
 
     return el;
 }

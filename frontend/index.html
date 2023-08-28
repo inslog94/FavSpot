@@ -5,10 +5,10 @@
 	<title>place every where</title>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8166b325e80b4bce3d1d6b725fbbba9f&libraries=services,clusterer,drawing"></script>
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8166b325e80b4bce3d1d6b725fbbba9f"></script>
-    <script type="module" src="../js/maps/event.js"></script>
-    <script type="module" src="../js/maps/data.js"></script>
-    <script type="module" src="../js/maps/map.js"></script>
-    <link rel="stylesheet" href="../css/map.css">
+    <script type="module" src="assets/js/maps/event.js"></script>
+    <script type="module" src="assets/js/maps/data.js"></script>
+    <script type="module" src="assets/js/maps/map.js"></script>
+    <link rel="stylesheet" href="assets/css/map.css">
 </head>
 <body>
 	<!-- <div id="map" style="width:1000px;height:700px;"></div> -->
@@ -16,7 +16,7 @@
     <div class="map_wrap">
         <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
     
-        <div id="menu_wrap" class="bg_white">
+        <div id="search_result_box" class="bg_white">
             <div class="option">
                 <div>
                     키워드 : <input type="text" value="" id="keyword" size="15"> 
@@ -24,8 +24,8 @@
                 </div>
             </div>
             <hr>
-            <ul id="pinList"></ul>
-            <div id="pagination"></div>
+            <ul id="search_results"></ul>
+            <div id="search_pagination"></div>
         </div>
     </div>
 
