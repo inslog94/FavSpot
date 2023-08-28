@@ -74,27 +74,24 @@ export function displayGeoLocationMap() {
 }
 
 // marker 목록 표시
-export function displayMarkers(markers) {
+export function displayMarkers() {
     
-    markers.forEach(function(_marker) {
-        let marker = new kakao.maps.Marker({
-            map: MAP,
-            position: _marker.position,
-            title: _marker.title
-        })
+    let markers = [];
 
-        markerHoverEvent(marker, PIN_INFO_WINDOW);
-        markerClickZoomInEvent(marker);
-        displayMarker(marker);
-        MARKERS.push(marker);
+    MARKERS.forEach(function(marker) {
+        markerHoverEvent(marker.marker, PIN_INFO_WINDOW);
+        markerClickZoomInEvent(marker.marker);
+        displayMarker(marker.marker);
+        markers.push(marker.marker);
     });
-    mapRangeSetup(MARKERS);
-    CLUSTERER.addMarkers(MARKERS);
+    mapRangeSetup(markers);
+
+    CLUSTERER.addMarkers(markers);
 }
 
 export function removeAllMarker() {
     MARKERS.forEach(function(marker) {
-        marker.setMap(null);
+        marker.marker.setMap(null);
     });
 
     MARKERS.length = 0;
