@@ -94,8 +94,12 @@ export function markerInfoClickEvent(markerInfo) {
     }
 
     kakao.maps.event.addListener(markerInfo.marker, 'click', function() {
+        displayMarkerDetailInfo(markerInfo);
+    });
+}
 
-        MARKER_OVERLAY.setMap(null);
+export function displayMarkerDetailInfo(markerInfo) {
+    MARKER_OVERLAY.setMap(null);
         MARKER_OVERLAY.setContent(null);
         MARKER_OVERLAY_CONTENT.textContent = "";
         PIN_INFO_WINDOW.close();
@@ -171,8 +175,6 @@ export function markerInfoClickEvent(markerInfo) {
         MARKER_OVERLAY.setContent(MARKER_OVERLAY_CONTENT_BOX);
         MARKER_OVERLAY.setPosition(markerInfo.position);
         MARKER_OVERLAY.setMap(MAP);
-    });
-    
 }
 
 export function markerDetailContentClickEvent(marker) {

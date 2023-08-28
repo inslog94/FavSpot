@@ -1,6 +1,7 @@
 import { pinContentsRequest } from "../request/content.js";
 import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination, MARKERS } from "./data.js";
-import { removeAllMarker, displayMarkers, mapRangeSetup } from "./map.js";
+import { displayMarkerDetailInfo, markerInfoClickEvent } from "./event.js";
+import { removeAllMarker, displayMarkers, mapRangeSetup, move } from "./map.js";
 
 // 서버로부터 pin 목록 가져옴
 export async function getPinContents(marker) {
@@ -140,6 +141,11 @@ function getListItem(index, places) {
 
     el.innerHTML = itemStr;
     el.className = 'item';
+    // 리스트 요소 클릭시 오버레이 표시
+    el.addEventListener('click', ()=>{
+        move(places.position);
+        displayMarkerDetailInfo(places);
+    })
 
     return el;
 }

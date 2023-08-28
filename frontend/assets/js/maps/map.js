@@ -58,6 +58,10 @@ export function closeZoomInLocation(location) {
     MAP.panTo(location);
 }
 
+export function move(location) {
+    MAP.panTo(location);
+}
+
 // 현재 위치 기반 지도 표시
 export function displayGeoLocationMap() {
     if (navigator.geolocation) {
