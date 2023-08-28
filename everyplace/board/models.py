@@ -9,7 +9,7 @@ class Board(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     
     # 연결시킬 Tag(들)
-    tags = models.ManyToManyField('BoardTag', null=True, blank=True)
+    tags = models.ManyToManyField('BoardTag', blank=True)
     
     # 보드명
     title = models.CharField(max_length=50)
@@ -17,6 +17,9 @@ class Board(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
+
+    # 보드 공개, 비공개 설정 
+    is_public = models.BooleanField(default=False)
     
     def __str__(self):
         return self.title
