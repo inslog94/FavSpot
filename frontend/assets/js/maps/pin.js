@@ -1,10 +1,11 @@
 import { pinContentsRequest } from "../request/content.js";
-import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination } from "./data.js";
-import { removeAllMarker, displayMarkers, mapRangeSetup } from "./map.js";
+import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination, MARKERS } from "./data.js";
+import { displayMarkerDetailInfo, markerInfoClickEvent } from "./event.js";
+import { removeAllMarker, displayMarkers, mapRangeSetup, move } from "./map.js";
 
 // 서버로부터 pin 목록 가져옴
-export function getPinContents(marker) {
-    return pinContentsRequest(marker.title, marker.lat, marker.lng);
+export async function getPinContents(marker) {
+    return await pinContentsRequest(marker.getTitle(), marker.getPosition().getLat(), marker.getPosition().getLng());
 }
 
 // 검색 결과 페이징
@@ -45,12 +46,13 @@ export function displaySearchPlace(data) {
     removeAllChildNods($searchResultList);
     removeAllMarker();
 
-    let pins = convertKaKaoDataToPins(data);
+    // MARKERS 값 설정, kakao result -> MARKERS
+    getMarkers(data);
 
     // 검색 결과 표시
-    pinListSetUp(pins);
+    pinListSetUp();
     // 마커 표시
-    displayMarkers(pins);
+    displayMarkers();
 }
 
 // 서버 API pin 표시
@@ -59,17 +61,17 @@ export function displayPins(data) {
     removeAllChildNods($searchResultList);
     removeAllMarker();
 
-    let pins = convertDataToPins(data);
+    getMarkers(data);
 
-    pinListSetUp(pins);
-    displayMarkers(pins);
+    pinListSetUp();
+    displayMarkers();
 }
 
-export function convertKaKaoDataToPins(dataList) {
-
-    let pins = [];
+// 전역변수 MARKERS 값 설정
+export function getMarkers(dataList) {
 
     dataList.forEach(function(data) {
+
         let pin = {};
 
         pin.title = data.place_name;
@@ -85,30 +87,33 @@ export function convertKaKaoDataToPins(dataList) {
         pin.placeURL = data.place_url;
         pin.roadAddressName = data.road_address_name;
 
-        pins.push(pin);
+        pin.marker = new kakao.maps.Marker({
+            map: MAP,
+            position: pin.position,
+            title: pin.title
+        });
+
+        MARKERS.push(pin);
     });
     
-    return pins;
 }
 
 function convertDataToPins(dataList) {
-    let pins = [];
 
     dataList.forEach(function(data) {
         let pin = {};
 
-        pins.push(pin);
+        MARKERS.push(pin);
     });
 
-    return pins;
 }
 
-function pinListSetUp(pins) {
+function pinListSetUp() {
 
     let fragment = document.createDocumentFragment();
 
-    for ( let i=0; i<pins.length; i++ ) {
-        let pin = getListItem(i, pins[i]);
+    for ( let i=0; i<MARKERS.length; i++ ) {
+        let pin = getListItem(i, MARKERS[i]);
         fragment.appendChild(pin);
     }
 
@@ -136,6 +141,11 @@ function getListItem(index, places) {
 
     el.innerHTML = itemStr;
     el.className = 'item';
+    // 리스트 요소 클릭시 오버레이 표시
+    el.addEventListener('click', ()=>{
+        move(places.position);
+        displayMarkerDetailInfo(places);
+    })
 
     return el;
 }

@@ -4,7 +4,7 @@
 // lat (latitude) : 위도, y축
 // lng (longitude) : 경도, x축
 
-export const origin = 'localhost:8080';
+export const origin = 'http://127.0.0.1:8000';
 
 const DEFAULT_LATITUDE = 37.566968;
 const DEFAULT_LONGITUDE = 126.978154;
@@ -31,6 +31,7 @@ export const $pinDetailAddressName = document.getElementById('pin_detail_address
 export const $pinDetailPhone = document.getElementById('pin_detail_phone');
 export const $pinContents = document.getElementById('pin_contents');
 export const $pinContentBoxCloseBtn = document.getElementById('pin_detail_close_btn');
+export const PIN_CONTENTS_NEXT_ENDPOINT = {value:''};
 
 export const MARKER = new kakao.maps.Marker({
         clickable: true
@@ -56,5 +57,26 @@ CLUSTER_OVERLAY_CONTENT.addEventListener('mouseover', (e)=>{
 }, false);
 
 CLUSTER_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
+    MAP.setZoomable(true);
+}, false);
+
+
+export const MARKER_OVERLAY = new kakao.maps.CustomOverlay({
+    map: MAP,
+    clickable: true,
+});
+
+export const MARKER_OVERLAY_CONTENT_BOX = document.createElement('div');
+export const MARKER_OVERLAY_CONTENT = document.createElement('div');
+
+MARKER_OVERLAY_CONTENT_BOX.appendChild(MARKER_OVERLAY_CONTENT);
+MARKER_OVERLAY_CONTENT_BOX.classList.add('marker_overlay_box')
+MARKER_OVERLAY_CONTENT.classList.add('marker_overlay_content');
+
+MARKER_OVERLAY_CONTENT.addEventListener('mouseover', (e)=>{
+    MAP.setZoomable(false);
+}, false);
+
+MARKER_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
     MAP.setZoomable(true);
 }, false);
