@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 
 
 # Create your views here.
+# 핀 장소의 대표 이미지 가져오는 함수
 def get_thumbnail_img(place_id):
     url = f"https://place.map.kakao.com/photolist/v/{place_id}"
 
@@ -31,6 +32,7 @@ def get_thumbnail_img(place_id):
     return thumbnail_img
 
 
+# 핀 장소의 메뉴 가져오는 함수
 def get_menu(place_id):
     url = f"https://place.map.kakao.com/menuinfo/v/{place_id}"
 
@@ -100,8 +102,6 @@ class PinView(APIView):
         request.data['user_id'] = request.user.id
 
         # request에서 필요한 데이터 가져오기
-        title = request.data.get('title')
-        lat_lng = request.data.get('lat_lng')
         board_id = request.data.get('board_id')
         place_id = request.data.get('place_id')
 
@@ -109,7 +109,7 @@ class PinView(APIView):
         thumbnail_img = get_thumbnail_img(place_id)
 
         # 상호명, 좌표 기준으로 같은 pin이 있는지 확인
-        existing_pin = Pin.objects.filter(title=title, lat_lng=lat_lng).first()
+        existing_pin = Pin.objects.filter(place_id=place_id).first()
 
         # pin이 이미 존재할 시 board에 추가
         if existing_pin:
