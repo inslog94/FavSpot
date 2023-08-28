@@ -1,5 +1,5 @@
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, $pinContentBoxCloseBtn, $pinContentBox, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX } from './data.js';
-import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, displayPinContents } from './map.js';
+import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX } from './data.js';
+import { displayGeoLocationMap, displayMarkers, closeZoomInLocation } from './map.js';
 import { getPinContents } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
 
@@ -52,8 +52,8 @@ function mapSetup() {
     });
 }
 
-// 마커 드래그 기능
 function markerCreateEvent() {
+    // 마커 드래그 기능
     MARKER.setDraggable(true);
 
     // 지도 클릭시 마커 생성 이벤트
@@ -248,12 +248,6 @@ function clusterClickEvent() {
         CLUSTER_OVRELAY.setContent(CLUSTER_OVERLAY_CONTENT);
         CLUSTER_OVRELAY.setPosition(overlayPosition);
         CLUSTER_OVRELAY.setMap(MAP);
-    });
-}
-
-function pinContentBoxCloseEvent() {
-    $pinContentBoxCloseBtn.addEventListener('click', ()=>{
-        $pinContentBox.display = none;
     });
 }
 
