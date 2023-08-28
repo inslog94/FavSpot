@@ -7,13 +7,63 @@ from django.db.models import Q
 from .models import Pin, PinContent
 from .serializers import PinSerializer, PinContentSerializer
 from rest_framework.pagination import PageNumberPagination
+import json
+import requests
+from bs4 import BeautifulSoup
 
 
 # Create your views here.
+# 핀 장소의 대표 이미지 가져오는 함수
+def get_thumbnail_img(place_id):
+    url = f"https://place.map.kakao.com/photolist/v/{place_id}"
+
+    res = requests.get(url)
+    soup = BeautifulSoup(res.text, 'lxml')
+    json_data = soup.find("p").text
+
+    # JSON 데이터 파싱
+    data = json.loads(json_data)
+    # "list" 하위 첫번째 사진의 url 값 가져오기
+    try:
+        thumbnail_img = data["photoViewer"]["list"][0]['url']
+    except KeyError:
+        thumbnail_img = ''
+
+    return thumbnail_img
+
+
+# 핀 장소의 메뉴 가져오는 함수
+def get_menu(place_id):
+    url = f"https://place.map.kakao.com/menuinfo/v/{place_id}"
+
+    res = requests.get(url)
+    soup = BeautifulSoup(res.text, 'lxml')
+    json_data = soup.find("p").text
+
+    # JSON 데이터 파싱
+    data = json.loads(json_data)
+    # "topList" or "bottomList" 하위 메뉴 리스트 가져오기
+    try:
+        menu_raw_data = data["menuInfo"]["topList"]
+    except KeyError:
+        menu_raw_data = data["menuInfo"].get("bottomList", None)
+
+    if not menu_raw_data:
+        return menu_raw_data
+
+    menu = []
+    for i in menu_raw_data:
+        menu.append({"price": i.get("price", ""), "menu": i.get(
+            "menu", ""), "img": i.get("img", "")})
+
+    return menu
+
+
 class PinView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     # ## pin 상세정보 조회
+
     def get(self, request, title, lat_lng):
         pin = get_object_or_404(
             Pin, title=title, lat_lng=lat_lng, is_deleted=False)
@@ -36,9 +86,13 @@ class PinView(APIView):
         pin_contents_serializer = PinContentSerializer(
             pin_contents_page, many=True)
 
+        # place_id로 메뉴 정보 가져오기
+        menu = get_menu(pin.place_id)
+
         return paginator.get_paginated_response({
             'pin': pin_serializer.data,
             'pin_contents': pin_contents_serializer.data,
+            'menu': menu,
             'pin_content_count': pin_content_count
         })
 
@@ -48,12 +102,14 @@ class PinView(APIView):
         request.data['user_id'] = request.user.id
 
         # request에서 필요한 데이터 가져오기
-        title = request.data.get('title')
-        lat_lng = request.data.get('lat_lng')
         board_id = request.data.get('board_id')
+        place_id = request.data.get('place_id')
+
+        # place_id를 사용해서 thumbnail_img값 얻기
+        thumbnail_img = get_thumbnail_img(place_id)
 
         # 상호명, 좌표 기준으로 같은 pin이 있는지 확인
-        existing_pin = Pin.objects.filter(title=title, lat_lng=lat_lng).first()
+        existing_pin = Pin.objects.filter(place_id=place_id).first()
 
         # pin이 이미 존재할 시 board에 추가
         if existing_pin:
@@ -80,6 +136,7 @@ class PinView(APIView):
         # board_id를 list형태로 변환
         request_data = request.data.copy()
         request_data["board_id"] = [request_data["board_id"]]
+        request_data["thumbnail_img"] = thumbnail_img
         pin_serializer = PinSerializer(data=request_data)
         pin_content_serializer = PinContentSerializer(data=request_data)
 

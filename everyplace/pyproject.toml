@@ -15,6 +15,8 @@ python-dotenv = "^1.0.0"
 psycopg2 = "^2.9.7"
 dj-rest-auth = "2.1.4"
 django-allauth = "0.51.0"
+beautifulsoup4 = "^4.12.2"
+lxml = "^4.9.3"
 
 
 [build-system]

@@ -9,8 +9,8 @@ class PinSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pin
-        fields = ['category', 'board_id',
-                  'title', 'new_address', 'old_address', 'lat_lng']
+        fields = ['category', 'board_id', 'place_id', 'title',
+                  'thumbnail_img', 'new_address', 'old_address', 'lat_lng']
 
 
 class PinContentSerializer(serializers.ModelSerializer):
