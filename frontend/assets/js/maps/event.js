@@ -2,7 +2,6 @@ import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL,
 import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, displayPinContents } from './map.js';
 import { getPinContents } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
-import { TEST_MARKERS } from './test_data.js';
 
 // 지도 초기화
 function mapSetup() {
@@ -187,6 +186,5 @@ window.onload = function init() {
     // markerClickRemoveEvent(MARKER, PIN_INFO_WINDOW);
     markerClickZoomInEvent(MARKER);
     keywordSearchSetup();
-    displayMarkers(TEST_MARKERS);
     clusterClickEvent();
 }
