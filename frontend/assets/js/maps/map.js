@@ -1,5 +1,5 @@
 import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, $pinContentBox, $pinDetailTitle, $pinDetailCategory, $pinDetailRoadAddressName, $pinDetailAddressName, $pinDetailPhone, $pinContents } from './data.js';
-import { markerHoverEvent, markerClickZoomInEvent, markerDetailContentClickEvent } from './event.js';
+import { markerInfoHoverEvent, markerClickZoomInEvent, markerDetailContentClickEvent, markerInfoClickEvent } from './event.js';
 
 export function displayPinContents(pinInfo, contents, count, nextPageURL) {
     $pinContentBox.display = 'inline-block';
@@ -79,9 +79,9 @@ export function displayMarkers() {
     let markers = [];
 
     MARKERS.forEach(function(marker) {
-        markerHoverEvent(marker.marker, PIN_INFO_WINDOW);
+        markerInfoHoverEvent(marker.marker, PIN_INFO_WINDOW);
+        markerInfoClickEvent(marker);
         markerClickZoomInEvent(marker.marker);
-        displayMarker(marker.marker);
         markers.push(marker.marker);
     });
     mapRangeSetup(markers);

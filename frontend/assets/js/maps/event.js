@@ -1,4 +1,4 @@
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, $pinContentBoxCloseBtn, $pinContentBox } from './data.js';
+import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, $pinContentBoxCloseBtn, $pinContentBox, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX } from './data.js';
 import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, displayPinContents } from './map.js';
 import { getPinContents } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
@@ -18,6 +18,8 @@ function mapSetup() {
     kakao.maps.event.addListener(MAP, 'click', mouseEvent=> {
         CLUSTER_OVRELAY.setContent(null);
         CLUSTER_OVRELAY.setMap(null);
+        MARKER_OVERLAY.setContent(null);
+        MARKER_OVERLAY.setMap(null);
     });
 
     // 지도 확대/축소 직전, 지도 레벨 저장
@@ -65,8 +67,8 @@ function markerCreateEvent() {
     });
 }
 
-// 마커 정보 표시
-export function markerHoverEvent(marker, infoWindow) {
+// 마커 mouseover시 상호명 표시
+export function markerInfoHoverEvent(marker, infoWindow) {
 
     let content = marker.getTitle();
     if (content === null || content === undefined || content.length <= 0) {
@@ -85,17 +87,92 @@ export function markerHoverEvent(marker, infoWindow) {
 }
 
 // 마커 클릭시 인포 윈도우 표시
-export function markerInfoWindowEvent(marker, infoWindow) {
+export function markerInfoClickEvent(markerInfo) {
 
-    let content = marker.getTitle();
-    if (content === null || content === undefined || content.length <= 0) {
+    if (markerInfo.title === null || markerInfo.title === undefined || markerInfo.title.length <= 0) {
         return;
     }
 
-    kakao.maps.event.addListener(marker, 'click', function() {
-        infoWindow.setContent(content);
-        infoWindow.open(MAP, marker);
+    kakao.maps.event.addListener(markerInfo.marker, 'click', function() {
+
+        MARKER_OVERLAY.setMap(null);
+        MARKER_OVERLAY.setContent(null);
+        MARKER_OVERLAY_CONTENT.textContent = "";
+        PIN_INFO_WINDOW.close();
+
+        let titleBox = document.createElement('div'); 
+        let imgBox = document.createElement('div');
+        let infoBox = document.createElement('div');
+        let functionBox = document.createElement('div');
+
+        let titleEl = document.createElement('span');
+        let categoryEl = document.createElement('span');
+        let contentBody = document.createElement('div');
+        let img = document.createElement('img');        
+        let addressNameEl = document.createElement('div');
+        let roadAddressNameEl = document.createElement('div');
+        let phoneEl = document.createElement('div');
+        let contentBtn = document.createElement('button');
+
+        titleBox.classList.add('title_box');
+        titleEl.classList.add('title');
+        categoryEl.classList.add('category');
+        contentBody.classList.add('body');
+        imgBox.classList.add('img');
+        infoBox.classList.add('desc');
+        roadAddressNameEl.classList.add('ellipsis');
+        addressNameEl.classList.add('jibun', 'ellipsis');
+        phoneEl.classList.add('phone');
+        functionBox.classList.add('func');
+        contentBtn.classList.add('btn');
+
+        let content = 
+            '        <div class=title_box>'
+            '           <div class="title">' + 
+            '               ' + markerInfo.title + 
+            '           <span>' +
+            '               ' + markerInfo.categoryGroupName +
+            '           </span>' +
+            '           </div>'
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">' + markerInfo.roadAddressName + '</div>' + 
+            '                <div class="jibun ellipsis">(지번) '+ markerInfo.addressName + '</div>' + 
+            '                <div class="phone">'+ markerInfo.phone + '</div>' +
+            '            </div>' + 
+            '            <div> 전화번호 </div>'
+            '        </div>';
+
+        titleEl.innerText = markerInfo.title;
+        addressNameEl.innerText = markerInfo.addressName;
+        roadAddressNameEl.innerText = markerInfo.roadAddressName;
+        categoryEl.innerText = markerInfo.categoryGroupName;
+        phoneEl.innerText = markerInfo.phone;
+        img.alt = '이미지';
+        contentBtn.innerText = '핀 보기';
+
+        functionBox.appendChild(contentBtn);
+        titleBox.appendChild(titleEl);
+        titleBox.appendChild(categoryEl);
+        infoBox.appendChild(roadAddressNameEl);
+        infoBox.appendChild(addressNameEl);
+        infoBox.appendChild(phoneEl);
+        infoBox.appendChild(functionBox);
+        imgBox.appendChild(img);
+        contentBody.appendChild(imgBox);
+        contentBody.appendChild(infoBox);
+        MARKER_OVERLAY_CONTENT.appendChild(titleBox);
+        MARKER_OVERLAY_CONTENT.appendChild(contentBody);
+        
+        MARKER_OVERLAY.setContent(MARKER_OVERLAY_CONTENT_BOX);
+        MARKER_OVERLAY.setPosition(markerInfo.position);
+        MARKER_OVERLAY.setMap(MAP);
     });
+    
 }
 
 export function markerDetailContentClickEvent(marker) {
