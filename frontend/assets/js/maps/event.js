@@ -1,5 +1,6 @@
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL } from './data.js';
-import { displayGeoLocationMap, displayMarkers, closeZoomInLocation } from './map.js';
+import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, $pinContentBoxCloseBtn, $pinContentBox } from './data.js';
+import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, displayPinContents } from './map.js';
+import { getPinContents } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
 import { TEST_MARKERS } from './test_data.js';
 
@@ -85,7 +86,7 @@ export function markerHoverEvent(marker, infoWindow) {
 }
 
 // 마커 클릭시 인포 윈도우 표시
-export function markerClickInfoEvent(marker, infoWindow) {
+export function markerInfoWindowEvent(marker, infoWindow) {
 
     let content = marker.getTitle();
     if (content === null || content === undefined || content.length <= 0) {
@@ -96,6 +97,10 @@ export function markerClickInfoEvent(marker, infoWindow) {
         infoWindow.setContent(content);
         infoWindow.open(MAP, marker);
     });
+}
+
+export function markerDetailContentClickEvent(marker) {
+
 }
 
 export function markerClickZoomInEvent(marker) {
@@ -168,11 +173,17 @@ function clusterClickEvent() {
     });
 }
 
+function pinContentBoxCloseEvent() {
+    $pinContentBoxCloseBtn.addEventListener('click', ()=>{
+        $pinContentBox.display = none;
+    });
+}
+
 // 전체 기능 초기화
 window.onload = function init() {
     displayGeoLocationMap();
     mapSetup();
-    // markerCreateEvent();
+    // markerInfoWindowEvent();
     // markerClickRemoveEvent(MARKER, PIN_INFO_WINDOW);
     markerClickZoomInEvent(MARKER);
     keywordSearchSetup();

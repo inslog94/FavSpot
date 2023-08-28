@@ -1,12 +1,18 @@
-import { MAP, PIN_INFO_WINDOW, $pinList, $menuBox, $pagination } from "./data.js";
+import { pinContentsRequest } from "../request/content.js";
+import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination } from "./data.js";
 import { removeAllMarker, displayMarkers, mapRangeSetup } from "./map.js";
+
+// 서버로부터 pin 목록 가져옴
+export async function getPinContents(marker) {
+    return await pinContentsRequest(marker.getTitle(), marker.getPosition().getLat(), marker.getPosition().getLng());
+}
 
 // 검색 결과 페이징
 export function displayPagination(pagination) {
     let fragment = document.createDocumentFragment();
 
     // 기존 페이지 번호 삭제
-    removeAllChildNods($pagination);
+    removeAllChildNods($searchPagination);
 
     // 페이지 생성 및 클릭 이벤트 등록
     for (let i=1; i<=pagination.last; i++) {
@@ -27,7 +33,7 @@ export function displayPagination(pagination) {
         fragment.appendChild(page);
     }
 
-    $pagination.appendChild(fragment);
+    $searchPagination.appendChild(fragment);
 }
 
 // 카카오 검색 API pin 표시
@@ -36,7 +42,7 @@ export function displaySearchPlace(data) {
     // 마커 지우기, 검색 결과 표시, map 조정
 
     // 기존 검색 결과 목록 및 마커 제거
-    removeAllChildNods($pinList);
+    removeAllChildNods($searchResultList);
     removeAllMarker();
 
     let pins = convertKaKaoDataToPins(data);
@@ -50,7 +56,7 @@ export function displaySearchPlace(data) {
 // 서버 API pin 표시
 export function displayPins(data) {
 
-    removeAllChildNods($pinList);
+    removeAllChildNods($searchResultList);
     removeAllMarker();
 
     let pins = convertDataToPins(data);
@@ -58,7 +64,6 @@ export function displayPins(data) {
     pinListSetUp(pins);
     displayMarkers(pins);
 }
-
 
 export function convertKaKaoDataToPins(dataList) {
 
@@ -69,6 +74,8 @@ export function convertKaKaoDataToPins(dataList) {
 
         pin.title = data.place_name;
         pin.position = new kakao.maps.LatLng(data.y, data.x);
+        pin.lat = data.y;
+        pin.lng = data.x;
         pin.addressName = data.address_name;
         pin.categoryGroupCode = data.category_group_code;
         pin.categoryGroupName = data.category_group_name;
@@ -105,8 +112,8 @@ function pinListSetUp(pins) {
         fragment.appendChild(pin);
     }
 
-    $menuBox.scrollTop = 0;
-    $pinList.appendChild(fragment);
+    $searchResultBox.scrollTop = 0;
+    $searchResultList.appendChild(fragment);
 }
 
 function getListItem(index, places) {

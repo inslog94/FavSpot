@@ -21,4 +21,13 @@ urlpatterns = [
     # User Profile
     path('me/', views.UserInfoView.as_view(), name='my_info'),
     path('<int:pk>/', views.UserInfoView.as_view(), name='user_info'),
+    # User Follow
+    path('follow/', views.UserFollow.as_view(), name='follow'),
+    path('follow/<int:pk>/', views.UserFollow.as_view(), name='unfollow'),
+    # User Following List
+    path('following/', views.UserFollowing.as_view(), name='my_following_list'),
+    path('<int:pk>/following/', views.UserFollowing.as_view(), name='user_following_list'),
+    # User Follower List
+    path('follower/', views.UserFollower.as_view(), name='my_follower_list'),
+    path('<int:pk>/follower/', views.UserFollower.as_view(), name='user_follower_list'),
 ]

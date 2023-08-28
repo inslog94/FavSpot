@@ -6,9 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from .models import Pin, PinContent
 from .serializers import PinSerializer, PinContentSerializer
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from rest_framework.pagination import PageNumberPagination
 
 
 # Create your views here.
@@ -16,19 +14,33 @@ class PinView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     # ## pin 상세정보 조회
-    def get(self, request, pk):
-        pin = get_object_or_404(Pin, pk=pk, is_deleted=False)
+    def get(self, request, title, lat_lng):
+        pin = get_object_or_404(
+            Pin, title=title, lat_lng=lat_lng, is_deleted=False)
+
+        # pin에 포함된 pin content 갯수 세기
+        pin_content_count = PinContent.objects.filter(
+            pin_id=pin, is_deleted=False).count()
+
+        # 페이지네이션 적용
+        paginator = PageNumberPagination()
+        paginator.page_size = 3
         # pin content 중 내용이 없는 객체는 보여주지 않음. 최신순으로 정렬
         pin_contents = PinContent.objects.filter(
             pin_id=pin, is_deleted=False).exclude(Q(text__isnull=True, photo='')).order_by('-created_at')
 
-        pin_serializer = PinSerializer(pin)
-        pin_contents_serializer = PinContentSerializer(pin_contents, many=True)
+        # 쿼리셋 페이지네이트
+        pin_contents_page = paginator.paginate_queryset(pin_contents, request)
 
-        return Response({
+        pin_serializer = PinSerializer(pin)
+        pin_contents_serializer = PinContentSerializer(
+            pin_contents_page, many=True)
+
+        return paginator.get_paginated_response({
             'pin': pin_serializer.data,
-            'pin_contents': pin_contents_serializer.data
-        }, status=status.HTTP_200_OK)
+            'pin_contents': pin_contents_serializer.data,
+            'pin_content_count': pin_content_count
+        })
 
     # ## pin 생성
     def post(self, request):
