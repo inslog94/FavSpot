@@ -19,9 +19,6 @@ class Pin(models.Model):
     # 썸네일 : 카카오에서 크롤링
     thumbnail_img = models.CharField(max_length=150, blank=True)
 
-    # 메뉴 : 예) [{'price': '6,000', 'menu': 'Raspberry Milk (ICE)'}, {'price': '6,000', 'menu': 'Nurungji Milk Tea (ICE)'}]
-    menu = models.TextField(blank=True)
-
     # 도로명주소 : 예) 서울 강남구 도산대로53길 15 1층
     new_address = models.CharField(max_length=100)
 
