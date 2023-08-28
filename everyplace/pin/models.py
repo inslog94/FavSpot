@@ -1,4 +1,5 @@
 import os
+import uuid
 from django.db import models
 from django.contrib.auth import get_user_model
 from board.models import Board
@@ -47,7 +48,7 @@ def pin_photo_upload_path(instance, filename):
     # pin_id에 따라 폴더 구분
     pin_id_folder = str(instance.pin_id.id)
     # 파일 경로 설정
-    return os.path.join(id_folder, 'pin_photos', pin_id_folder, filename)
+    return os.path.join('images', id_folder, 'pin_photos', pin_id_folder, str(uuid.uuid4()))
 
 
 # 핀에 연결될 내용(간단한 텍스트, 사진)
