@@ -86,7 +86,7 @@ export function markerInfoHoverEvent(marker, infoWindow) {
 
 }
 
-// 마커 클릭시 인포 윈도우 표시
+// 마커 클릭시 오버레이
 export function markerInfoClickEvent(markerInfo) {
 
     if (markerInfo.title === null || markerInfo.title === undefined || markerInfo.title.length <= 0) {
@@ -98,83 +98,100 @@ export function markerInfoClickEvent(markerInfo) {
     });
 }
 
+// 마커 오버레이(메타 데이터 표시)
 export function displayMarkerDetailInfo(markerInfo) {
     MARKER_OVERLAY.setMap(null);
-        MARKER_OVERLAY.setContent(null);
-        MARKER_OVERLAY_CONTENT.textContent = "";
-        PIN_INFO_WINDOW.close();
+    MARKER_OVERLAY.setContent(null);
+    MARKER_OVERLAY_CONTENT.textContent = "";
+    PIN_INFO_WINDOW.close();
 
-        let titleBox = document.createElement('div'); 
+    let titleBox = document.createElement('div'); 
+    let infoBox = document.createElement('div');
+    let functionBox = document.createElement('div');
+
+    let titleEl = document.createElement('span');
+    let categoryEl = document.createElement('span');
+    let contentBody = document.createElement('div');        
+    let addressNameEl = document.createElement('div');
+    let roadAddressNameEl = document.createElement('div');
+    let phoneEl = document.createElement('div');
+    let contentBtn = document.createElement('a');
+    let saveBtn = document.createElement('a');
+
+    titleBox.classList.add('title_box');
+    titleEl.classList.add('title');
+    categoryEl.classList.add('category');
+    contentBody.classList.add('body');
+    infoBox.classList.add('desc');
+    roadAddressNameEl.classList.add('ellipsis');
+    addressNameEl.classList.add('jibun', 'ellipsis');
+    phoneEl.classList.add('phone');
+    functionBox.classList.add('func');
+    contentBtn.classList.add('btn');
+    saveBtn.classList.add('btn');
+
+    let content = 
+        '        <div class=title_box>'
+        '           <div class="title">' + 
+        '               ' + markerInfo.title + 
+        '           <span>' +
+        '               ' + markerInfo.categoryGroupName +
+        '           </span>' +
+        '           </div>'
+        '        </div>' + 
+        '        <div class="body">' + 
+        '            <div class="img">' +
+        '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
+        '           </div>' + 
+        '            <div class="desc">' + 
+        '                <div class="ellipsis">' + markerInfo.roadAddressName + '</div>' + 
+        '                <div class="jibun ellipsis">(지번) '+ markerInfo.addressName + '</div>' + 
+        '                <div class="phone">'+ markerInfo.phone + '</div>' +
+        '            </div>' + 
+        '            <div class="func">' +
+        '                <button>핀 보기<button>'
+        '                <button>핀 생성<button>'
+        '            </div>' +
+        '        </div>';
+
+    titleEl.innerText = markerInfo.title;
+    addressNameEl.innerText = markerInfo.addressName;
+    roadAddressNameEl.innerText = markerInfo.roadAddressName;
+    categoryEl.innerText = markerInfo.categoryGroupName;
+    phoneEl.innerText = markerInfo.phone;
+    contentBtn.innerText = '핀 보기';
+    contentBtn.href = '#';
+    saveBtn.innerText = '핀 생성';
+    saveBtn.href = '#';
+
+    functionBox.appendChild(contentBtn);
+    functionBox.appendChild(saveBtn);
+    titleBox.appendChild(titleEl);
+    titleBox.appendChild(categoryEl);
+    infoBox.appendChild(roadAddressNameEl);
+    infoBox.appendChild(addressNameEl);
+    infoBox.appendChild(phoneEl);
+    infoBox.appendChild(functionBox);
+    if(markerInfo.photo !== null && markerInfo.photo !== undefined) {
         let imgBox = document.createElement('div');
-        let infoBox = document.createElement('div');
-        let functionBox = document.createElement('div');
-
-        let titleEl = document.createElement('span');
-        let categoryEl = document.createElement('span');
-        let contentBody = document.createElement('div');
-        let img = document.createElement('img');        
-        let addressNameEl = document.createElement('div');
-        let roadAddressNameEl = document.createElement('div');
-        let phoneEl = document.createElement('div');
-        let contentBtn = document.createElement('button');
-
-        titleBox.classList.add('title_box');
-        titleEl.classList.add('title');
-        categoryEl.classList.add('category');
-        contentBody.classList.add('body');
-        imgBox.classList.add('img');
-        infoBox.classList.add('desc');
-        roadAddressNameEl.classList.add('ellipsis');
-        addressNameEl.classList.add('jibun', 'ellipsis');
-        phoneEl.classList.add('phone');
-        functionBox.classList.add('func');
-        contentBtn.classList.add('btn');
-
-        let content = 
-            '        <div class=title_box>'
-            '           <div class="title">' + 
-            '               ' + markerInfo.title + 
-            '           <span>' +
-            '               ' + markerInfo.categoryGroupName +
-            '           </span>' +
-            '           </div>'
-            '        </div>' + 
-            '        <div class="body">' + 
-            '            <div class="img">' +
-            '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
-            '           </div>' + 
-            '            <div class="desc">' + 
-            '                <div class="ellipsis">' + markerInfo.roadAddressName + '</div>' + 
-            '                <div class="jibun ellipsis">(지번) '+ markerInfo.addressName + '</div>' + 
-            '                <div class="phone">'+ markerInfo.phone + '</div>' +
-            '            </div>' + 
-            '            <div> 전화번호 </div>'
-            '        </div>';
-
-        titleEl.innerText = markerInfo.title;
-        addressNameEl.innerText = markerInfo.addressName;
-        roadAddressNameEl.innerText = markerInfo.roadAddressName;
-        categoryEl.innerText = markerInfo.categoryGroupName;
-        phoneEl.innerText = markerInfo.phone;
+        let img = document.createElement('img');
         img.alt = '이미지';
-        contentBtn.innerText = '핀 보기';
-
-        functionBox.appendChild(contentBtn);
-        titleBox.appendChild(titleEl);
-        titleBox.appendChild(categoryEl);
-        infoBox.appendChild(roadAddressNameEl);
-        infoBox.appendChild(addressNameEl);
-        infoBox.appendChild(phoneEl);
-        infoBox.appendChild(functionBox);
+        imgBox.classList.add('img');
         imgBox.appendChild(img);
         contentBody.appendChild(imgBox);
-        contentBody.appendChild(infoBox);
-        MARKER_OVERLAY_CONTENT.appendChild(titleBox);
-        MARKER_OVERLAY_CONTENT.appendChild(contentBody);
-        
-        MARKER_OVERLAY.setContent(MARKER_OVERLAY_CONTENT_BOX);
-        MARKER_OVERLAY.setPosition(markerInfo.position);
-        MARKER_OVERLAY.setMap(MAP);
+    } else {
+        MARKER_OVERLAY_CONTENT_BOX.style.width = '290px';
+        MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = '-145px';
+        MARKER_OVERLAY_CONTENT.style.width = '290px';
+    }
+    contentBody.appendChild(infoBox);
+
+    MARKER_OVERLAY_CONTENT.appendChild(titleBox);
+    MARKER_OVERLAY_CONTENT.appendChild(contentBody);
+    
+    MARKER_OVERLAY.setContent(MARKER_OVERLAY_CONTENT_BOX);
+    MARKER_OVERLAY.setPosition(markerInfo.position);
+    MARKER_OVERLAY.setMap(MAP);
 }
 
 export function markerDetailContentClickEvent(marker) {
