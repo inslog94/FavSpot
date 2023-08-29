@@ -14,8 +14,14 @@ export async function pinContentsRequest(placeName, lat, lng) {
     return response.json();
 }
 
-export async function randomBoardRequest() {
-    let url = origin + '/board/';
+export async function boardRequest(keyword) {
+    let url;
+
+    if (keyword !== null && keyword !== undefined && keyword.length > 0) {
+        url = origin + '/board/search?search_field=all&search=' + keyword;
+    } else {
+        url = origin + '/board/';
+    }
     
     const response = await fetch(url, {
         method: 'GET',

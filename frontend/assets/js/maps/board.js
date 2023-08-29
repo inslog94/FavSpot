@@ -1,9 +1,15 @@
-import { randomBoardRequest } from "../request/content.js";
+import { boardRequest } from "../request/content.js";
 import { $mainBoard } from "./data.js";
 
+export async function displayRelatedBoards(keyword) {
+    let boards = await getBoards(keyword);
+    console.log(boards);
+    displayMainBoards(boards);
+}
 
-export async function getBoards() {
-    return await randomBoardRequest();
+
+export async function getBoards(keyword) {
+    return await boardRequest(keyword);
 }
 
 export function displayMainBoards(boards) {
@@ -12,7 +18,7 @@ export function displayMainBoards(boards) {
     let boardSet;
     for(let i=0; i<boards.length; i++) {
 
-        if (i===5) {
+        if (i===6) {
             return;
         }
 
