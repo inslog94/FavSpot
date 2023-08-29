@@ -8,13 +8,16 @@ User = get_user_model()
 
 class Pin(models.Model):
     # 카테고리명 : 디저트카페 or 카페
-    category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    category = models.CharField(max_length=50)
 
     # 연결시킬 Board id
     board_id = models.ManyToManyField(Board)
 
     # 상호명 : 예) 노티드 청담
     title = models.CharField(max_length=50)
+
+    # 썸네일 : 카카오에서 크롤링
+    thumbnail_img = models.CharField(max_length=150, blank=True)
 
     # 도로명주소 : 예) 서울 강남구 도산대로53길 15 1층
     new_address = models.CharField(max_length=100)
@@ -62,17 +65,6 @@ class PinContent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
-
-
-class Category(models.Model):
-    # 업종별 분류 - 카카오에서 제공하는 카테고리 활용
-    # https://apis.map.kakao.com/web/documentation/#CategoryCode 참고
-    # 최상단 분류는 "FD6 음식점" 이지만 카카오 지도에서 검색해보면 "FD6 음식점" 밑으로 "음식점 > 한식 > 냉면 > 전체" 단위까지 분류가 되어있기 때문에 조금 더 세부적으로 나뉘어도 괜찮을 것 같다는 생각
-    name = models.CharField(max_length=20)
-    is_deleted = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
 
 
 # 만약을 대비한 핀 태그 모델
