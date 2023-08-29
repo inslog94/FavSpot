@@ -5,6 +5,7 @@ from .models import Board, BoardTag, BoardComment, BoardLike
 from pin.models import Pin
 from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer, BoardLikeSerializer
 from pin.serializers import SimplePinSerializer
+from user.serializers import BoardPinSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import authentication_classes, permission_classes
@@ -30,7 +31,7 @@ class BoardView(APIView):
         ## 보드 전체 목록 조희
         if not pk:
             boards = Board.objects.filter(is_deleted=False)
-            serializer = BoardSerializer(boards, many=True)
+            serializer = BoardPinSerializer(boards, many=True)
 
             return Response(serializer.data)
         
