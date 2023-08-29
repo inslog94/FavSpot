@@ -11,23 +11,91 @@
     <link rel="stylesheet" href="assets/css/map.css">
 </head>
 <body>
-	<!-- <div id="map" style="width:1000px;height:700px;"></div> -->
 
-    <div class="map_wrap">
-        <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-    
-        <div id="search_result_box" class="bg_white">
-            <div class="option">
-                <div>
-                    키워드 : <input type="text" value="" id="keyword" size="15"> 
-                    <button type="submit" id="keywordSearchBtn">검색</button> 
+    <div style="display: flex;">
+        <div class="map_wrap">
+            <div id="map"></div>
+        
+            <div id="search_result_box" class="bg_white">
+                <div class="option">
+                    <div>
+                        키워드 : <input type="text" value="" id="keyword" size="15"> 
+                        <button type="submit" id="keywordSearchBtn">검색</button> 
+                    </div>
+                </div>
+                <hr>
+                <ul id="search_results"></ul>
+                <div id="search_pagination"></div>
+            </div>
+
+            <button id="screen_btn" style="position: absolute; z-index: 1; top: 3rem; left: 63rem; width: 60px; height: 40px; border:0.5px solid gray; border-radius: 10px;">전체화면</button>
+        </div>
+        <div id="main_board" class="main_board_list">
+            <div class="board_set">
+                <div class="board">
+                    <div class="img_box">
+                        <img src="" alt="이미지">
+                    </div>
+                    <div class="info">
+                        <div>
+                            <span>서울 와인바</span>
+                            <div>
+                                <img src="assets/img/fav.png" width="25px" height="25px" alt="fav" style="vertical-align: text-top;">
+                                <span>67</span>
+                            </div>
+                        </div>
+                        <div>생성자</div>
+                    </div>
+                </div>
+                <div class="board">
+                    <div class="img_box">
+                        <img src="" alt="이미지">
+                    </div>
+                    <div class="info">
+                        <div>
+                            <span>서울 와인바</span>
+                            <div>
+                                <img src="assets/img/fav.png" width="25px" height="25px" alt="fav" style="vertical-align: text-top;">
+                                <span>67</span>
+                            </div>
+                        </div>
+                        <div>생성자</div>
+                    </div>
+                </div>
+            </div>      
+            <div class="board_set">
+                <div class="board">
+                    <div class="img_box">
+                        <img src="" alt="이미지">
+                    </div>
+                    <div class="info">
+                        <div>
+                            <span>서울 와인바</span>
+                            <div>
+                                <img src="assets/img/fav.png" width="25px" height="25px" alt="fav" style="vertical-align: text-top;">
+                                <span>67</span>
+                            </div>
+                        </div>
+                        <div>생성자</div>
+                    </div>
+                </div>
+                <div class="board">
+                    <div class="img_box">
+                        <img src="" alt="이미지">
+                    </div>
+                    <div class="info">
+                        <div>
+                            <span>서울 와인바</span>
+                            <div>
+                                <img src="assets/img/fav.png" width="25px" height="25px" alt="fav" style="vertical-align: text-top;">
+                                <span>67</span>
+                            </div>
+                        </div>
+                        <div>생성자</div>
+                    </div>
                 </div>
             </div>
-            <hr>
-            <ul id="search_results"></ul>
-            <div id="search_pagination"></div>
         </div>
     </div>
-
 </body>
 </html>

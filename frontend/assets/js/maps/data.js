@@ -22,6 +22,10 @@ export const $searchResultBox = document.getElementById('search_result_box');
 export const $keyword = document.getElementById('keyword');
 export const $searchPagination = document.getElementById('search_pagination');
 export const $keywordSearchBtn = document.getElementById('keywordSearchBtn');
+export const $screenBtn = document.getElementById('screen_btn');
+export const screenMode = {fullScreen: false};
+
+export const $mainBoard = document.getElementById('main_board');
 
 export const MARKER = new kakao.maps.Marker({
         clickable: true

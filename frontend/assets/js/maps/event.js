@@ -1,5 +1,6 @@
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX } from './data.js';
-import { displayGeoLocationMap, displayMarkers, closeZoomInLocation } from './map.js';
+import { displayMainBoards, getBoards } from './board.js';
+import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode } from './data.js';
+import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, fullScreen, fullScreenEnd } from './map.js';
 import { getPinContents } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
 
@@ -268,6 +269,25 @@ function clusterClickEvent() {
     });
 }
 
+// 메인 페이지 화면 버튼 이벤트
+function mainPageBtnClickEvent() {
+    $screenBtn.addEventListener('click', ()=> {
+        
+        if (screenMode.fullScreen) {
+            fullScreenEnd();
+        } else {
+            fullScreen();
+        }
+        
+    });
+}
+
+// 메인 페이지 보드 채우기
+export async function mainBoardSetup() {
+    let boards = await getBoards();
+    displayMainBoards(boards);
+}
+
 // 전체 기능 초기화
 window.onload = function init() {
     displayGeoLocationMap();
@@ -277,4 +297,6 @@ window.onload = function init() {
     markerClickZoomInEvent(MARKER);
     keywordSearchSetup();
     clusterClickEvent();
+    mainPageBtnClickEvent();
+    mainBoardSetup();
 }

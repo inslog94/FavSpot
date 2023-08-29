@@ -1,4 +1,4 @@
-import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT} from './data.js';
+import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, $screenBtn, screenMode, $container} from './data.js';
 import { markerInfoHoverEvent, markerClickZoomInEvent, markerDetailContentClickEvent, markerInfoClickEvent } from './event.js';
 
 
@@ -30,6 +30,32 @@ export function closeZoomInLocation(location) {
 
 export function move(location) {
     MAP.panTo(location);
+}
+
+export function fullScreen() {
+    let mapBox = document.getElementsByClassName('map_wrap')[0];
+    let board = document.getElementById('main_board');
+
+    board.style.display = 'none';
+    mapBox.style.width = '98%';
+    $screenBtn.style.left = '107rem';
+    $screenBtn.innerText = '되돌리기';
+    screenMode.fullScreen = true;
+
+    MAP.relayout();
+}
+
+export function fullScreenEnd() {
+    let mapBox = document.getElementsByClassName('map_wrap')[0];
+    let board = document.getElementById('main_board');
+
+    board.style.display = 'block';
+    mapBox.style.width = '60%';
+    $screenBtn.style.left = '63rem';
+    $screenBtn.innerText = '전체화면';
+    screenMode.fullScreen = false;
+
+    MAP.relayout();
 }
 
 // 현재 위치 기반 지도 표시
