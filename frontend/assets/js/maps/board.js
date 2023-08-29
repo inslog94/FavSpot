@@ -1,16 +1,21 @@
 import { randomBoardRequest } from "../request/content.js";
 import { $mainBoard } from "./data.js";
 
+
 export async function getBoards() {
     return await randomBoardRequest();
 }
 
 export function displayMainBoards(boards) {
-    console.log(boards);
     $mainBoard.textContent = '';
 
     let boardSet;
     for(let i=0; i<boards.length; i++) {
+
+        if (i===5) {
+            return;
+        }
+
         if (i==0 || i%2 === 0) {
             boardSet = document.createElement('div');
             boardSet.classList.add('board_set');
@@ -27,19 +32,22 @@ export function displayMainBoards(boards) {
         let pinCount = document.createElement('span');
         let info2 = document.createElement('div');
 
+        infoBox.classList.add('info');
+        thumnailBox.classList.add('img_box');
+        board.classList.add('board');
+
         pinLogo.style.width = '25px';
         pinLogo.style.height = '25px';
         pinLogo.alt = 'like';
         pinLogo.style.verticalAlign = 'text-top';
         pinLogo.src = 'assets/img/fav.png';
-        
-        infoBox.classList.add('info');
-        thumnailBox.classList.add('img_box');
-        board.classList.add('board');
+
+        thumnail.src = 'assets/img/favspot.png';
+        thumnail.alt = 'assets/img/favspot.png';
 
         title.innerText = boards[i].title;
         info2.innerText = boards[i].user_id;
-        pinCount.innerText = boards[i].tags.length;
+        pinCount.innerText = boards[i].tags;
 
         pinBox.appendChild(pinLogo);
         pinBox.appendChild(pinCount);
@@ -57,8 +65,6 @@ export function displayMainBoards(boards) {
 
         boardSet.appendChild(board);
 
-        if(i%2 !== 0) {
-            $mainBoard.appendChild(boardSet);
-        }
+        $mainBoard.appendChild(boardSet);
     }
 }
