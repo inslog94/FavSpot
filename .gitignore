@@ -175,3 +175,6 @@ cython_debug/
 .vscode
 
 # End of https://www.toptal.com/developers/gitignore/api/django
+
+# FrontEnd 개발
+assets

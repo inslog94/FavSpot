@@ -1,4 +1,5 @@
 import os
+import uuid
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -45,13 +46,13 @@ def profile_img_upload_path(instance, filename):
     else:
         id_folder = str(instance.id)
     # 파일 경로 설정
-    return os.path.join(id_folder, 'profile', filename)
+    return os.path.join('images', id_folder, 'profile', str(uuid.uuid4()))
 
 
 class User(AbstractUser):
     username = None
     nickname = models.CharField(max_length=20, null=True, blank=True)
-    profile_img = models.ImageField(upload_to=profile_img_upload_path, null=True, blank=True)
+    profile_img = models.ImageField(upload_to=profile_img_upload_path, blank=True)
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)

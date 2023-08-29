@@ -16,9 +16,8 @@ from allauth.socialaccount.providers.kakao import views as kakao_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from .models import User, Follow
-from .serializers import UserSerializer, FollowingSerializer, FollowerSerializer
+from .serializers import UserSerializer, FollowingSerializer, FollowerSerializer, BoardPinSerializer
 from board.models import Board
-from board.serializers import BoardSerializer
 
 state = os.getenv('STATE')
 BASE_URL = os.getenv('BASE_URL')
@@ -273,8 +272,8 @@ class UserInfoView(APIView):
         user_serializer = UserSerializer(user)
         # 유저가 작성한 보드 내역
         boards = Board.objects.filter(user_id=user.id)
-        board_serializer = BoardSerializer(boards, many=True)
-        return JsonResponse({'User': user_serializer.data, 'Boards': board_serializer.data}, status=status.HTTP_200_OK)
+        board_pin_serializer = BoardPinSerializer(boards, many=True)
+        return JsonResponse({'User': user_serializer.data, 'Boards': board_pin_serializer.data}, status=status.HTTP_200_OK)
     
     def patch(self, request):
         # 비밀번호 수정 = 기존 비밀번호 검증 and (새 비밀번호 1 == 새 비밀번호 2)
