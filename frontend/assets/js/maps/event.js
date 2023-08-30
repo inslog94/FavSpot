@@ -23,6 +23,7 @@ function mapSetup() {
         MARKER_OVERLAY.setMap(null);
         PIN_SAVE_OVERLAY.setContent(null);
         PIN_SAVE_OVERLAY.setMap(null);
+        PIN_SAVE_OVERLAY.setVisible(false);
     });
 
     // 지도 확대/축소 직전, 지도 레벨 저장
@@ -52,6 +53,13 @@ function mapSetup() {
             CLUSTER_OVRELAY.setPosition(newOverlayPosition);
             CLUSTERER.redraw();
         }
+    });
+
+    // 지도 중심좌표 변경시 핀 생성 오버레이 삭제
+    kakao.maps.event.addListener(MAP, 'center_changed', function() {
+        PIN_SAVE_OVERLAY.setContent(null);
+        PIN_SAVE_OVERLAY.setMap(null);
+        PIN_SAVE_OVERLAY.setVisible(false);
     });
 }
 
@@ -158,6 +166,7 @@ export function displayMarkerDetailInfo(markerInfo) {
     saveBtn.addEventListener('click', ()=> {
         
         let open = PIN_SAVE_OVERLAY.getVisible();
+
         if (open) {
             PIN_SAVE_OVERLAY_CONTENT.textContent = "";
             PIN_SAVE_OVERLAY.setContent(null);    
@@ -192,9 +201,8 @@ export function displayMarkerDetailInfo(markerInfo) {
             boardBox.classList.add('pin_save_board');
             pinSaveBtn.classList.add('pin_save_btn');
 
-            pinSaveBtn.addEventListener('click', ()=>{
-                pinSimpleSave(board, markerInfo)
-            });
+            // 생성 버튼 클릭 이벤트
+            pinSimpleSaveEvent(pinSaveBtn, board, markerInfo);
 
             PIN_SAVE_OVERLAY_CONTENT.appendChild(boardBox);
         });
@@ -227,6 +235,15 @@ export function displayMarkerDetailInfo(markerInfo) {
     MARKER_OVERLAY.setContent(MARKER_OVERLAY_CONTENT_BOX);
     MARKER_OVERLAY.setPosition(markerInfo.position);
     MARKER_OVERLAY.setMap(MAP);
+}
+
+// 생성 버튼 클릭 이벤트
+function pinSimpleSaveEvent(element, board, place) {
+    console.log(board);
+    console.log(place);
+    element.addEventListener('click', ()=>{
+        pinSimpleSave(board, place);
+    });
 }
 
 export function markerDetailContentClickEvent(marker) {

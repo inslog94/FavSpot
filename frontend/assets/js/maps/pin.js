@@ -4,9 +4,7 @@ import { displayMarkerDetailInfo, markerInfoClickEvent } from "./event.js";
 import { removeAllMarker, displayMarkers, mapRangeSetup, move } from "./map.js";
 
 export function pinSimpleSave(board, place) {
-    console.log(board);
-    console.log(place);
-    pinSimpleCreateRequest(board.id, place.id);
+    pinSimpleCreateRequest(board, place);
 }
 
 // 서버로부터 pin 목록 가져옴
@@ -92,6 +90,11 @@ export function getMarkers(dataList) {
         pin.phone = data.phone;
         pin.placeURL = data.place_url;
         pin.roadAddressName = data.road_address_name;
+
+        // 카테고리가 없을 경우 '기타' 처리
+        if (data.category_group_name === null || data.category_group_name === undefined || data.category_group_name.length === 0) {
+            pin.categoryGroupName = '기타';
+        }
 
         pin.marker = new kakao.maps.Marker({
             map: MAP,

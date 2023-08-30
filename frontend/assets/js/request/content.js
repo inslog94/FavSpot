@@ -49,16 +49,21 @@ export async function loginUserBoardReadRequest() {
     return response.json();
 }
 
-export async function pinSimpleCreateRequest(boardId, palceId) {
+export async function pinSimpleCreateRequest(board, place) {
 
-    let url = origin + '/pin/'
+    let url = origin + '/pin/';
 
     const response = await fetch(url, {
         method: 'POST',
-        body: {
-            board_id: boardId,
-            place_id: palceId
-        },
+        body: JSON.stringify({
+            category: place.categoryGroupName,
+            board_id: board.id,
+            title: place.title,
+            place_id: place.id,
+            new_address: place.roadAddressName,
+            old_address: place.addressName,
+            lat_lng: place.lat + ',' + place.lng,
+        }),
         credentials: "include",
         headers: {
             'Content-Type': 'application/json',
