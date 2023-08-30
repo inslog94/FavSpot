@@ -24,6 +24,10 @@ export const $searchPagination = document.getElementById('search_pagination');
 export const $keywordSearchBtn = document.getElementById('keywordSearchBtn');
 export const $screenBtn = document.getElementById('screen_btn');
 export const screenMode = {fullScreen: false};
+export const $boardAddModal = document.getElementById('board_add_modal');
+export const $boardAddTitle = document.getElementById('board_add_title');
+export const $boardAddTags = document.getElementById('board_add_tags');
+export const $boardAddBtn = document.getElementById('board_add_btn');
 
 export const $mainBoard = document.getElementById('main_board');
 

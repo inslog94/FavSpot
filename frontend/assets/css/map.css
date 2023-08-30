@@ -62,7 +62,7 @@
 .marker_overlay_content:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
 .marker_overlay_content .link {color: #5085BB;}
 
-.pin_save_overlay {width: 300px; height: 120px; background-color: white; border: 1px solid gray; border-radius: 10px; overflow-y: scroll; padding: 0px 10px 10px 10px;}
+.pin_save_overlay {width: 300px; height: 150px; background-color: white; border: 1px solid gray; border-radius: 10px; overflow-y: scroll; padding: 0px 10px 10px 10px;}
 .pin_save_overlay::-webkit-scrollbar {width: 6px; border: 1px solid black; border-radius: 5px;}
 .pin_save_overlay::-webkit-scrollbar-thumb {background: lightsteelblue; border: 1px solid black; border-radius: 5px;}
 .pin_save_board {display: flex; justify-content: space-between; margin-top: 10px; align-items: center; border-radius: 5px; padding: 5px;}
@@ -87,6 +87,85 @@
     width: 38px;
     height: 28px;
 }
+
+.board_add_box{
+    display: flex;
+    align-items: center;
+    box-shadow: 0px -4px 2px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+    border-radius: 5px;
+    padding: 5px;
+    height: 30px;
+}
+.board_add_box:hover {
+    background: #E9E9E9;
+}
+
+.board_add_box > span:first-child {
+    font-size: 18px;
+}
+.board_add_modal_cls {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+.board_add_modal_content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 50px 75px 100px 75px;
+    border-radius: 10px;
+    height: 200px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.board_add_modal_content > div:first-child {
+    margin-bottom: 40px;
+    font-size: 25px;
+}
+.board_add_modal_content > div:nth-child(2) div {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.board_add_modal_content > div:nth-child(2) div > *:first-child{
+    color: gray;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+.board_add_modal_content > div:nth-child(2) input {
+    width: 300px;
+    height: 30px;
+    border: 1px solid gray;
+    border-radius: 10px;
+}
+.board_add_modal_content > div:last-child {
+    width: 60px;
+    line-height: 40px;
+    background: #ff5757;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    margin-top: 30px;
+    margin-left: 245px;
+}
+.board_add_modal_content > div:last-child:hover{
+    background: #b54d4d;
+    cursor: pointer;
+}
+.board_add_modal_content > div:last-child:active {
+    width: 46px;
+    height: 28px;
+}
+
 
 header {display: flex; height: 4.5rem; align-items: center;}
 header > div:first-child {width: 48%;}

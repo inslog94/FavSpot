@@ -1,8 +1,21 @@
 import { displayMainBoards, getBoards, setMyBoard } from './board.js';
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS } from './data.js';
+import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $boardAddBtn, $boardAddModal } from './data.js';
 import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, fullScreen, fullScreenEnd } from './map.js';
 import { getPinContents, pinSimpleSave } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
+
+// 모든 오버레이 지도에서 제거
+export function removeAllOverlay() {
+    CLUSTER_OVRELAY.setContent(null);
+    CLUSTER_OVRELAY.setMap(null);
+    MARKER_OVERLAY.setContent(null);
+    MARKER_OVERLAY.setMap(null);
+    MARKER_OVERLAY_CONTENT.textContent = "";
+    PIN_SAVE_OVERLAY.setContent(null);
+    PIN_SAVE_OVERLAY.setMap(null);
+    PIN_SAVE_OVERLAY.setVisible(false);
+    PIN_SAVE_OVERLAY_CONTENT.textContent = "";
+}
 
 // 지도 초기화
 function mapSetup() {
@@ -17,13 +30,7 @@ function mapSetup() {
     MAP.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
     kakao.maps.event.addListener(MAP, 'click', mouseEvent=> {
-        CLUSTER_OVRELAY.setContent(null);
-        CLUSTER_OVRELAY.setMap(null);
-        MARKER_OVERLAY.setContent(null);
-        MARKER_OVERLAY.setMap(null);
-        PIN_SAVE_OVERLAY.setContent(null);
-        PIN_SAVE_OVERLAY.setMap(null);
-        PIN_SAVE_OVERLAY.setVisible(false);
+        removeAllOverlay();
     });
 
     // 지도 확대/축소 직전, 지도 레벨 저장
@@ -55,11 +62,9 @@ function mapSetup() {
         }
     });
 
-    // 지도 중심좌표 변경시 핀 생성 오버레이 삭제
+    // 지도 중심좌표 변경시 오버레이 삭제
     kakao.maps.event.addListener(MAP, 'center_changed', function() {
-        PIN_SAVE_OVERLAY.setContent(null);
-        PIN_SAVE_OVERLAY.setMap(null);
-        PIN_SAVE_OVERLAY.setVisible(false);
+        removeAllOverlay();
     });
 }
 
@@ -206,6 +211,20 @@ export function displayMarkerDetailInfo(markerInfo) {
 
             PIN_SAVE_OVERLAY_CONTENT.appendChild(boardBox);
         });
+
+        // 보드 만들기 버튼/이벤트 추가
+        let boardAddBtnBox = document.createElement('div');
+        let boardAddBtn = document.createElement('div');
+        
+        boardAddBtn.innerText = '보드 만들기';
+        boardAddBtnBox.classList.add('board_add_box');
+
+        boardAddBtnBox.addEventListener('click', ()=>{
+            $boardAddModal.style.display = 'flex';
+        });
+
+        boardAddBtnBox.appendChild(boardAddBtn);
+        PIN_SAVE_OVERLAY_CONTENT.appendChild(boardAddBtnBox);
                       
         PIN_SAVE_OVERLAY.setContent(PIN_SAVE_OVERLAY_CONTENT);
         PIN_SAVE_OVERLAY.setPosition(markerInfo.position);
@@ -237,10 +256,17 @@ export function displayMarkerDetailInfo(markerInfo) {
     MARKER_OVERLAY.setMap(MAP);
 }
 
+// 보드 닫기 이벤트
+function boardModalCloseEvent() {
+    window.addEventListener('click', (event) => {
+        if (event.target === $boardAddModal) {
+            $boardAddModal.style.display = 'none';
+        }
+    });
+}
+
 // 생성 버튼 클릭 이벤트
 function pinSimpleSaveEvent(element, board, place) {
-    console.log(board);
-    console.log(place);
     element.addEventListener('click', ()=>{
         pinSimpleSave(board, place);
     });
@@ -351,4 +377,5 @@ window.onload = function init() {
     mapFullScreenClickEvent();
     mainBoardSetup();
     setMyBoard();
+    boardModalCloseEvent();
 }
