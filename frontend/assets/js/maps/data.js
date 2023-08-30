@@ -74,3 +74,23 @@ MARKER_OVERLAY_CONTENT.addEventListener('mouseover', (e)=>{
 MARKER_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
     MAP.setZoomable(true);
 }, false);
+
+export const PIN_SAVE_OVERLAY = new kakao.maps.CustomOverlay({
+    map: MAP,
+    clickable: true,
+    xAnchor: 0,
+    yAnchor: 1,
+    zIndex: 1
+});
+export const PIN_SAVE_OVERLAY_CONTENT = document.createElement('div');
+PIN_SAVE_OVERLAY_CONTENT.classList.add('pin_save_overlay');
+PIN_SAVE_OVERLAY_CONTENT.addEventListener('mouseover', (e)=>{
+    MAP.setZoomable(false);
+}, false);
+
+PIN_SAVE_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
+    MAP.setZoomable(true);
+}, false);
+PIN_SAVE_OVERLAY.setVisible(false);
+
+export const MY_BOARDS = [];

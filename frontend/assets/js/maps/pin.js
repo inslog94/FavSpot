@@ -1,11 +1,17 @@
-import { pinContentsRequest } from "../request/content.js";
+import { pinContentsReadRequest, pinSimpleCreateRequest } from "../request/content.js";
 import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination, MARKERS } from "./data.js";
 import { displayMarkerDetailInfo, markerInfoClickEvent } from "./event.js";
 import { removeAllMarker, displayMarkers, mapRangeSetup, move } from "./map.js";
 
+export function pinSimpleSave(board, place) {
+    console.log(board);
+    console.log(place);
+    pinSimpleCreateRequest(board.id, place.id);
+}
+
 // 서버로부터 pin 목록 가져옴
 export async function getPinContents(marker) {
-    return await pinContentsRequest(marker.getTitle(), marker.getPosition().getLat(), marker.getPosition().getLng());
+    return await pinContentsReadRequest(marker.getTitle(), marker.getPosition().getLat(), marker.getPosition().getLng());
 }
 
 // 검색 결과 페이징

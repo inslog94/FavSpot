@@ -1,17 +1,30 @@
-import { boardRequest } from "../request/content.js";
-import { $mainBoard } from "./data.js";
+import { boardReadRequest, loginUserBoardReadRequest } from "../request/content.js";
+import { $mainBoard, MY_BOARDS } from "./data.js";
 
+// 해당 계정의 보드 세팅
+export async function setMyBoard() {
+    MY_BOARDS.length = 0;
+
+    const response = await loginUserBoardReadRequest();
+    const boards = response.Boards;
+
+    boards.forEach(board=>{
+        MY_BOARDS.push(board);
+    });
+}
+
+
+// 카카오 map 검색 결과와 관련된 보드 표시
 export async function displayRelatedBoards(keyword) {
     let boards = await getBoards(keyword);
-    console.log(boards);
     displayMainBoards(boards);
 }
 
-
 export async function getBoards(keyword) {
-    return await boardRequest(keyword);
+    return await boardReadRequest(keyword);
 }
 
+// 메인 보드 표시
 export function displayMainBoards(boards) {
     $mainBoard.textContent = '';
 

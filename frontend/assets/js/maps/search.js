@@ -45,6 +45,7 @@ function searchPlaceAsKeywordCB(data, status, pagination) {
 
         displayPagination(pagination);
     
+        // 검색 결과 관련된 보드 표시
         displayRelatedBoards($keyword.value);
 
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
