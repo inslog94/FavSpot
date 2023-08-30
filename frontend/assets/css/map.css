@@ -1,6 +1,7 @@
 .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
 .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
-.map_wrap {position:relative;width:90%;height:47rem;}
+.map_wrap {display: inline-block; position:relative;width:60%;height:90vh; margin-top: 0.5rem; border-radius: 15px;}
+#map {width:100%;height:100%;position:relative;overflow: hidden; border-radius: 15px;}
 #search_result_box {display:inline-block;position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.8);z-index: 1;font-size:12px;border-radius: 10px;}
 .bg_white {background:#fff;}
 #search_result_box hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
@@ -53,9 +54,52 @@
 .desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
 .desc .jibun {font-size: 11px;color: #888;margin-top: -0.5px;}
 .desc .phone {margin-top: 5px;}
-.desc .func {margin-top: 10px;}
-.desc .func .btn {display: block; width: 58px; height: 27px; background: #A74982; margin: 10px 20px 10px 0; padding: 0px; margin: 10px 20px 10px 0; text-align: center; color: #FFF; border: none; border-radius: 5px; transition: all 0.2s ;}
-.desc .func .btn:hover {width: 58px; height: 27px; background: #6D184B;}
+.desc .func {margin-top: 10px; display: flex;}
+.desc .func .btn {display: block; width: 58px; height: 27px; background: #ff5757; padding: 0px; text-align: center; color: #FFF; line-height: 25px; border: none; border-radius: 5px; transition: all 0.2s ;}
+.desc .func .btn:hover {width: 58px; height: 27px; background: #b54d4d;}
+.desc .func .btn:nth-child(n+2) {margin-left: 7px;}
 .marker_overlay_content .img {margin:10px 0 0 10px; width: 110px;height: 110px;border: 1px solid #ddd;color: #888;overflow: hidden;}
 .marker_overlay_content:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
 .marker_overlay_content .link {color: #5085BB;}
+
+.pin_save_overlay {width: 300px; height: 120px; background-color: white; border: 1px solid gray; border-radius: 10px; overflow-y: scroll; padding: 0px 10px 10px 10px;}
+.pin_save_overlay::-webkit-scrollbar {width: 6px; border: 1px solid black; border-radius: 5px;}
+.pin_save_overlay::-webkit-scrollbar-thumb {background: lightsteelblue; border: 1px solid black; border-radius: 5px;}
+.pin_save_board {display: flex; justify-content: space-between; margin-top: 10px; align-items: center; border-radius: 5px; padding: 5px;}
+.pin_save_board > div:first-child {display: flex; align-items: center;}
+.pin_save_board:hover {
+    background: #E9E9E9;
+}
+.pin_save_btn {
+    width: 40px;
+    height: 30px;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid gray;
+    color: black;
+    text-align: center;
+    line-height: 30px;
+}
+.pin_save_btn:hover{
+    opacity: 0.6;
+}
+.pin_save_btn:active {
+    width: 38px;
+    height: 28px;
+}
+
+header {display: flex; height: 4.5rem; align-items: center;}
+header > div:first-child {width: 48%;}
+header > div:last-child {display: flex; width: 100%; align-items: center; justify-content: space-around;}
+header .img_box {width: 100px; height: 100%;overflow: hidden; margin: 0 auto;}
+header .img_box > img {width: 100%; height: 100%; object-fit: cover;}
+header .img_box:last-child {width: 35px; height: 35px;overflow: hidden; margin: 0 auto;}
+
+.main_board_list {width: 38%; display: flex; flex-direction: column; padding-top: 1rem; padding-left: 20px;}
+.main_board_list .board_set {width: 100%; display: flex; height: 25vh; margin-top: 1rem;}
+.board_set .board {width: 48%; margin-right: 20px; height: 100%;}
+.board .img_box {height: 80%; border: 1px solid black; border-radius: 15px; overflow: hidden; margin: 0 auto;}
+.img_box img {width: 100%; height: 100%; object-fit: cover;}
+.board .info {height: 20%; margin-top: 5px; margin-left: 5px; margin-right: 10px;}
+.board .info > div:first-child{display: flex; justify-content: space-between;}
+.board .info > div:last-child{margin-top: -1px; color:gray; font-size: 14px;}

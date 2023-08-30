@@ -22,16 +22,10 @@ export const $searchResultBox = document.getElementById('search_result_box');
 export const $keyword = document.getElementById('keyword');
 export const $searchPagination = document.getElementById('search_pagination');
 export const $keywordSearchBtn = document.getElementById('keywordSearchBtn');
+export const $screenBtn = document.getElementById('screen_btn');
+export const screenMode = {fullScreen: false};
 
-export const $pinContentBox = document.getElementById('pin_content_box');
-export const $pinDetailTitle = document.getElementById('pin_detail_title');
-export const $pinDetailCategory = document.getElementById('pin_detail_category');
-export const $pinDetailRoadAddressName = document.getElementById('pin_detail_road_address_name');
-export const $pinDetailAddressName = document.getElementById('pin_detail_address_name');
-export const $pinDetailPhone = document.getElementById('pin_detail_phone');
-export const $pinContents = document.getElementById('pin_contents');
-export const $pinContentBoxCloseBtn = document.getElementById('pin_detail_close_btn');
-export const PIN_CONTENTS_NEXT_ENDPOINT = {value:''};
+export const $mainBoard = document.getElementById('main_board');
 
 export const MARKER = new kakao.maps.Marker({
         clickable: true
@@ -80,3 +74,23 @@ MARKER_OVERLAY_CONTENT.addEventListener('mouseover', (e)=>{
 MARKER_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
     MAP.setZoomable(true);
 }, false);
+
+export const PIN_SAVE_OVERLAY = new kakao.maps.CustomOverlay({
+    map: MAP,
+    clickable: true,
+    xAnchor: 0,
+    yAnchor: 1,
+    zIndex: 1
+});
+export const PIN_SAVE_OVERLAY_CONTENT = document.createElement('div');
+PIN_SAVE_OVERLAY_CONTENT.classList.add('pin_save_overlay');
+PIN_SAVE_OVERLAY_CONTENT.addEventListener('mouseover', (e)=>{
+    MAP.setZoomable(false);
+}, false);
+
+PIN_SAVE_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
+    MAP.setZoomable(true);
+}, false);
+PIN_SAVE_OVERLAY.setVisible(false);
+
+export const MY_BOARDS = [];

@@ -1,3 +1,4 @@
+import { displayRelatedBoards } from "./board.js";
 import { PLACE, $keyword, CURRENT_POSITION } from "./data.js";
 import { displaySearchPlace, displayPagination } from "./pin.js";
 
@@ -43,6 +44,9 @@ function searchPlaceAsKeywordCB(data, status, pagination) {
         displaySearchPlace(data);
 
         displayPagination(pagination);
+    
+        // 검색 결과 관련된 보드 표시
+        displayRelatedBoards($keyword.value);
 
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
 
