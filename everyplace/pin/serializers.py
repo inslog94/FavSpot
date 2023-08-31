@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Pin, PinContent
 from django.contrib.auth import get_user_model
+from user.serializers import UserSerializer
 
 User = get_user_model()
 
@@ -10,14 +11,19 @@ class PinSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pin
         fields = ['category', 'board_id', 'place_id', 'title',
-                  'thumbnail_img', 'new_address', 'old_address', 'lat_lng']
+                  'thumbnail_img', 'new_address', 'old_address', 'lat_lng', 'updated_at']
 
 
 class PinContentSerializer(serializers.ModelSerializer):
+    email = serializers.SerializerMethodField()
 
     class Meta:
         model = PinContent
-        fields = ['user_id', 'text', 'photo']
+        fields = ['id', 'email', 'user_id', 'text', 'photo']
+
+    # 유저 email 정보 추가
+    def get_email(self, obj):
+        return UserSerializer(obj.user_id).data['email']
 
 
 # 보드 상세보기 시 표기 될 내용을 담은 serializer
