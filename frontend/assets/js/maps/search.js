@@ -1,5 +1,6 @@
 import { displayRelatedBoards } from "./board.js";
-import { PLACE, $keyword, CURRENT_POSITION } from "./data.js";
+import { PLACE, $keyword, CURRENT_POSITION, PIN_SAVE_OVERLAY, MARKER_OVERLAY } from "./data.js";
+import { removeAllOverlay } from "./event.js";
 import { displaySearchPlace, displayPagination } from "./pin.js";
 
 export function searchPlaceAsKeyword() {
@@ -10,6 +11,9 @@ export function searchPlaceAsKeyword() {
         alert('키워드를 입력해주세요!');
         return false;
     }
+
+    // 검색시 기존 남아있는 오버레이 제거
+    removeAllOverlay();
 
     if (keyword.startsWith('근처')) {
         searchPlaceAsKeywordOnAround(keyword);

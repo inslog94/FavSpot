@@ -1,8 +1,28 @@
-import { displayMainBoards, getBoards, setMyBoard } from './board.js';
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS } from './data.js';
+import { boardSimpleSave, displayBoardsOnOverlay, displayMainBoards, getBoards, setMyBoard } from './board.js';
+import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $boardAddModal, $boardModalNextBtn, $boardModalSaveBtn, $boardInputBox1, $boardInputBox2, $boardModalTagsInput, $boardModalTitleInput, $boardConfirmModal, $boardConfirmModalBtn, $boardAddResult, $boardAddModalContent } from './data.js';
 import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, fullScreen, fullScreenEnd } from './map.js';
 import { getPinContents, pinSimpleSave } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
+
+// 모든 오버레이 지도에서 제거
+export function removeAllOverlay() {
+    CLUSTER_OVRELAY.setContent(null);
+    CLUSTER_OVRELAY.setMap(null);
+    MARKER_OVERLAY.setContent(null);
+    MARKER_OVERLAY.setMap(null);
+    MARKER_OVERLAY_CONTENT.textContent = "";
+    PIN_SAVE_OVERLAY.setContent(null);
+    PIN_SAVE_OVERLAY.setMap(null);
+    PIN_SAVE_OVERLAY.setVisible(false);
+    PIN_SAVE_OVERLAY_CONTENT.textContent = "";
+}
+
+export function removePinSaveOverlay() {
+    PIN_SAVE_OVERLAY.setContent(null);
+    PIN_SAVE_OVERLAY.setMap(null);
+    PIN_SAVE_OVERLAY.setVisible(false);
+    PIN_SAVE_OVERLAY_CONTENT.textContent = "";
+}
 
 // 지도 초기화
 function mapSetup() {
@@ -17,12 +37,7 @@ function mapSetup() {
     MAP.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
     kakao.maps.event.addListener(MAP, 'click', mouseEvent=> {
-        CLUSTER_OVRELAY.setContent(null);
-        CLUSTER_OVRELAY.setMap(null);
-        MARKER_OVERLAY.setContent(null);
-        MARKER_OVERLAY.setMap(null);
-        PIN_SAVE_OVERLAY.setContent(null);
-        PIN_SAVE_OVERLAY.setMap(null);
+        removeAllOverlay();
     });
 
     // 지도 확대/축소 직전, 지도 레벨 저장
@@ -52,6 +67,11 @@ function mapSetup() {
             CLUSTER_OVRELAY.setPosition(newOverlayPosition);
             CLUSTERER.redraw();
         }
+    });
+
+    // 지도 중심좌표 변경시 오버레이 삭제
+    kakao.maps.event.addListener(MAP, 'center_changed', function() {
+        removePinSaveOverlay();
     });
 }
 
@@ -158,6 +178,7 @@ export function displayMarkerDetailInfo(markerInfo) {
     saveBtn.addEventListener('click', ()=> {
         
         let open = PIN_SAVE_OVERLAY.getVisible();
+
         if (open) {
             PIN_SAVE_OVERLAY_CONTENT.textContent = "";
             PIN_SAVE_OVERLAY.setContent(null);    
@@ -166,43 +187,7 @@ export function displayMarkerDetailInfo(markerInfo) {
             return;
         }
 
-        MY_BOARDS.forEach(board=>{
-            let boardBox = document.createElement('div');
-            let titleBox = document.createElement('div');
-            let thumnail = document.createElement('img');
-            let title = document.createElement('span');
-            let pinSaveBtn = document.createElement('div');
-
-            title.innerText = board.title;
-            pinSaveBtn.innerText = '생성';
-            if (board.thumnail_imgs === null || board.thumnail_imgs === undefined || board.thumnail_imgs.length === 0) {
-                thumnail.src = 'assets/img/favspot.png';
-            } else {
-                thumnail.src = board.thumnail_imgs[0];
-            }
-            thumnail.style.width = '50px';
-            thumnail.style.height = '40px';
-            thumnail.style.marginRight = '7px';
-
-            titleBox.appendChild(thumnail);
-            titleBox.append(title);
-            boardBox.appendChild(titleBox);
-            boardBox.appendChild(pinSaveBtn);
-          
-            boardBox.classList.add('pin_save_board');
-            pinSaveBtn.classList.add('pin_save_btn');
-
-            pinSaveBtn.addEventListener('click', ()=>{
-                pinSimpleSave(board, markerInfo)
-            });
-
-            PIN_SAVE_OVERLAY_CONTENT.appendChild(boardBox);
-        });
-                      
-        PIN_SAVE_OVERLAY.setContent(PIN_SAVE_OVERLAY_CONTENT);
-        PIN_SAVE_OVERLAY.setPosition(markerInfo.position);
-        PIN_SAVE_OVERLAY.setMap(MAP);
-        PIN_SAVE_OVERLAY.setVisible(true);
+        displayBoardsOnOverlay(markerInfo);
     });
 
 
@@ -227,6 +212,63 @@ export function displayMarkerDetailInfo(markerInfo) {
     MARKER_OVERLAY.setContent(MARKER_OVERLAY_CONTENT_BOX);
     MARKER_OVERLAY.setPosition(markerInfo.position);
     MARKER_OVERLAY.setMap(MAP);
+}
+
+// 보드 생성 모달 닫기 이벤트
+function boardModalCloseEvent() {
+    window.addEventListener('click', (event) => {
+        if (event.target === $boardAddModal) {
+            $boardModalTitleInput.value = '';
+            $boardModalTagsInput.value = '';
+            $boardModalNextBtn.style.display = 'block';
+            $boardModalSaveBtn.style.display = 'none';
+            $boardInputBox1.style.display = 'flex';
+            $boardInputBox2.style.display = 'none';
+            $boardAddModal.style.display = 'none';
+            $boardAddModalContent.style.display = 'none';
+            $boardConfirmModal.style.display = 'none';
+        }
+    });
+}
+
+function boardModalNextBtnClickEvent() {
+    $boardModalNextBtn.addEventListener('click', ()=>{
+        $boardModalNextBtn.style.display = 'none';
+        $boardModalSaveBtn.style.display = 'block';
+        $boardInputBox1.style.display = 'none';
+        $boardInputBox2.style.display = 'flex';
+    });
+
+    $boardModalSaveBtn.addEventListener('click', async ()=>{
+        let title = $boardModalTitleInput.value;
+        let tags = $boardModalTagsInput.value.split;
+        let created = await boardSimpleSave(title, tags);
+        
+        if (created) {
+            setMyBoard();
+        } else {
+            $boardAddResult.innerText = '보드를 생성하는게 문제가 발생했습니다 다시 시도해주세요';
+        }
+
+        $boardModalTitleInput.value = '';
+        $boardModalTagsInput.value = '';
+        $boardAddModalContent.style.display = 'none';
+        $boardConfirmModal.style.display = 'flex';
+
+    });
+
+    $boardConfirmModalBtn.addEventListener('click', ()=>{
+        $boardModalTitleInput.value = '';
+        $boardModalTagsInput.value = '';
+        $boardModalNextBtn.style.display = 'block';
+        $boardModalSaveBtn.style.display = 'none';
+        $boardInputBox1.style.display = 'flex';
+        $boardInputBox2.style.display = 'none';
+        $boardAddModal.style.display = 'none';
+        $boardAddModalContent.style.display = 'none';
+        $boardConfirmModal.style.display = 'none';
+        removePinSaveOverlay();
+    });
 }
 
 export function markerDetailContentClickEvent(marker) {
@@ -334,4 +376,6 @@ window.onload = function init() {
     mapFullScreenClickEvent();
     mainBoardSetup();
     setMyBoard();
+    boardModalCloseEvent();
+    boardModalNextBtnClickEvent();
 }
