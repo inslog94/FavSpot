@@ -1,5 +1,5 @@
-import { displayMainBoards, getBoards, setMyBoard } from './board.js';
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $boardAddModal, $boardModalNextBtn, $boardModalSaveBtn, $boardInputBox1, $boardInputBox2, $boardModalTagsInput, $boardModalTitleInput } from './data.js';
+import { boardSimpleSave, displayBoardsOnOverlay, displayMainBoards, getBoards, setMyBoard } from './board.js';
+import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $boardAddModal, $boardModalNextBtn, $boardModalSaveBtn, $boardInputBox1, $boardInputBox2, $boardModalTagsInput, $boardModalTitleInput, $boardConfirmModal, $boardConfirmModalBtn, $boardAddResult, $boardAddModalContent } from './data.js';
 import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, fullScreen, fullScreenEnd } from './map.js';
 import { getPinContents, pinSimpleSave } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
@@ -187,56 +187,7 @@ export function displayMarkerDetailInfo(markerInfo) {
             return;
         }
 
-        MY_BOARDS.forEach(board=>{
-            let boardBox = document.createElement('div');
-            let titleBox = document.createElement('div');
-            let thumnail = document.createElement('img');
-            let title = document.createElement('span');
-            let pinSaveBtn = document.createElement('div');
-
-            title.innerText = board.title;
-            pinSaveBtn.innerText = '생성';
-            if (board.thumnail_imgs === null || board.thumnail_imgs === undefined || board.thumnail_imgs.length === 0) {
-                thumnail.src = 'assets/img/favspot.png';
-            } else {
-                thumnail.src = board.thumnail_imgs[0];
-            }
-            thumnail.style.width = '50px';
-            thumnail.style.height = '40px';
-            thumnail.style.marginRight = '7px';
-
-            titleBox.appendChild(thumnail);
-            titleBox.append(title);
-            boardBox.appendChild(titleBox);
-            boardBox.appendChild(pinSaveBtn);
-          
-            boardBox.classList.add('pin_save_board');
-            pinSaveBtn.classList.add('pin_save_btn');
-
-            // 생성 버튼 클릭 이벤트
-            pinSimpleSaveEvent(pinSaveBtn, board, markerInfo);
-
-            PIN_SAVE_OVERLAY_CONTENT.appendChild(boardBox);
-        });
-
-        // 보드 만들기 버튼/이벤트 추가
-        let boardAddBtnBox = document.createElement('div');
-        let boardAddBtn = document.createElement('div');
-        
-        boardAddBtn.innerText = '보드 만들기';
-        boardAddBtnBox.classList.add('board_add_box');
-
-        boardAddBtnBox.addEventListener('click', ()=>{
-            $boardAddModal.style.display = 'flex';
-        });
-
-        boardAddBtnBox.appendChild(boardAddBtn);
-        PIN_SAVE_OVERLAY_CONTENT.appendChild(boardAddBtnBox);
-                      
-        PIN_SAVE_OVERLAY.setContent(PIN_SAVE_OVERLAY_CONTENT);
-        PIN_SAVE_OVERLAY.setPosition(markerInfo.position);
-        PIN_SAVE_OVERLAY.setMap(MAP);
-        PIN_SAVE_OVERLAY.setVisible(true);
+        displayBoardsOnOverlay(markerInfo);
     });
 
 
@@ -274,6 +225,8 @@ function boardModalCloseEvent() {
             $boardInputBox1.style.display = 'flex';
             $boardInputBox2.style.display = 'none';
             $boardAddModal.style.display = 'none';
+            $boardAddModalContent.style.display = 'none';
+            $boardConfirmModal.style.display = 'none';
         }
     });
 }
@@ -286,15 +239,35 @@ function boardModalNextBtnClickEvent() {
         $boardInputBox2.style.display = 'flex';
     });
 
-    $boardModalSaveBtn.addEventListener('click', ()=>{
+    $boardModalSaveBtn.addEventListener('click', async ()=>{
+        let title = $boardModalTitleInput.value;
+        let tags = $boardModalTagsInput.value.split;
+        let created = await boardSimpleSave(title, tags);
+        
+        if (created) {
+            setMyBoard();
+        } else {
+            $boardAddResult.innerText = '보드를 생성하는게 문제가 발생했습니다 다시 시도해주세요';
+        }
+
+        $boardModalTitleInput.value = '';
+        $boardModalTagsInput.value = '';
+        $boardAddModalContent.style.display = 'none';
+        $boardConfirmModal.style.display = 'flex';
 
     });
-}
 
-// 생성 버튼 클릭 이벤트
-function pinSimpleSaveEvent(element, board, place) {
-    element.addEventListener('click', ()=>{
-        pinSimpleSave(board, place);
+    $boardConfirmModalBtn.addEventListener('click', ()=>{
+        $boardModalTitleInput.value = '';
+        $boardModalTagsInput.value = '';
+        $boardModalNextBtn.style.display = 'block';
+        $boardModalSaveBtn.style.display = 'none';
+        $boardInputBox1.style.display = 'flex';
+        $boardInputBox2.style.display = 'none';
+        $boardAddModal.style.display = 'none';
+        $boardAddModalContent.style.display = 'none';
+        $boardConfirmModal.style.display = 'none';
+        removePinSaveOverlay();
     });
 }
 

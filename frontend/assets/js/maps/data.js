@@ -28,12 +28,16 @@ export const $keywordSearchBtn = document.getElementById('keywordSearchBtn');
 export const $screenBtn = document.getElementById('screen_btn');
 export const screenMode = {fullScreen: false};
 export const $boardAddModal = document.getElementById('board_add_modal');
+export const $boardAddModalContent = document.getElementById('board_content_modal');
 export const $boardInputBox1 = document.getElementById('board_input_box1');
 export const $boardInputBox2 = document.getElementById('board_input_box2');
 export const $boardModalTitleInput = document.getElementById('board_add_title');
 export const $boardModalTagsInput = document.getElementById('board_add_tags');
 export const $boardModalNextBtn = document.getElementById('board_add_next_btn');
 export const $boardModalSaveBtn = document.getElementById('board_add_c_btn');
+export const $boardConfirmModal = document.getElementById('board_confirm_modal');
+export const $boardConfirmModalBtn = document.getElementById('board_add_confirm_btn');
+export const $boardAddResult = document.getElementById('board_add_result');
 
 export const $mainBoard = document.getElementById('main_board');
 

@@ -3,8 +3,10 @@ import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagin
 import { displayMarkerDetailInfo, markerInfoClickEvent } from "./event.js";
 import { removeAllMarker, displayMarkers, mapRangeSetup, move } from "./map.js";
 
-export function pinSimpleSave(board, place) {
-    pinSimpleCreateRequest(board, place);
+export async function pinSimpleSave(board, place) {
+    let result= await pinSimpleCreateRequest(board, place);
+    // result status code에 따른 return 처리 필요
+    return true;
 }
 
 // 서버로부터 pin 목록 가져옴

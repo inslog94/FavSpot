@@ -46,7 +46,7 @@
         </div>
     </main>
     <div id="board_add_modal" class="board_add_modal_cls">
-        <div class="board_add_modal_content">
+        <div id="board_content_modal" class="board_add_modal_content">
             <div>
                 <span>어떤 보드를 만드실건가요?</span>
             </div>
@@ -62,6 +62,12 @@
             </div>
             <div id="board_add_next_btn">다음</div>
             <div id="board_add_c_btn">생성</div>
+        </div>
+        <div id="board_confirm_modal" class="board_add_modal_content" style="height: 100px; display: none;">
+            <div>
+                <span id="board_add_result">보드가 성공적으로 생성되었습니다 !</span>
+            </div>
+            <div id="board_add_confirm_btn">확인</div>
         </div>
     </div>
 </body>

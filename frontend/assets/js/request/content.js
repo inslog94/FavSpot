@@ -46,7 +46,7 @@ export async function loginUserBoardReadRequest() {
         }
     });
 
-    return response.json();
+    return await response.json();
 }
 
 export async function pinSimpleCreateRequest(board, place) {
@@ -69,7 +69,30 @@ export async function pinSimpleCreateRequest(board, place) {
             'Content-Type': 'application/json',
             Accept: 'application/json'
         }
+    }).catch(error=> {
+        alert(error);
     });
 
-    return response.json();
+    return await response.json();
+}
+
+export async function boardSimpleCreateRequest(title, tags) {
+    let url = origin + '/board/';
+
+    const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+            title: title,
+            tags: tags
+        }),
+        credentials: "include",
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+        }
+    }).catch(error=>{
+        alert(error);
+    });
+
+    return await response.json();
 }
