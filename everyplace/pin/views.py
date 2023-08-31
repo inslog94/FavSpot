@@ -64,9 +64,9 @@ class PinView(APIView):
 
     # ## pin 상세정보 조회
 
-    def get(self, request, title, lat_lng):
+    def get(self, request, place_id):
         pin = get_object_or_404(
-            Pin, title=title, lat_lng=lat_lng, is_deleted=False)
+            Pin, place_id=place_id, is_deleted=False)
 
         # pin에 포함된 pin content 갯수 세기
         pin_content_count = PinContent.objects.filter(
@@ -162,6 +162,8 @@ class PinView(APIView):
             'pin_content_errors': {}
         }, status=status.HTTP_400_BAD_REQUEST)
 
+
+class PinContentView(APIView):
     # ## pin content 수정
     def put(self, request, pk):
         pin_content = get_object_or_404(PinContent, pk=pk)
