@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from .models import Pin, PinContent
 from .serializers import PinSerializer, PinContentSerializer
-from rest_framework.pagination import PageNumberPagination
+from .paginations import CustomPagination
 import json
 import requests
 from bs4 import BeautifulSoup
@@ -73,7 +73,7 @@ class PinView(APIView):
             pin_id=pin, is_deleted=False).count()
 
         # 페이지네이션 적용
-        paginator = PageNumberPagination()
+        paginator = CustomPagination()
         paginator.page_size = 3
         # pin content 중 내용이 없는 객체는 보여주지 않음. 최신순으로 정렬
         pin_contents = PinContent.objects.filter(
