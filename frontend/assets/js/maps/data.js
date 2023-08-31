@@ -16,6 +16,9 @@ export const $container = document.getElementById('map');
 export const MAP_OPTIONS = { center: CURRENT_POSITION, level: INIT_MAP_LEVEL};
 export const MAP = new kakao.maps.Map($container, MAP_OPTIONS);
 export const BASE_MAP_LEVEL = {value:MAP_OPTIONS.level};
+let imageSrc = 'assets/img/fav.png';
+let imageSize = new kakao.maps.Size(41, 45);
+export const MARKER_IMG = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
 export const $searchResultList = document.getElementById('search_results');
 export const $searchResultBox = document.getElementById('search_result_box');
@@ -25,9 +28,12 @@ export const $keywordSearchBtn = document.getElementById('keywordSearchBtn');
 export const $screenBtn = document.getElementById('screen_btn');
 export const screenMode = {fullScreen: false};
 export const $boardAddModal = document.getElementById('board_add_modal');
-export const $boardAddTitle = document.getElementById('board_add_title');
-export const $boardAddTags = document.getElementById('board_add_tags');
-export const $boardAddBtn = document.getElementById('board_add_btn');
+export const $boardInputBox1 = document.getElementById('board_input_box1');
+export const $boardInputBox2 = document.getElementById('board_input_box2');
+export const $boardModalTitleInput = document.getElementById('board_add_title');
+export const $boardModalTagsInput = document.getElementById('board_add_tags');
+export const $boardModalNextBtn = document.getElementById('board_add_next_btn');
+export const $boardModalSaveBtn = document.getElementById('board_add_c_btn');
 
 export const $mainBoard = document.getElementById('main_board');
 

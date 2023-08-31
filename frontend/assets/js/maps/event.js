@@ -1,5 +1,5 @@
 import { displayMainBoards, getBoards, setMyBoard } from './board.js';
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $boardAddBtn, $boardAddModal } from './data.js';
+import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $boardAddModal, $boardModalNextBtn, $boardModalSaveBtn, $boardInputBox1, $boardInputBox2, $boardModalTagsInput, $boardModalTitleInput } from './data.js';
 import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, fullScreen, fullScreenEnd } from './map.js';
 import { getPinContents, pinSimpleSave } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
@@ -11,6 +11,13 @@ export function removeAllOverlay() {
     MARKER_OVERLAY.setContent(null);
     MARKER_OVERLAY.setMap(null);
     MARKER_OVERLAY_CONTENT.textContent = "";
+    PIN_SAVE_OVERLAY.setContent(null);
+    PIN_SAVE_OVERLAY.setMap(null);
+    PIN_SAVE_OVERLAY.setVisible(false);
+    PIN_SAVE_OVERLAY_CONTENT.textContent = "";
+}
+
+export function removePinSaveOverlay() {
     PIN_SAVE_OVERLAY.setContent(null);
     PIN_SAVE_OVERLAY.setMap(null);
     PIN_SAVE_OVERLAY.setVisible(false);
@@ -64,7 +71,7 @@ function mapSetup() {
 
     // 지도 중심좌표 변경시 오버레이 삭제
     kakao.maps.event.addListener(MAP, 'center_changed', function() {
-        removeAllOverlay();
+        removePinSaveOverlay();
     });
 }
 
@@ -256,12 +263,31 @@ export function displayMarkerDetailInfo(markerInfo) {
     MARKER_OVERLAY.setMap(MAP);
 }
 
-// 보드 닫기 이벤트
+// 보드 생성 모달 닫기 이벤트
 function boardModalCloseEvent() {
     window.addEventListener('click', (event) => {
         if (event.target === $boardAddModal) {
+            $boardModalTitleInput.value = '';
+            $boardModalTagsInput.value = '';
+            $boardModalNextBtn.style.display = 'block';
+            $boardModalSaveBtn.style.display = 'none';
+            $boardInputBox1.style.display = 'flex';
+            $boardInputBox2.style.display = 'none';
             $boardAddModal.style.display = 'none';
         }
+    });
+}
+
+function boardModalNextBtnClickEvent() {
+    $boardModalNextBtn.addEventListener('click', ()=>{
+        $boardModalNextBtn.style.display = 'none';
+        $boardModalSaveBtn.style.display = 'block';
+        $boardInputBox1.style.display = 'none';
+        $boardInputBox2.style.display = 'flex';
+    });
+
+    $boardModalSaveBtn.addEventListener('click', ()=>{
+
     });
 }
 
@@ -378,4 +404,5 @@ window.onload = function init() {
     mainBoardSetup();
     setMyBoard();
     boardModalCloseEvent();
+    boardModalNextBtnClickEvent();
 }

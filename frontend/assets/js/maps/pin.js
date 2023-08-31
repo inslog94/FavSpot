@@ -1,5 +1,5 @@
 import { pinContentsReadRequest, pinSimpleCreateRequest } from "../request/content.js";
-import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination, MARKERS } from "./data.js";
+import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination, MARKERS, MARKER_IMG } from "./data.js";
 import { displayMarkerDetailInfo, markerInfoClickEvent } from "./event.js";
 import { removeAllMarker, displayMarkers, mapRangeSetup, move } from "./map.js";
 
@@ -99,7 +99,8 @@ export function getMarkers(dataList) {
         pin.marker = new kakao.maps.Marker({
             map: MAP,
             position: pin.position,
-            title: pin.title
+            title: pin.title,
+            image: MARKER_IMG
         });
 
         MARKERS.push(pin);

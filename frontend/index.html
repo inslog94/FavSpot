@@ -40,7 +40,7 @@
                 <div id="search_pagination"></div>
             </div>
 
-            <button id="screen_btn" style="position: absolute; z-index: 1; top: 3rem; left: 63rem; width: 60px; height: 40px; border:0.5px solid gray; border-radius: 10px;">전체화면</button>
+            <button id="screen_btn" style="position: absolute; z-index: 1; top: 3rem; left: 62rem; width: 60px; height: 40px; border:0.5px solid gray; border-radius: 10px;">전체화면</button>
         </div>
         <div id="main_board" class="main_board_list">
         </div>
@@ -51,16 +51,17 @@
                 <span>어떤 보드를 만드실건가요?</span>
             </div>
             <div>
-                <div>
+                <div id="board_input_box1">
                     <label for="board_add_title">이름</label>
-                    <input type="text" id="board_add_title">
+                    <input type="text" id="board_add_title" placeholder="예: 동네 맛집, 버킷 리스트">
                 </div>
-                <div>
-                    <label for="board_add_tags">태그</label>
-                    <input type="text" id="board_add_tags">
+                <div id="board_input_box2">
+                    <label for="board_add_tags">태그<span> 쉼표(,)로 구분해주세요</span></label>
+                    <input type="text" id="board_add_tags" placeholder="예: 부산, 제주도, 맛집">
                 </div>
             </div>
-            <div id="board_add_btn">생성</div>
+            <div id="board_add_next_btn">다음</div>
+            <div id="board_add_c_btn">생성</div>
         </div>
     </div>
 </body>
