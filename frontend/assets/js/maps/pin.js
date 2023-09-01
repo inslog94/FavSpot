@@ -1,11 +1,17 @@
-import { pinContentsRequest } from "../request/content.js";
-import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination, MARKERS } from "./data.js";
+import { pinContentsReadRequest, pinSimpleCreateRequest } from "../request/content.js";
+import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination, MARKERS, MARKER_IMG } from "./data.js";
 import { displayMarkerDetailInfo, markerInfoClickEvent } from "./event.js";
 import { removeAllMarker, displayMarkers, mapRangeSetup, move } from "./map.js";
 
+export async function pinSimpleSave(board, place) {
+    let result= await pinSimpleCreateRequest(board, place);
+    // result status code에 따른 return 처리 필요
+    return true;
+}
+
 // 서버로부터 pin 목록 가져옴
 export async function getPinContents(marker) {
-    return await pinContentsRequest(marker.getTitle(), marker.getPosition().getLat(), marker.getPosition().getLng());
+    return await pinContentsReadRequest(marker.getTitle(), marker.getPosition().getLat(), marker.getPosition().getLng());
 }
 
 // 검색 결과 페이징
@@ -87,10 +93,16 @@ export function getMarkers(dataList) {
         pin.placeURL = data.place_url;
         pin.roadAddressName = data.road_address_name;
 
+        // 카테고리가 없을 경우 '기타' 처리
+        if (data.category_group_name === null || data.category_group_name === undefined || data.category_group_name.length === 0) {
+            pin.categoryGroupName = '기타';
+        }
+
         pin.marker = new kakao.maps.Marker({
             map: MAP,
             position: pin.position,
-            title: pin.title
+            title: pin.title,
+            image: MARKER_IMG
         });
 
         MARKERS.push(pin);

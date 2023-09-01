@@ -1,7 +1,28 @@
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, $pinContentBoxCloseBtn, $pinContentBox, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX } from './data.js';
-import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, displayPinContents } from './map.js';
-import { getPinContents } from './pin.js';
+import { boardSimpleSave, displayBoardsOnOverlay, displayMainBoards, getBoards, setMyBoard } from './board.js';
+import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $boardAddModal, $boardModalNextBtn, $boardModalSaveBtn, $boardInputBox1, $boardInputBox2, $boardModalTagsInput, $boardModalTitleInput, $boardConfirmModal, $boardConfirmModalBtn, $boardAddResult, $boardAddModalContent } from './data.js';
+import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, fullScreen, fullScreenEnd } from './map.js';
+import { getPinContents, pinSimpleSave } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
+
+// 모든 오버레이 지도에서 제거
+export function removeAllOverlay() {
+    CLUSTER_OVRELAY.setContent(null);
+    CLUSTER_OVRELAY.setMap(null);
+    MARKER_OVERLAY.setContent(null);
+    MARKER_OVERLAY.setMap(null);
+    MARKER_OVERLAY_CONTENT.textContent = "";
+    PIN_SAVE_OVERLAY.setContent(null);
+    PIN_SAVE_OVERLAY.setMap(null);
+    PIN_SAVE_OVERLAY.setVisible(false);
+    PIN_SAVE_OVERLAY_CONTENT.textContent = "";
+}
+
+export function removePinSaveOverlay() {
+    PIN_SAVE_OVERLAY.setContent(null);
+    PIN_SAVE_OVERLAY.setMap(null);
+    PIN_SAVE_OVERLAY.setVisible(false);
+    PIN_SAVE_OVERLAY_CONTENT.textContent = "";
+}
 
 // 지도 초기화
 function mapSetup() {
@@ -16,10 +37,7 @@ function mapSetup() {
     MAP.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
     kakao.maps.event.addListener(MAP, 'click', mouseEvent=> {
-        CLUSTER_OVRELAY.setContent(null);
-        CLUSTER_OVRELAY.setMap(null);
-        MARKER_OVERLAY.setContent(null);
-        MARKER_OVERLAY.setMap(null);
+        removeAllOverlay();
     });
 
     // 지도 확대/축소 직전, 지도 레벨 저장
@@ -50,10 +68,15 @@ function mapSetup() {
             CLUSTERER.redraw();
         }
     });
+
+    // 지도 중심좌표 변경시 오버레이 삭제
+    kakao.maps.event.addListener(MAP, 'center_changed', function() {
+        removePinSaveOverlay();
+    });
 }
 
-// 마커 드래그 기능
 function markerCreateEvent() {
+    // 마커 드래그 기능
     MARKER.setDraggable(true);
 
     // 지도 클릭시 마커 생성 이벤트
@@ -86,7 +109,7 @@ export function markerInfoHoverEvent(marker, infoWindow) {
 
 }
 
-// 마커 클릭시 인포 윈도우 표시
+// 마커 클릭시 오버레이
 export function markerInfoClickEvent(markerInfo) {
 
     if (markerInfo.title === null || markerInfo.title === undefined || markerInfo.title.length <= 0) {
@@ -98,83 +121,154 @@ export function markerInfoClickEvent(markerInfo) {
     });
 }
 
+// 마커 오버레이(메타 데이터 표시)
 export function displayMarkerDetailInfo(markerInfo) {
     MARKER_OVERLAY.setMap(null);
-        MARKER_OVERLAY.setContent(null);
-        MARKER_OVERLAY_CONTENT.textContent = "";
-        PIN_INFO_WINDOW.close();
+    MARKER_OVERLAY.setContent(null);
+    MARKER_OVERLAY_CONTENT.textContent = "";
+    PIN_INFO_WINDOW.close();
 
-        let titleBox = document.createElement('div'); 
+    let titleBox = document.createElement('div'); 
+    let infoBox = document.createElement('div');
+    let functionBox = document.createElement('div');
+
+    let titleEl = document.createElement('span');
+    let categoryEl = document.createElement('span');
+    let contentBody = document.createElement('div');        
+    let addressNameEl = document.createElement('div');
+    let roadAddressNameEl = document.createElement('div');
+    let phoneEl = document.createElement('div');
+    let contentBtn = document.createElement('div');
+    let saveBtn = document.createElement('div');
+
+    titleBox.classList.add('title_box');
+    titleEl.classList.add('title');
+    categoryEl.classList.add('category');
+    contentBody.classList.add('body');
+    infoBox.classList.add('desc');
+    roadAddressNameEl.classList.add('ellipsis');
+    addressNameEl.classList.add('jibun', 'ellipsis');
+    phoneEl.classList.add('phone');
+    functionBox.classList.add('func');
+    contentBtn.classList.add('btn');
+    saveBtn.classList.add('btn');
+
+    titleEl.innerText = markerInfo.title;
+    addressNameEl.innerText = markerInfo.addressName;
+    roadAddressNameEl.innerText = markerInfo.roadAddressName;
+    categoryEl.innerText = markerInfo.categoryGroupName;
+    phoneEl.innerText = markerInfo.phone;
+    contentBtn.innerText = '핀 보기';
+    saveBtn.innerText = '핀 생성';
+
+    functionBox.appendChild(contentBtn);
+    functionBox.appendChild(saveBtn);
+    titleBox.appendChild(titleEl);
+    titleBox.appendChild(categoryEl);
+    infoBox.appendChild(roadAddressNameEl);
+    infoBox.appendChild(addressNameEl);
+    infoBox.appendChild(phoneEl);
+    infoBox.appendChild(functionBox);
+
+    contentBtn.addEventListener('click', ()=> {
+
+    });
+
+    // 핀 생성 버튼 클릭시 보드 목록 표시
+    saveBtn.addEventListener('click', ()=> {
+        
+        let open = PIN_SAVE_OVERLAY.getVisible();
+
+        if (open) {
+            PIN_SAVE_OVERLAY_CONTENT.textContent = "";
+            PIN_SAVE_OVERLAY.setContent(null);    
+            PIN_SAVE_OVERLAY.setMap(null);
+            PIN_SAVE_OVERLAY.setVisible(false);
+            return;
+        }
+
+        displayBoardsOnOverlay(markerInfo);
+    });
+
+
+    // 이미지 처리
+    if(markerInfo.photo !== null && markerInfo.photo !== undefined) {
         let imgBox = document.createElement('div');
-        let infoBox = document.createElement('div');
-        let functionBox = document.createElement('div');
-
-        let titleEl = document.createElement('span');
-        let categoryEl = document.createElement('span');
-        let contentBody = document.createElement('div');
-        let img = document.createElement('img');        
-        let addressNameEl = document.createElement('div');
-        let roadAddressNameEl = document.createElement('div');
-        let phoneEl = document.createElement('div');
-        let contentBtn = document.createElement('button');
-
-        titleBox.classList.add('title_box');
-        titleEl.classList.add('title');
-        categoryEl.classList.add('category');
-        contentBody.classList.add('body');
-        imgBox.classList.add('img');
-        infoBox.classList.add('desc');
-        roadAddressNameEl.classList.add('ellipsis');
-        addressNameEl.classList.add('jibun', 'ellipsis');
-        phoneEl.classList.add('phone');
-        functionBox.classList.add('func');
-        contentBtn.classList.add('btn');
-
-        let content = 
-            '        <div class=title_box>'
-            '           <div class="title">' + 
-            '               ' + markerInfo.title + 
-            '           <span>' +
-            '               ' + markerInfo.categoryGroupName +
-            '           </span>' +
-            '           </div>'
-            '        </div>' + 
-            '        <div class="body">' + 
-            '            <div class="img">' +
-            '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
-            '           </div>' + 
-            '            <div class="desc">' + 
-            '                <div class="ellipsis">' + markerInfo.roadAddressName + '</div>' + 
-            '                <div class="jibun ellipsis">(지번) '+ markerInfo.addressName + '</div>' + 
-            '                <div class="phone">'+ markerInfo.phone + '</div>' +
-            '            </div>' + 
-            '            <div> 전화번호 </div>'
-            '        </div>';
-
-        titleEl.innerText = markerInfo.title;
-        addressNameEl.innerText = markerInfo.addressName;
-        roadAddressNameEl.innerText = markerInfo.roadAddressName;
-        categoryEl.innerText = markerInfo.categoryGroupName;
-        phoneEl.innerText = markerInfo.phone;
+        let img = document.createElement('img');
         img.alt = '이미지';
-        contentBtn.innerText = '핀 보기';
-
-        functionBox.appendChild(contentBtn);
-        titleBox.appendChild(titleEl);
-        titleBox.appendChild(categoryEl);
-        infoBox.appendChild(roadAddressNameEl);
-        infoBox.appendChild(addressNameEl);
-        infoBox.appendChild(phoneEl);
-        infoBox.appendChild(functionBox);
+        imgBox.classList.add('img');
         imgBox.appendChild(img);
         contentBody.appendChild(imgBox);
-        contentBody.appendChild(infoBox);
-        MARKER_OVERLAY_CONTENT.appendChild(titleBox);
-        MARKER_OVERLAY_CONTENT.appendChild(contentBody);
+    } else {
+        MARKER_OVERLAY_CONTENT_BOX.style.width = '290px';
+        MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = '-145px';
+        MARKER_OVERLAY_CONTENT.style.width = '290px';
+    }
+    contentBody.appendChild(infoBox);
+
+    MARKER_OVERLAY_CONTENT.appendChild(titleBox);
+    MARKER_OVERLAY_CONTENT.appendChild(contentBody);
+    
+    MARKER_OVERLAY.setContent(MARKER_OVERLAY_CONTENT_BOX);
+    MARKER_OVERLAY.setPosition(markerInfo.position);
+    MARKER_OVERLAY.setMap(MAP);
+}
+
+// 보드 생성 모달 닫기 이벤트
+function boardModalCloseEvent() {
+    window.addEventListener('click', (event) => {
+        if (event.target === $boardAddModal) {
+            $boardModalTitleInput.value = '';
+            $boardModalTagsInput.value = '';
+            $boardModalNextBtn.style.display = 'block';
+            $boardModalSaveBtn.style.display = 'none';
+            $boardInputBox1.style.display = 'flex';
+            $boardInputBox2.style.display = 'none';
+            $boardAddModal.style.display = 'none';
+            $boardAddModalContent.style.display = 'none';
+            $boardConfirmModal.style.display = 'none';
+        }
+    });
+}
+
+function boardModalNextBtnClickEvent() {
+    $boardModalNextBtn.addEventListener('click', ()=>{
+        $boardModalNextBtn.style.display = 'none';
+        $boardModalSaveBtn.style.display = 'block';
+        $boardInputBox1.style.display = 'none';
+        $boardInputBox2.style.display = 'flex';
+    });
+
+    $boardModalSaveBtn.addEventListener('click', async ()=>{
+        let title = $boardModalTitleInput.value;
+        let tags = $boardModalTagsInput.value.split;
+        let created = await boardSimpleSave(title, tags);
         
-        MARKER_OVERLAY.setContent(MARKER_OVERLAY_CONTENT_BOX);
-        MARKER_OVERLAY.setPosition(markerInfo.position);
-        MARKER_OVERLAY.setMap(MAP);
+        if (created) {
+            setMyBoard();
+        } else {
+            $boardAddResult.innerText = '보드를 생성하는게 문제가 발생했습니다 다시 시도해주세요';
+        }
+
+        $boardModalTitleInput.value = '';
+        $boardModalTagsInput.value = '';
+        $boardAddModalContent.style.display = 'none';
+        $boardConfirmModal.style.display = 'flex';
+
+    });
+
+    $boardConfirmModalBtn.addEventListener('click', ()=>{
+        $boardModalTitleInput.value = '';
+        $boardModalTagsInput.value = '';
+        $boardModalNextBtn.style.display = 'block';
+        $boardModalSaveBtn.style.display = 'none';
+        $boardInputBox1.style.display = 'flex';
+        $boardInputBox2.style.display = 'none';
+        $boardAddModal.style.display = 'none';
+        $boardAddModalContent.style.display = 'none';
+        $boardConfirmModal.style.display = 'none';
+        removePinSaveOverlay();
+    });
 }
 
 export function markerDetailContentClickEvent(marker) {
@@ -251,10 +345,23 @@ function clusterClickEvent() {
     });
 }
 
-function pinContentBoxCloseEvent() {
-    $pinContentBoxCloseBtn.addEventListener('click', ()=>{
-        $pinContentBox.display = none;
+// 메인 페이지 화면 버튼 이벤트
+function mapFullScreenClickEvent() {
+    $screenBtn.addEventListener('click', ()=> {
+        
+        if (screenMode.fullScreen) {
+            fullScreenEnd();
+        } else {
+            fullScreen();
+        }
+        
     });
+}
+
+// 메인 페이지 보드 채우기
+export async function mainBoardSetup() {
+    let boards = await getBoards();
+    displayMainBoards(boards);
 }
 
 // 전체 기능 초기화
@@ -266,4 +373,9 @@ window.onload = function init() {
     markerClickZoomInEvent(MARKER);
     keywordSearchSetup();
     clusterClickEvent();
+    mapFullScreenClickEvent();
+    mainBoardSetup();
+    setMyBoard();
+    boardModalCloseEvent();
+    boardModalNextBtnClickEvent();
 }

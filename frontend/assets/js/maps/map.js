@@ -1,36 +1,6 @@
-import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, $pinContentBox, $pinDetailTitle, $pinDetailCategory, $pinDetailRoadAddressName, $pinDetailAddressName, $pinDetailPhone, $pinContents } from './data.js';
+import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, $screenBtn, screenMode, $container} from './data.js';
 import { markerInfoHoverEvent, markerClickZoomInEvent, markerDetailContentClickEvent, markerInfoClickEvent } from './event.js';
 
-export function displayPinContents(pinInfo, contents, count, nextPageURL) {
-    $pinContentBox.display = 'inline-block';
-
-    $pinDetailTitle.innerText = pinInfo.title;
-    $pinDetailCategory.innerText = pinInfo.category;
-    $pinDetailRoadAddressName.innerText = pinInfo.new_address;
-    $pinDetailAddressName.innerText = pinInfo.old_address;
-    // $pinDetailPhone.innerText = pinInfo.phone;
-
-    let liEl, userEl, textEl, photoEl;
-    contents.forEach(content=> {
-        liEl = document.createElement('li');
-        liEl.classList.add('pin_content');
-
-        userEl = document.createElement('div');
-        textEl = document.createElement('div');
-        photoEl = document.createElement('div');
-
-        userEl.innerText = content.user_id;
-        textEl.innertText = content.text;
-        photoEl.innerHTML = content.photoEl;
-
-        liEl.appendChild(userEl);
-        liEl.appendChild(textEl);
-        liEl.appendChild(photoEl);
-
-        $pinContents.appendChild(liEl);
-    });
-    
-}
 
 function displayMarker(pin) {
     pin.setMap(MAP);
@@ -60,6 +30,32 @@ export function closeZoomInLocation(location) {
 
 export function move(location) {
     MAP.panTo(location);
+}
+
+export function fullScreen() {
+    let mapBox = document.getElementsByClassName('map_wrap')[0];
+    let board = document.getElementById('main_board');
+
+    board.style.display = 'none';
+    mapBox.style.width = '98%';
+    $screenBtn.style.left = '106rem';
+    $screenBtn.innerText = '되돌리기';
+    screenMode.fullScreen = true;
+
+    MAP.relayout();
+}
+
+export function fullScreenEnd() {
+    let mapBox = document.getElementsByClassName('map_wrap')[0];
+    let board = document.getElementById('main_board');
+
+    board.style.display = 'block';
+    mapBox.style.width = '60%';
+    $screenBtn.style.left = '62rem';
+    $screenBtn.innerText = '전체화면';
+    screenMode.fullScreen = false;
+
+    MAP.relayout();
 }
 
 // 현재 위치 기반 지도 표시
