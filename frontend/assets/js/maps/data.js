@@ -109,3 +109,5 @@ PIN_SAVE_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
 PIN_SAVE_OVERLAY.setVisible(false);
 
 export const MY_BOARDS = [];
+
+export const PIN_DETAIL = {};

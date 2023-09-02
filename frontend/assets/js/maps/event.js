@@ -1,8 +1,8 @@
 import { getLoginUserInfoRequest } from '../request/content.js';
-import { boardSimpleSave, displayBoardsOnOverlay, displayMainBoards, getBoards, setMyBoard } from './board.js';
-import { $container, MAP, MAP_OPTIONS, MARKER, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $boardAddModal, $boardModalNextBtn, $boardModalSaveBtn, $boardInputBox1, $boardInputBox2, $boardModalTagsInput, $boardModalTitleInput, $boardConfirmModal, $boardConfirmModalBtn, $boardAddResult, $boardAddModalContent, ACCOUNT, $accountBtn } from './data.js';
-import { displayGeoLocationMap, displayMarkers, closeZoomInLocation, fullScreen, fullScreenEnd, move } from './map.js';
-import { getPinContents, pinSimpleSave } from './pin.js';
+import { boardSimpleSave, displayMainBoards, getBoards, setMyBoard } from './board.js';
+import { MAP, MAP_OPTIONS, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $boardAddModal, $boardModalNextBtn, $boardModalSaveBtn, $boardInputBox1, $boardInputBox2, $boardModalTagsInput, $boardModalTitleInput, $boardConfirmModal, $boardConfirmModalBtn, $boardAddResult, $boardAddModalContent, ACCOUNT } from './data.js';
+import { displayGeoLocationMap, closeZoomInLocation, fullScreen, fullScreenEnd, move } from './map.js';
+import { displayPinOverlay } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
 
 // 모든 오버레이 지도에서 제거
@@ -76,21 +76,6 @@ function mapSetup() {
     });
 }
 
-function markerCreateEvent() {
-    // 마커 드래그 기능
-    MARKER.setDraggable(true);
-
-    // 지도 클릭시 마커 생성 이벤트
-    kakao.maps.event.addListener(MAP, 'click', function(mouseEvent) {
-
-        let mapLevel = MAP.getLevel();
-        let position = mouseEvent.latLng;
-
-        MARKER.setPosition(position);
-        MARKER.setMap(MAP);
-    });
-}
-
 // 마커 mouseover시 상호명 표시
 export function markerInfoHoverEvent(marker, infoWindow) {
 
@@ -110,7 +95,7 @@ export function markerInfoHoverEvent(marker, infoWindow) {
 
 }
 
-// 마커 클릭시 오버레이
+// 마커 클릭시 오버레이 표시 이벤트
 export function markerInfoClickEvent(markerInfo) {
 
     if (markerInfo.title === null || markerInfo.title === undefined || markerInfo.title.length <= 0) {
@@ -122,7 +107,7 @@ export function markerInfoClickEvent(markerInfo) {
     });
 }
 
-// 마커 오버레이(메타 데이터 표시)
+// 마커 오버레이 표시
 export async function displayMarkerDetailInfo(markerInfo) {
     MARKER_OVERLAY.setMap(null);
     MARKER_OVERLAY.setContent(null);
@@ -130,144 +115,12 @@ export async function displayMarkerDetailInfo(markerInfo) {
     PIN_INFO_WINDOW.close();
 
     move(markerInfo.position);
-    let titleBox = document.createElement('div'); 
-    let infoBox = document.createElement('div');
-    let functionBox = document.createElement('div');
 
-    let titleEl = document.createElement('span');
-    let categoryEl = document.createElement('span');
-    let contentBody = document.createElement('div');        
-    let addressNameEl = document.createElement('div');
-    let roadAddressNameEl = document.createElement('div');
-    let phoneEl = document.createElement('div');
-    let contentBtn = document.createElement('div');
-    let saveBtn = document.createElement('div');
-
-    titleBox.classList.add('title_box');
-    titleEl.classList.add('title');
-    categoryEl.classList.add('category');
-    contentBody.classList.add('body');
-    infoBox.classList.add('desc');
-    roadAddressNameEl.classList.add('ellipsis');
-    addressNameEl.classList.add('jibun', 'ellipsis');
-    phoneEl.classList.add('phone');
-    functionBox.classList.add('func');
-    contentBtn.classList.add('btn');
-    saveBtn.classList.add('btn');
-
-    titleEl.innerText = markerInfo.title;
-    addressNameEl.innerText = markerInfo.addressName;
-    roadAddressNameEl.innerText = markerInfo.roadAddressName;
-    categoryEl.innerText = markerInfo.categoryGroupName;
-    phoneEl.innerText = markerInfo.phone;
-    contentBtn.innerText = '핀 보기';
-    saveBtn.innerText = '핀 생성';
-
-    functionBox.appendChild(contentBtn);
-    functionBox.appendChild(saveBtn);
-    titleBox.appendChild(titleEl);
-    titleBox.appendChild(categoryEl);
-    infoBox.appendChild(roadAddressNameEl);
-    infoBox.appendChild(addressNameEl);
-    infoBox.appendChild(phoneEl);
-    infoBox.appendChild(functionBox);
-
-    contentBtn.addEventListener('click', ()=> {
-        window.localStorage.setItem('CURRENT_PIN', markerInfo.id);
-        // location.href = 'test.html'
-    });
-
-    // 핀 생성 버튼 클릭시 보드 목록 표시
-    saveBtn.addEventListener('click', ()=> {
-        
-        if (!ACCOUNT.login) {
-            alert('로그인이 필요합니다');
-            return;
-        }
-
-        let open = PIN_SAVE_OVERLAY.getVisible();
-
-        if (open) {
-            PIN_SAVE_OVERLAY_CONTENT.textContent = "";
-            PIN_SAVE_OVERLAY.setContent(null);    
-            PIN_SAVE_OVERLAY.setMap(null);
-            PIN_SAVE_OVERLAY.setVisible(false);
-            return;
-        }
-
-        displayBoardsOnOverlay(markerInfo);
-    });
-
-
-    // 해당 핀의 썸네일 여부 처리
-    let pinThumbnail;
-    let pinContent = await getPinContents(markerInfo.title, markerInfo.lat, markerInfo.lng);
-    let boxHeight = 170;
-    let contentHeight = 160;
-
-    if (pinContent !== null) {
-        pinThumbnail = pinContent.results.pin.thumbnail_img;
-    }
-    
-    if(pinThumbnail !== null && pinThumbnail !== undefined && pinThumbnail.length > 0) {
-        let imgBox = document.createElement('div');
-        let img = document.createElement('img');
-        img.src = pinThumbnail;
-        img.alt = '이미지';
-        imgBox.classList.add('img');
-        imgBox.appendChild(img);
-        contentBody.appendChild(imgBox);
-
-        boxHeight += 60;
-        contentHeight += 60;
-        MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
-        MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
-        MARKER_OVERLAY_CONTENT.style.minWidth = '380px';
-        MARKER_OVERLAY_CONTENT_BOX.style.minWidth = '380px';
-        MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = '-145px';
-        MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = '-188px';
-        
-    } else {
-        MARKER_OVERLAY_CONTENT_BOX.style.minWidth = '290px';
-        MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
-        MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = '-145px';
-        MARKER_OVERLAY_CONTENT.style.minWidth = '290px';
-        MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
-        
-        if (markerInfo.phone !== undefined && markerInfo.phone !== null && markerInfo.phone.length > 0 ) {
-            boxHeight += 15;
-            contentHeight += 15;
-            MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
-            MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
-        }
-
-        if (markerInfo.roadAddressName !== undefined && markerInfo.roadAddressName !== null && markerInfo.roadAddressName.length > 0 ) {
-            boxHeight += 10;
-            contentHeight += 10;
-            MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
-            MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
-        }
-
-        if (markerInfo.addressName !== undefined && markerInfo.addressName !== null && markerInfo.addressName.length > 0 ) {
-            boxHeight += 10;
-            contentHeight += 10;
-            MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
-            MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
-        }
-
-    }
-    contentBody.appendChild(infoBox);
-
-    MARKER_OVERLAY_CONTENT.appendChild(titleBox);
-    MARKER_OVERLAY_CONTENT.appendChild(contentBody);
-    
-    MARKER_OVERLAY.setContent(MARKER_OVERLAY_CONTENT_BOX);
-    MARKER_OVERLAY.setPosition(markerInfo.position);
-    MARKER_OVERLAY.setMap(MAP);
+    displayPinOverlay(markerInfo);    
 }
 
 // 보드 생성 모달 닫기 이벤트
-function boardModalCloseEvent() {
+function boardCreateModalCloseEvent() {
     window.addEventListener('click', (event) => {
         if (event.target === $boardAddModal) {
             $boardModalTitleInput.value = '';
@@ -283,7 +136,7 @@ function boardModalCloseEvent() {
     });
 }
 
-function boardModalNextBtnClickEvent() {
+function boardCloseModalBtnEvent() {
     
     // 보드 생성 모달 '다음' 클릭 이벤트
     $boardModalNextBtn.addEventListener('click', ()=>{
@@ -327,10 +180,6 @@ function boardModalNextBtnClickEvent() {
     });
 }
 
-export function markerDetailContentClickEvent(marker) {
-
-}
-
 export function markerClickZoomInEvent(marker) {
     kakao.maps.event.addListener(marker, 'click', mouseEvent=> {
 
@@ -343,16 +192,8 @@ export function markerClickZoomInEvent(marker) {
     });
 }
 
-// 마커 클릭시 숨김 처리
-export function markerClickRemoveEvent(marker, infoWindow) {
-    kakao.maps.event.addListener(marker, 'click', function() {
-        infoWindow.close();
-        marker.setMap(null);
-    });
-}
-
-// KAKAO API 키워드 검색 이벤트 처리
-function keywordSearchSetup() {
+// KAKAO API 검색창 엔터, 버튼 클릭 감지 이벤트
+function placeSearchClickEvent() {
     $keywordSearchBtn.addEventListener('click', searchPlaceAsKeyword);
     $keyword.addEventListener('keydown', (e)=>{
         if (e.key === 'Enter') {
@@ -402,7 +243,7 @@ function clusterClickEvent() {
 }
 
 // 메인 페이지 화면 버튼 이벤트
-function mapFullScreenClickEvent() {
+function mapSizeEvent() {
     $screenBtn.addEventListener('click', ()=> {
         
         if (screenMode.fullScreen) {
@@ -414,12 +255,14 @@ function mapFullScreenClickEvent() {
 }
 
 // 메인 페이지 보드 채우기
-export async function mainSetup() {
+async function mainBoardSetup() {
 
     let boards = await getBoards();
-    window.localStorage.removeItem('CURRENT_PIN');
-    window.localStorage.removeItem('pins');
     displayMainBoards(boards);
+}
+
+// 로그인 여부에 따라 화면 출력
+export async function loginProcess() {
 
     document.getElementById('account_login_btn').addEventListener('click', ()=>{
         if(document.getElementById('account_login_option').style.display === 'flex') {
@@ -428,10 +271,6 @@ export async function mainSetup() {
         }
         document.getElementById('account_login_option').style.display = 'flex';
     });
-}
-
-// 로그인 여부에 따라 화면 출력
-export async function loginProcess() {
 
     let response = await getLoginUserInfoRequest();
     response = await response.json();
@@ -452,16 +291,24 @@ export async function loginProcess() {
 
 // 전체 기능 초기화
 window.onload = function init() {
-    loginProcess();
-    displayGeoLocationMap();
-    mapSetup();
-    // markerInfoWindowEvent();
-    // markerClickRemoveEvent(MARKER, PIN_INFO_WINDOW);
-    markerClickZoomInEvent(MARKER);
-    keywordSearchSetup();
-    clusterClickEvent();
-    mapFullScreenClickEvent();
-    boardModalCloseEvent();
-    boardModalNextBtnClickEvent();
-    mainSetup();
+
+
+    let path = window.location.pathname;
+    let page = path.split('/').pop();
+    
+    if(page === '' || page === 'index.html' ||  page === undefined || page === null) {
+        loginProcess();
+        displayGeoLocationMap();
+        mapSetup();
+        placeSearchClickEvent();
+        clusterClickEvent();
+        mapSizeEvent();
+        boardCreateModalCloseEvent();
+        boardCloseModalBtnEvent();
+        mainBoardSetup();
+    } else if (page === 'board_detail.html') {
+        displayGeoLocationMap();
+        mapSetup();
+        clusterClickEvent();
+    }
 }

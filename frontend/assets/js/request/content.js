@@ -67,14 +67,15 @@ export async function getLoginUserInfoRequest() {
 export async function pinSimpleSaveRequest(board, place) {
 
     let url = origin + '/pin/';
-
+    console.log('########################################', board);
+    console.log('########################################', place);
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
             category: place.categoryGroupName,
             board_id: board.id,
             title: place.title,
-            place_id: place.id,
+            place_id: place.placeId,
             new_address: place.roadAddressName,
             old_address: place.addressName,
             lat_lng: place.lat + ',' + place.lng,
