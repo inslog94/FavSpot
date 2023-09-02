@@ -38,8 +38,9 @@ export const $boardModalSaveBtn = document.getElementById('board_add_c_btn');
 export const $boardConfirmModal = document.getElementById('board_confirm_modal');
 export const $boardConfirmModalBtn = document.getElementById('board_add_confirm_btn');
 export const $boardAddResult = document.getElementById('board_add_result');
-
+export const ACCOUNT = {login:false}
 export const $mainBoard = document.getElementById('main_board');
+export const $accountBtn = document.getElementById('account_btn');
 
 export const MARKER = new kakao.maps.Marker({
         clickable: true
@@ -92,8 +93,8 @@ MARKER_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
 export const PIN_SAVE_OVERLAY = new kakao.maps.CustomOverlay({
     map: MAP,
     clickable: true,
-    xAnchor: 0,
-    yAnchor: 1,
+    xAnchor: -0.05,
+    yAnchor: 0.2,
     zIndex: 1
 });
 export const PIN_SAVE_OVERLAY_CONTENT = document.createElement('div');

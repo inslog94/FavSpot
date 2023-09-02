@@ -1,21 +1,30 @@
-import { boardReadRequest, boardSimpleCreateRequest, loginUserBoardReadRequest } from "../request/content.js";
-import { $boardAddModal, $boardAddModalContent, $mainBoard, MAP, MY_BOARDS, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT } from "./data.js";
+import { getBoardRequest, boardSimpleSaveRequest, getLoginUserInfoRequest, findBoardRequest, pinDeleteRequest } from "../request/content.js";
+import { $boardAddModal, $boardAddModalContent, $mainBoard, MARKERS, MAP, MY_BOARDS, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, ACCOUNT } from "./data.js";
+import { registerMainPin, pinSimpleSave } from "./pin.js";
 
 // 타이틀, 태그로 보드 생성
 export async function boardSimpleSave(title, tags) {
-    let result = await boardSimpleCreateRequest(title, tags);
-    // result status code에 따른 return 처리 필요
-    if (result.id > 0) {
-        return true;
+    let response = await boardSimpleSaveRequest(title, tags);
+    
+    if (response.status >= 400 && response.status <= 500) {
+        return false;
     }
-    return false;
+
+    return true;
 }
 
 // 해당 계정의 보드 세팅
 export async function setMyBoard() {
     MY_BOARDS.length = 0;
 
-    const response = await loginUserBoardReadRequest();
+    let response = await getLoginUserInfoRequest();
+
+    if (response.status >= 400 && response.status <= 500) {
+        return null;
+    }
+
+    response = await response.json();
+
     const boards = response.Boards;
 
     boards.forEach(board=>{
@@ -23,36 +32,61 @@ export async function setMyBoard() {
     });
 }
 
+// 핀 생성 추가 오버레이
 export function displayBoardsOnOverlay(markerInfo) {
+
+    if (MY_BOARDS === null || MY_BOARDS.length === 0) {
+        return;
+    }
 
     MY_BOARDS.forEach(board=>{
         let boardBox = document.createElement('div');
         let titleBox = document.createElement('div');
-        let thumnail = document.createElement('img');
+        let thumbnail = document.createElement('img');
         let title = document.createElement('span');
         let pinSaveBtn = document.createElement('div');
 
-        title.innerText = board.title;
         pinSaveBtn.innerText = '생성';
-        if (board.thumnail_imgs === null || board.thumnail_imgs === undefined || board.thumnail_imgs.length === 0) {
-            thumnail.src = 'assets/img/favspot.png';
-        } else {
-            thumnail.src = board.thumnail_imgs[0];
-        }
-        thumnail.style.width = '50px';
-        thumnail.style.height = '40px';
-        thumnail.style.marginRight = '7px';
+        pinSaveBtn.classList.add('pin_save_btn');
+        let pinsaved = false;
 
-        titleBox.appendChild(thumnail);
+        // 해당 핀이 보드에 생성된 경우 '생성됨' 처리
+        for (let i=0; i<board.pins.length; i++) {
+            if (board.pins[i] == markerInfo.id) {
+                pinSaveBtn.innerText = '생성됨';
+                pinSaveBtn.classList.remove('pin_save_btn');
+                pinSaveBtn.classList.add('pin_saved_btn');
+                pinsaved = true;
+                break;
+            }
+        }
+
+        if (board.thumbnail_imgs === null || board.thumbnail_imgs === undefined || board.thumbnail_imgs.length === 0) {
+            thumbnail.src = 'assets/img/favspot.png';
+        } else {
+            for (let i=0; i<board.thumbnail_imgs.length; i++) {
+                if(board.thumbnail_imgs[i] === null || board.thumbnail_imgs[i] === undefined || board.thumbnail_imgs[i].length > 0) {
+                    thumbnail.src =  board.thumbnail_imgs[i];
+                    break;
+                }
+            }
+        }
+
+        title.innerText = board.title;
+        thumbnail.style.width = '50px';
+        thumbnail.style.height = '40px';
+        thumbnail.style.marginRight = '7px';
+        thumbnail.style.borderRadius = '10px';
+
+        titleBox.appendChild(thumbnail);
         titleBox.append(title);
         boardBox.appendChild(titleBox);
         boardBox.appendChild(pinSaveBtn);
       
         boardBox.classList.add('pin_save_board');
-        pinSaveBtn.classList.add('pin_save_btn');
 
         // 생성 버튼 클릭 이벤트
-        pinSimpleSaveEvent(pinSaveBtn, board, markerInfo);
+        pinSimpleSaveEvent(pinSaveBtn, board, markerInfo, pinsaved);
 
         PIN_SAVE_OVERLAY_CONTENT.appendChild(boardBox);
     });
@@ -65,6 +99,12 @@ export function displayBoardsOnOverlay(markerInfo) {
     boardAddBtnBox.classList.add('board_add_box');
 
     boardAddBtnBox.addEventListener('click', ()=>{
+
+        if (!ACCOUNT.login) {
+            alert('로그인이 필요합니다')
+            return;
+        }
+
         $boardAddModal.style.display = 'flex';
         $boardAddModalContent.style.display = 'flex';
     });
@@ -79,18 +119,28 @@ export function displayBoardsOnOverlay(markerInfo) {
 }
 
 // 생성 버튼 클릭 이벤트
-function pinSimpleSaveEvent(element, board, place) {
-    let saved = false;
-    element.addEventListener('click', ()=>{
-        if (!saved) {
+function pinSimpleSaveEvent(element, board, place, pinsaved) {
+
+    element.addEventListener('click', async ()=>{
+        if (!pinsaved) {
             let saveSucceess = pinSimpleSave(board, place);
             if (saveSucceess) {
+                setMyBoard();
                 element.innerText = '생성됨';
-                saved = true;
+                element.classList.remove('pin_save_btn');
+                element.classList.add('pin_saved_btn');
+                pinsaved = true;
                 return;
             }
         } else {
-            confirm('핀을 삭제하시겠습니까?');
+            if (confirm('핀을 삭제하시겠습니까?')) {
+                // let response = await pinDeleteRequest(place.id);
+
+                element.innerText = '생성';
+                element.classList.remove('pin_saved_btn');
+                element.classList.add('pin_save_btn');
+                pinsaved = false;
+            }
         }
     });
 }
@@ -102,7 +152,7 @@ export async function displayRelatedBoards(keyword) {
 }
 
 export async function getBoards(keyword) {
-    return await boardReadRequest(keyword);
+    return await getBoardRequest(keyword);
 }
 
 // 메인 보드 표시
@@ -111,7 +161,6 @@ export function displayMainBoards(boards) {
 
     let boardSet;
     for(let i=0; i<boards.length; i++) {
-
         if (i===6) {
             return;
         }
@@ -123,14 +172,14 @@ export function displayMainBoards(boards) {
 
         let board = document.createElement('div');
         let thumnailBox = document.createElement('div');
-        let thumnail = document.createElement('img');
+        let thumbnail = document.createElement('img');
         let infoBox = document.createElement('div');
         let info1 = document.createElement('div');
         let title = document.createElement('div');
         let pinBox = document.createElement('div');
         let pinLogo = document.createElement('img');
         let pinCount = document.createElement('span');
-        let info2 = document.createElement('div');
+        let user = document.createElement('div');
 
         infoBox.classList.add('info');
         thumnailBox.classList.add('img_box');
@@ -142,11 +191,20 @@ export function displayMainBoards(boards) {
         pinLogo.style.verticalAlign = 'text-top';
         pinLogo.src = 'assets/img/fav.png';
 
-        thumnail.src = 'assets/img/favspot.png';
-        thumnail.alt = 'assets/img/favspot.png';
-
+        thumbnail.src = 'assets/img/favspot.png';
+        thumbnail.alt = 'assets/img/favspot.png';
+        thumbnail.addEventListener('click', async ()=>{
+            let response = await findBoardRequest(boards[i].id);
+            if (response.status >= 400 && response.status < 600) {
+                return;
+            }
+            let pins = JSON.stringify(response.pins);
+            window.localStorage.setItem('pins', pins);
+            // location.href = '';
+        });
+        
         title.innerText = boards[i].title;
-        info2.innerText = boards[i].user_id;
+        user.innerText = boards[i].user_id;
         pinCount.innerText = boards[i].tags;
 
         pinBox.appendChild(pinLogo);
@@ -156,9 +214,9 @@ export function displayMainBoards(boards) {
         info1.appendChild(pinBox);
 
         infoBox.appendChild(info1);
-        infoBox.appendChild(info2);
+        infoBox.appendChild(user);
 
-        thumnailBox.appendChild(thumnail);
+        thumnailBox.appendChild(thumbnail);
 
         board.appendChild(thumnailBox);
         board.appendChild(infoBox);
