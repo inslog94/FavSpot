@@ -158,12 +158,20 @@ export async function getBoards(keyword) {
 // 메인 보드 표시
 export function displayMainBoards(boards) {
     $mainBoard.textContent = '';
+    let randomBoards = [];
+
+    let oldIndex = 999999;
+    for (; randomBoards.length !== 6;) {
+        let newIndex = Math.floor(Math.random() * boards.length);
+        if (oldIndex === newIndex) {
+            continue;
+        }
+        randomBoards.push(boards[newIndex]);
+        oldIndex = newIndex;
+    }
 
     let boardSet;
-    for(let i=0; i<boards.length; i++) {
-        if (i===6) {
-            return;
-        }
+    for(let i=0; i<randomBoards.length; i++) {
 
         if (i==0 || i%2 === 0) {
             boardSet = document.createElement('div');
@@ -191,10 +199,19 @@ export function displayMainBoards(boards) {
         pinLogo.style.verticalAlign = 'text-top';
         pinLogo.src = 'assets/img/fav.png';
 
-        thumbnail.src = 'assets/img/favspot.png';
-        thumbnail.alt = 'assets/img/favspot.png';
+        if (randomBoards[i].thumbnail_imgs !== null && randomBoards[i].thumbnail_imgs !== undefined && randomBoards[i].thumbnail_imgs.length > 0) {
+            for(let j=0; j<randomBoards[i].thumbnail_imgs.length; j++) {
+                if (randomBoards[i].thumbnail_imgs[j] !== null && randomBoards[i].thumbnail_imgs[j] !== undefined && randomBoards[i].thumbnail_imgs[j].length > 0) {
+                    thumbnail.src = randomBoards[i].thumbnail_imgs[j];
+                    break;
+                }
+            }
+        } else {
+            thumbnail.src = 'assets/img/favspot.png';
+        }
+        thumbnail.alt = '';
         thumbnail.addEventListener('click', async ()=>{
-            let response = await findBoardRequest(boards[i].id);
+            let response = await findBoardRequest(randomBoards[i].id);
             if (response.status >= 400 && response.status < 600) {
                 return;
             }
@@ -203,9 +220,9 @@ export function displayMainBoards(boards) {
             // location.href = '';
         });
         
-        title.innerText = boards[i].title;
-        user.innerText = boards[i].user_id;
-        pinCount.innerText = boards[i].tags;
+        title.innerText = randomBoards[i].title;
+        user.innerText = randomBoards[i].user_id;
+        pinCount.innerText = randomBoards[i].tags;
 
         pinBox.appendChild(pinLogo);
         pinBox.appendChild(pinCount);

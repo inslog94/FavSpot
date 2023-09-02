@@ -410,7 +410,6 @@ function mapFullScreenClickEvent() {
         } else {
             fullScreen();
         }
-        
     });
 }
 
