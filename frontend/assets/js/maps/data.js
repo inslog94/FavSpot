@@ -16,22 +16,31 @@ export const $container = document.getElementById('map');
 export const MAP_OPTIONS = { center: CURRENT_POSITION, level: INIT_MAP_LEVEL};
 export const MAP = new kakao.maps.Map($container, MAP_OPTIONS);
 export const BASE_MAP_LEVEL = {value:MAP_OPTIONS.level};
+let imageSrc = 'assets/img/fav.png';
+let imageSize = new kakao.maps.Size(41, 45);
+export const MARKER_IMG = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
 export const $searchResultList = document.getElementById('search_results');
 export const $searchResultBox = document.getElementById('search_result_box');
 export const $keyword = document.getElementById('keyword');
 export const $searchPagination = document.getElementById('search_pagination');
 export const $keywordSearchBtn = document.getElementById('keywordSearchBtn');
-
-export const $pinContentBox = document.getElementById('pin_content_box');
-export const $pinDetailTitle = document.getElementById('pin_detail_title');
-export const $pinDetailCategory = document.getElementById('pin_detail_category');
-export const $pinDetailRoadAddressName = document.getElementById('pin_detail_road_address_name');
-export const $pinDetailAddressName = document.getElementById('pin_detail_address_name');
-export const $pinDetailPhone = document.getElementById('pin_detail_phone');
-export const $pinContents = document.getElementById('pin_contents');
-export const $pinContentBoxCloseBtn = document.getElementById('pin_detail_close_btn');
-export const PIN_CONTENTS_NEXT_ENDPOINT = {value:''};
+export const $screenBtn = document.getElementById('screen_btn');
+export const screenMode = {fullScreen: false};
+export const $boardAddModal = document.getElementById('board_add_modal');
+export const $boardAddModalContent = document.getElementById('board_content_modal');
+export const $boardInputBox1 = document.getElementById('board_input_box1');
+export const $boardInputBox2 = document.getElementById('board_input_box2');
+export const $boardModalTitleInput = document.getElementById('board_add_title');
+export const $boardModalTagsInput = document.getElementById('board_add_tags');
+export const $boardModalNextBtn = document.getElementById('board_add_next_btn');
+export const $boardModalSaveBtn = document.getElementById('board_add_c_btn');
+export const $boardConfirmModal = document.getElementById('board_confirm_modal');
+export const $boardConfirmModalBtn = document.getElementById('board_add_confirm_btn');
+export const $boardAddResult = document.getElementById('board_add_result');
+export const ACCOUNT = {login:false}
+export const $mainBoard = document.getElementById('main_board');
+export const $accountBtn = document.getElementById('account_btn');
 
 export const MARKER = new kakao.maps.Marker({
         clickable: true
@@ -80,3 +89,23 @@ MARKER_OVERLAY_CONTENT.addEventListener('mouseover', (e)=>{
 MARKER_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
     MAP.setZoomable(true);
 }, false);
+
+export const PIN_SAVE_OVERLAY = new kakao.maps.CustomOverlay({
+    map: MAP,
+    clickable: true,
+    xAnchor: -0.05,
+    yAnchor: 0.2,
+    zIndex: 1
+});
+export const PIN_SAVE_OVERLAY_CONTENT = document.createElement('div');
+PIN_SAVE_OVERLAY_CONTENT.classList.add('pin_save_overlay');
+PIN_SAVE_OVERLAY_CONTENT.addEventListener('mouseover', (e)=>{
+    MAP.setZoomable(false);
+}, false);
+
+PIN_SAVE_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
+    MAP.setZoomable(true);
+}, false);
+PIN_SAVE_OVERLAY.setVisible(false);
+
+export const MY_BOARDS = [];

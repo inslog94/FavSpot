@@ -1,11 +1,28 @@
-import { pinContentsRequest } from "../request/content.js";
-import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination, MARKERS } from "./data.js";
+import { getPinContentsRequest, pinSimpleSaveRequest } from "../request/content.js";
+import { MAP, PIN_INFO_WINDOW, $searchResultList, $searchResultBox, $searchPagination, MARKERS, MARKER_IMG } from "./data.js";
 import { displayMarkerDetailInfo, markerInfoClickEvent } from "./event.js";
 import { removeAllMarker, displayMarkers, mapRangeSetup, move } from "./map.js";
 
+export async function pinSimpleSave(board, place) {
+    let response  = await pinSimpleSaveRequest(board, place);
+    
+    if (response.status >= 400 && response.status <= 500) {
+        return false;
+    }
+
+    return true;
+}
+
 // 서버로부터 pin 목록 가져옴
-export async function getPinContents(marker) {
-    return await pinContentsRequest(marker.getTitle(), marker.getPosition().getLat(), marker.getPosition().getLng());
+export async function getPinContents(placeName, lat, lng) {
+    const response = await getPinContentsRequest(placeName, lat, lng);
+
+    // 해당 장소에 대해 핀이 하나도 없는 경우
+    if (response.status >= 400 && response.status < 500) {
+        return null;
+    }
+    
+    return await response.json();
 }
 
 // 검색 결과 페이징
@@ -87,10 +104,26 @@ export function getMarkers(dataList) {
         pin.placeURL = data.place_url;
         pin.roadAddressName = data.road_address_name;
 
+        // 카테고리가 없을 경우 '기타' 처리
+        if (data.category_group_name === null || data.category_group_name === undefined || data.category_group_name.length === 0) {
+            pin.categoryGroupName = '기타';
+        }
+
+        // 지번 주소가 없을 경우 공백 처리
+        if (data.address_name === null || data.address_name === undefined || data.address_name.length === 0) {
+            pin.addressName = '지번 주소 없음';
+        }
+
+        // 도로명 주소가 없을 경우 공백 처리
+        if (data.road_address_name === null || data.road_address_name === undefined || data.road_address_name.length === 0) {
+            pin.roadAddressName = '도로명 주소 없음';
+        }
+
         pin.marker = new kakao.maps.Marker({
             map: MAP,
             position: pin.position,
-            title: pin.title
+            title: pin.title,
+            image: MARKER_IMG
         });
 
         MARKERS.push(pin);
@@ -98,12 +131,10 @@ export function getMarkers(dataList) {
     
 }
 
-function convertDataToPins(dataList) {
+export function registerMainPin(dataList) {
 
     dataList.forEach(function(data) {
-        let pin = {};
-
-        MARKERS.push(pin);
+        MARKERS.push(data);
     });
 
 }

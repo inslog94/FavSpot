@@ -5,6 +5,7 @@ from .models import Board, BoardTag, BoardComment, BoardLike
 from pin.models import Pin
 from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer, BoardLikeSerializer
 from pin.serializers import SimplePinSerializer
+from user.serializers import BoardPinSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import authentication_classes, permission_classes
@@ -24,13 +25,18 @@ class BoardView(APIView):
         
     ## 로그인 된 유저의 좋아요 여부 판단 메소드
     def is_board_liked_by_user(self,user_id ,board_id):
-        return BoardLike.objects.filter(user_id=user_id, board_id=board_id, is_deleted=False).exists()
+        board_like = BoardLike.objects.filter(user_id=user_id, board_id=board_id, is_deleted=False)
+
+        if board_like.exists():
+            return True, board_like.values('id')[0]['id']
+    
+        return False, None
 
     def get(self, request, pk=None):
         ## 보드 전체 목록 조희
         if not pk:
             boards = Board.objects.filter(is_deleted=False)
-            serializer = BoardSerializer(boards, many=True)
+            serializer = BoardPinSerializer(boards, many=True)
 
             return Response(serializer.data)
         
@@ -230,8 +236,8 @@ class BoardLikeView(APIView):
         user = request.user
 
         # 이미 좋아요한 경우 -> 에러 응답 반환
-        if BoardLike.objects.filter(board_id=board.id, user_id=user.id).exists():
-            return Response({'error': '이미 이 보드에 좋아요를 눌렀습니다.'}, status=400)
+        # if BoardLike.objects.filter(board_id=board.id, user_id=user.id).exists():
+        #     return Response({'error': '이미 이 보드에 좋아요를 눌렀습니다.'}, status=400)
         
         serializer = BoardLikeSerializer(data={'board_id': board.id, 'user_id': user.id})
 
