@@ -18,6 +18,7 @@ from allauth.socialaccount.models import SocialAccount
 from .models import User, Follow
 from .serializers import UserSerializer, FollowingSerializer, FollowerSerializer, BoardPinSerializer
 from board.models import Board
+from pin.paginations import CustomPagination
 
 state = os.getenv('STATE')
 BASE_URL = os.getenv('BASE_URL')
@@ -271,9 +272,19 @@ class UserInfoView(APIView):
         # 유저 프로필
         user_serializer = UserSerializer(user)
         # 유저가 작성한 보드 내역
-        boards = Board.objects.filter(user_id=user.id)
-        board_pin_serializer = BoardPinSerializer(boards, many=True)
-        return JsonResponse({'User': user_serializer.data, 'Boards': board_pin_serializer.data}, status=status.HTTP_200_OK)
+        if not pk:
+            boards = Board.objects.filter(user_id=user.id).order_by('-created_at')
+        else:
+            boards = Board.objects.filter(user_id=user.id, is_public=True).order_by('-created_at')
+        
+        # 페이지네이션 적용
+        paginator = CustomPagination()
+        paginator.page_size = 4
+
+        # 쿼리셋 페이지네이트
+        boards_page = paginator.paginate_queryset(boards, request)
+        board_pin_serializer = BoardPinSerializer(boards_page, many=True)
+        return paginator.get_paginated_response({'User': user_serializer.data, 'Boards': board_pin_serializer.data})
     
     def patch(self, request):
         # 비밀번호 수정 = 기존 비밀번호 검증 and (새 비밀번호 1 == 새 비밀번호 2)
