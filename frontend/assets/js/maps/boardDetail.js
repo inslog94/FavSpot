@@ -5,40 +5,31 @@ function formatDate(dateString) {
   var date = new Date(dateString);
   var year = date.getFullYear();
   var month = ('0' + (
-  date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 1을 더해줍니다.
+  date.getMonth() + 1)).slice(-2); 
   var day = ('0' + date.getDate()).slice(-2);
   var hour = ('0' + date.getHours()).slice(-2);
   var minute = ('0' + date.getMinutes()).slice(-2);
 
-  // 'YYYY-MM-DD HH:MM' 형식의 문자열을 반환합니다.
   return year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  var buttons = document.querySelectorAll('.button-like');
-
-  buttons.forEach(function (button) {
-    button.addEventListener('click', function (event) {
-      if (button.classList.contains('liked')) {
-        button.classList.remove('liked');
-      } else {
-        button.classList.add('liked');
-      }
-    });
-  });
+$(document).foundation();
+$(function () {
+  $('.button-like').bind('click', function (event) {
+    $(".button-like").toggleClass("liked");
+  })
 });
 
 export async function boardDetail () {
 
-// document.addEventListener("DOMContentLoaded", function () {
   // 유저 정보 저장할 전역 변수
   let loggedInUserEmail;
 
   // 좋아요 버튼
   const likeButton = document.querySelector('.button-like');
+
   // 좋아요 테이블 pk
   let boardLikePk;
-  // console.log("좋테pk", boardLikePk);
 
   // 유저 정보 가져오기 위한 통신
   fetch('http://127.0.0.1:8000/user/me/', {
@@ -49,24 +40,23 @@ export async function boardDetail () {
   })
     .then(response => response.json())
     .then(data => {
-      console.log("유저 정보:", data);
 
       // 로그인된 유저 이메일 저장
-      loggedInUserEmail = data.User.email;
+      loggedInUserEmail = data.results.User.email;
 
       // 유저 이름 설정
       const nameInput = document.querySelector('.user-email');
-      nameInput.textContent = data.User.email;
+      nameInput.textContent = data.results.User.email;
 
       // 프로필 이미지 설정
       const profileImg = document.querySelector('.img-profile');
-      profileImg.src = data.User.profile_img;
+      profileImg.src = data.results.User.profile_img;
 
     })
     .catch(error => console.error('Error:', error));
 
   // 보드 상세 정보 가져오기 위한 통신
-  await fetch('http://127.0.0.1:8000/board/9/', {
+  await fetch(`http://127.0.0.1:8000/board/${selectedPk}/`, {
     credentials: "include",
     headers: {
       "Content-Type": "application/json"
@@ -74,7 +64,6 @@ export async function boardDetail () {
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
 
       CURRENT_PINS.value = "";
       CURRENT_PINS.value = data.pins;
@@ -99,14 +88,6 @@ export async function boardDetail () {
         settingsBox.style.display = 'none';
       }
 
-      // 보드 수정 기능
-      // document
-      //   .getElementById('editButton')
-      //   .addEventListener('click', function () {
-      //     localStorage.setItem('editForBoardPk', data.board.id);
-      //     window.location.href = 'board_edit.html';
-      //   });
-
       // 보드 이름
       const boardTitleElement = document.querySelector('.board-title');
       boardTitleElement.textContent = data.board.title;
@@ -128,9 +109,10 @@ export async function boardDetail () {
         likeButton
           .classList
           .add('liked');
+
         // 좋아요 테이블 pk 저장
         boardLikePk = data.user_liked[1];
-        // console.log("좋테pk나와라",boardLikePk)
+
       } else {
         likeButton
           .classList
@@ -141,7 +123,7 @@ export async function boardDetail () {
       }
 
       // 보드 태그
-      const ulElement = document.createElement('ul'); // <ul> 요소 생성
+      const ulElement = document.createElement('ul');
 
       data
         .board
@@ -243,7 +225,8 @@ export async function boardDetail () {
 
           postElement.addEventListener('click', function() {
             $('#myModal').modal('show');
-            pinDetail();
+            let place_id = pin.place_id;
+            pinDetail(place_id);
           });
 
           containerElement.appendChild(postElement);
@@ -322,17 +305,12 @@ export async function boardDetail () {
               })
                 .then(response => {
                   if (response.status === 204) {
-                    console.log('댓글 삭제 성공');
                     location.reload(); // 페이지 새로고침
                   } else {
                     return response.json();
                   }
                 })
-                .then(data => {
-                  if (data) 
-                    console.log(data);
-                  }
-                )
+                .then()
                 .catch((error) => console.error('Error:', error));
             });
           }
@@ -362,8 +340,6 @@ export async function boardDetail () {
           return response.json();
         })
         .then(data => {
-          console.log("좋아요 해제 완료");
-          console.log(data);
           likeButton
             .classList
             .remove('liked');
@@ -373,7 +349,7 @@ export async function boardDetail () {
         .catch(error => console.error('Error:', error));
     } else {
       // 아직 좋아요가 안 눌러져 있으면 등록
-      fetch('http://127.0.0.1:8000/board/9/like/', {
+      fetch(`http://127.0.0.1:8000/board/${selectedPk}/like/`, {
         method: 'POST',
         credentials: "include",
         headers: {
@@ -382,9 +358,6 @@ export async function boardDetail () {
       })
         .then(response => response.json())
         .then(data => {
-          console.log("좋아요 등록 완료");
-          console.log(data);
-
           // 받은 데이터에서 id를 추출하여 전역변수에 저장합니다.
           boardLikePk = data.id;
           likeButton
@@ -407,7 +380,7 @@ export async function boardDetail () {
         .getElementById('commentText')
         .value;
 
-      fetch('http://127.0.0.1:8000/board/9/comment/', {
+      fetch(`http://127.0.0.1:8000/board/${selectedPk}/comment/`, {
         method: 'POST',
         credentials: "include",
         headers: {
@@ -417,7 +390,6 @@ export async function boardDetail () {
       })
         .then(response => response.json())
         .then(data => {
-          console.log(data);
           location.reload(); // 페이지 새로고침
         })
         .catch((error) => console.error('Error:', error));
@@ -425,7 +397,7 @@ export async function boardDetail () {
 
   // 보드 삭제 기능
   document.getElementById('deleteButton').addEventListener('click', function() {
-      fetch('http://127.0.0.1:8000/board/9/', {
+      fetch(`http://127.0.0.1:8000/board/${selectedPk}/`, {
         method: 'DELETE',
         credentials: "include",
         headers: {
@@ -434,16 +406,13 @@ export async function boardDetail () {
       })
       .then(response => {
           if (response.status === 204) {
-            console.log('보드 삭제 성공');
           }
           else {
             return response.json();
           }
         })
-      .then(data => console.log(data))
+      .then()
       .catch((error) => console.error('Error:', error));
     });
 
 }
-// );
-// }
