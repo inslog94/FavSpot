@@ -86,7 +86,7 @@
               class="position-relative"
               style="width: 95vw"
             >
-              <a href="index.html">
+              <a href="../../index.html">
                 <img
                   id="logo_img"
                   src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/big_logo.png"
@@ -222,7 +222,7 @@ shop -->
                     <span id="copyright">
                       <script>
                         document
-                          .getElementById('copyright')
+                          .getElementById("copyright")
                           .appendChild(
                             document.createTextNode(new Date().getFullYear())
                           );
@@ -279,7 +279,7 @@ shop -->
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = '../js/';
+      var plugin_path = "../js/";
     </script>
 
     <!-- plugins-jquery -->
@@ -289,10 +289,10 @@ shop -->
     <script src="../js/custom.js"></script>
     <script>
       fetch(`http://127.0.0.1:8000/user/me/`, {
-        method: 'GET',
-        credentials: 'include',
+        method: "GET",
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       })
         .then((response) => response.json())
@@ -303,96 +303,96 @@ shop -->
           const requestUserProfileImg = data.results.User.profile_img;
 
           if (requestUser) {
-            const email = document.querySelector('#headerEmail');
+            const email = document.querySelector("#headerEmail");
             email.textContent = requestUser;
-            const profileImg = document.querySelector('.profileImg');
+            const profileImg = document.querySelector(".profileImg");
             profileImg.src = requestUserProfileImg;
-            profileImg.style.borderRadius = '50%';
+            profileImg.style.borderRadius = "50%";
           }
 
-          const logout = document.querySelector('#logout');
-          logout.addEventListener('click', (event) => {
+          const logout = document.querySelector("#logout");
+          logout.addEventListener("click", (event) => {
             fetch(`http://127.0.0.1:8000/user/logout/`, {
-              method: 'GET',
-              credentials: 'include',
+              method: "GET",
+              credentials: "include",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
             })
               .then((response) => {
                 if (response.status === 200) {
-                  console.log('로그아웃 성공');
+                  console.log("로그아웃 성공");
                   location.reload(); // 페이지 새로고침
                 }
               })
               .catch((error) => {
-                console.error('Error:', error);
+                console.error("Error:", error);
               });
           });
 
           const params = new URLSearchParams(window.location.search);
-          let pk = params.get('pk');
+          let pk = params.get("pk");
           if (!pk) {
-            pk = 'me';
+            pk = "me";
           }
 
-          const tagList = document.getElementById('tagList');
+          const tagList = document.getElementById("tagList");
 
           fetch(`http://127.0.0.1:8000/user/${pk}/`, {
-            method: 'GET',
-            credentials: 'include',
+            method: "GET",
+            credentials: "include",
           })
             .then((response) => response.json())
             .then((data) => {
               // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
-              const email = document.querySelector('#email');
-              email.textContent = data['results']['User']['email'];
-              const nickname = document.querySelector('#nickname');
+              const email = document.querySelector("#email");
+              email.textContent = data["results"]["User"]["email"];
+              const nickname = document.querySelector("#nickname");
 
-              if (data['results']['User']['nickname']) {
-                nickname.textContent = data['results']['User']['nickname'];
+              if (data["results"]["User"]["nickname"]) {
+                nickname.textContent = data["results"]["User"]["nickname"];
               } else {
-                nickname.textContent = 'None';
+                nickname.textContent = "None";
               }
-              const img = data['results']['User']['profile_img'];
-              const profileImg = document.getElementById('profileImg');
+              const img = data["results"]["User"]["profile_img"];
+              const profileImg = document.getElementById("profileImg");
               if (img) {
                 profileImg.src = img;
               }
-              let followers = document.querySelector('.followers');
-              followers.textContent = data['results']['User']['followers'];
-              followers = document.querySelector('#followers');
-              followers.addEventListener('click', (event) => {
+              let followers = document.querySelector(".followers");
+              followers.textContent = data["results"]["User"]["followers"];
+              followers = document.querySelector("#followers");
+              followers.addEventListener("click", (event) => {
                 window.location.href = `follower.html?pk=${pk}`;
               });
 
-              let following = document.querySelector('.following');
-              following.textContent = data['results']['User']['following'];
-              following = document.querySelector('#following');
-              following.addEventListener('click', (event) => {
+              let following = document.querySelector(".following");
+              following.textContent = data["results"]["User"]["following"];
+              following = document.querySelector("#following");
+              following.addEventListener("click", (event) => {
                 window.location.href = `following.html?pk=${pk}`;
               });
 
-              const button = document.createElement('a');
-              button.type = 'button';
-              button.classList.add('btn', 'btn-primary');
-              button.style.display = 'block';
+              const button = document.createElement("a");
+              button.type = "button";
+              button.classList.add("btn", "btn-primary");
+              button.style.display = "block";
 
               // 기존 요소에 버튼 추가
-              const changeBtnDiv = document.querySelector('.changeBtn');
-              if ((requestUserPk === parseInt(pk)) | (pk == 'me')) {
-                button.textContent = 'Profile Edit';
-                button.setAttribute('href', 'profile_edit.html');
+              const changeBtnDiv = document.querySelector(".changeBtn");
+              if ((requestUserPk === parseInt(pk)) | (pk == "me")) {
+                button.textContent = "Profile Edit";
+                button.setAttribute("href", "profile_edit.html");
               } else if (
-                followingList.includes(data['results']['User']['email'])
+                followingList.includes(data["results"]["User"]["email"])
               ) {
-                button.textContent = 'Unfollow';
-                button.addEventListener('click', () => {
+                button.textContent = "Unfollow";
+                button.addEventListener("click", () => {
                   fetch(`http://127.0.0.1:8000/user/follow/${pk}/`, {
-                    method: 'DELETE',
-                    credentials: 'include',
+                    method: "DELETE",
+                    credentials: "include",
                     headers: {
-                      'Content-Type': 'application/json',
+                      "Content-Type": "application/json",
                     },
                   })
                     .then((response) => {
@@ -402,16 +402,16 @@ shop -->
                         return response.json();
                       }
                     })
-                    .catch((error) => console.error('Error:', error));
+                    .catch((error) => console.error("Error:", error));
                 });
               } else {
-                button.textContent = 'Follow';
-                button.addEventListener('click', () => {
+                button.textContent = "Follow";
+                button.addEventListener("click", () => {
                   fetch(`http://127.0.0.1:8000/user/follow/`, {
-                    method: 'POST',
-                    credentials: 'include',
+                    method: "POST",
+                    credentials: "include",
                     headers: {
-                      'Content-Type': 'application/json',
+                      "Content-Type": "application/json",
                     },
                     body: JSON.stringify({ user_id: pk }),
                   })
@@ -422,16 +422,16 @@ shop -->
                         return response.json();
                       }
                     })
-                    .catch((error) => console.error('Error:', error));
+                    .catch((error) => console.error("Error:", error));
                 });
               }
               changeBtnDiv.appendChild(button);
 
-              const tags = data['results']['User']['tags'];
+              const tags = data["results"]["User"]["tags"];
               tags.forEach((tag) => {
-                const newLi = document.createElement('li');
-                const newTag = document.createElement('a');
-                newTag.setAttribute('href', '#');
+                const newLi = document.createElement("li");
+                const newTag = document.createElement("a");
+                newTag.setAttribute("href", "#");
                 newTag.textContent = tag;
 
                 newLi.appendChild(newTag);
@@ -439,112 +439,112 @@ shop -->
               });
             })
             .catch((error) => {
-              console.error('Failed to retrieve user data.', error);
+              console.error("Failed to retrieve user data.", error);
             });
 
           const url =
-            pk === 'me'
+            pk === "me"
               ? `http://127.0.0.1:8000/user/follower/`
               : `http://127.0.0.1:8000/user/${pk}/follower/`;
           // 팔로워 목록
           fetch(url, {
-            method: 'GET',
-            credentials: 'include',
+            method: "GET",
+            credentials: "include",
           })
             .then((response) => response.json())
             .then((data) => {
               // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
               // 사용 예시
-              const tbody = document.querySelector('#followList');
-              const followers = data['Follower List'];
+              const tbody = document.querySelector("#followList");
+              const followers = data["Follower List"];
               followers.forEach((data) => {
                 const newTableRow = createTableRow(pk, data);
                 tbody.appendChild(newTableRow);
               });
             })
             .catch((error) => {
-              console.error('Failed to retrieve user data.', error);
+              console.error("Failed to retrieve user data.", error);
             });
 
           function createTableRow(pk, data) {
-            const currentUser = data['followed_user'];
-            const followingList = data['following_list'];
-            const follwer = data['following_user_info'];
-            const followerPk = data['following_user'];
-            const tableRow = document.createElement('tr');
+            const currentUser = data["followed_user"];
+            const followingList = data["following_list"];
+            const follwer = data["following_user_info"];
+            const followerPk = data["following_user"];
+            const tableRow = document.createElement("tr");
 
             // 이미지 셀 생성
-            const imageCell = document.createElement('td');
-            imageCell.classList.add('image', 'pt-10', 'pb-10');
+            const imageCell = document.createElement("td");
+            imageCell.classList.add("image", "pt-10", "pb-10");
 
-            const profileImg = document.createElement('img');
-            profileImg.classList.add('img-fluid');
-            profileImg.style.width = '75px';
-            profileImg.style.height = '75px';
-            profileImg.style.borderRadius = '50%';
+            const profileImg = document.createElement("img");
+            profileImg.classList.add("img-fluid");
+            profileImg.style.width = "75px";
+            profileImg.style.height = "75px";
+            profileImg.style.borderRadius = "50%";
             if (follwer.profile_img) {
               profileImg.src = follwer.profile_img;
             } else {
               profileImg.src =
-                'https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default_clear.png';
+                "https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default_clear.png";
             }
-            profileImg.alt = '';
+            profileImg.alt = "";
 
             imageCell.appendChild(profileImg);
             tableRow.appendChild(imageCell);
 
             // 이메일 셀 생성
-            const emailCell = document.createElement('td');
-            emailCell.id = 'email';
-            emailCell.classList.add('description', 'pt-10', 'pb-10');
-            const emailLink = document.createElement('a');
-            emailLink.href = '#';
+            const emailCell = document.createElement("td");
+            emailCell.id = "email";
+            emailCell.classList.add("description", "pt-10", "pb-10");
+            const emailLink = document.createElement("a");
+            emailLink.href = "#";
             emailLink.textContent = follwer.email;
             emailCell.appendChild(emailLink);
             tableRow.appendChild(emailCell);
 
-            emailLink.addEventListener('click', (event) => {
+            emailLink.addEventListener("click", (event) => {
               window.location.href = `user_info.html?pk=${followerPk}`;
             });
             // 닉네임 셀 생성
-            const nicknameCell = document.createElement('td');
-            nicknameCell.id = 'nickname';
-            nicknameCell.classList.add('description', 'pt-10', 'pb-10');
-            const nicknameLink = document.createElement('a');
-            nicknameLink.href = '#';
+            const nicknameCell = document.createElement("td");
+            nicknameCell.id = "nickname";
+            nicknameCell.classList.add("description", "pt-10", "pb-10");
+            const nicknameLink = document.createElement("a");
+            nicknameLink.href = "#";
             if (follwer.nickname) {
               nicknameLink.textContent = follwer.nickname;
             } else {
-              nicknameLink.textContent = 'None';
+              nicknameLink.textContent = "None";
             }
             nicknameCell.appendChild(nicknameLink);
             tableRow.appendChild(nicknameCell);
 
             // 언팔로우 버튼 셀 생성
             if (requestUserPk === currentUser) {
-              const unfollowTh = document.querySelector('.Unfollow');
+              const unfollowTh = document.querySelector(".Unfollow");
               if (!unfollowTh) {
-                const followTr = document.getElementById('followTr');
-                const thElement = document.createElement('th');
-                thElement.className = 'Unfollow';
-                thElement.textContent = 'Unfollow';
+                const followTr = document.getElementById("followTr");
+                const thElement = document.createElement("th");
+                thElement.className = "Unfollow";
+                thElement.textContent = "Unfollow";
                 followTr.appendChild(thElement);
               }
 
-              const unfollowCell = document.createElement('td');
-              unfollowCell.classList.add('td-quantity', 'pt-10', 'pb-10');
-              const unfollowLink = document.createElement('a');
-              unfollowLink.id = 'unfollow';
-              unfollowLink.classList.add('button');
-              unfollowLink.href = '#';
+              const unfollowCell = document.createElement("td");
+              unfollowCell.classList.add("td-quantity", "pt-10", "pb-10");
+              const unfollowLink = document.createElement("a");
+              unfollowLink.id = "unfollow";
+              unfollowLink.classList.add("button");
+              unfollowLink.href = "#";
               if (followingList.includes(follwer.email)) {
-                unfollowLink.textContent = 'Unfollow';
-                unfollowLink.addEventListener('click', () => {
+                unfollowLink.textContent = "Unfollow";
+                unfollowLink.addEventListener("click", () => {
                   fetch(`http://127.0.0.1:8000/user/follow/${followerPk}/`, {
-                    method: 'DELETE',
-                    credentials: 'include',
+                    method: "DELETE",
+                    credentials: "include",
                     headers: {
-                      'Content-Type': 'application/json',
+                      "Content-Type": "application/json",
                     },
                   })
                     .then((response) => {
@@ -554,16 +554,16 @@ shop -->
                         return response.json();
                       }
                     })
-                    .catch((error) => console.error('Error:', error));
+                    .catch((error) => console.error("Error:", error));
                 });
               } else {
-                unfollowLink.textContent = 'Follow';
-                unfollowLink.addEventListener('click', () => {
+                unfollowLink.textContent = "Follow";
+                unfollowLink.addEventListener("click", () => {
                   fetch(`http://127.0.0.1:8000/user/follow/`, {
-                    method: 'POST',
-                    credentials: 'include',
+                    method: "POST",
+                    credentials: "include",
                     headers: {
-                      'Content-Type': 'application/json',
+                      "Content-Type": "application/json",
                     },
                     body: JSON.stringify({ user_id: followerPk }),
                   })
@@ -574,7 +574,7 @@ shop -->
                         return response.json();
                       }
                     })
-                    .catch((error) => console.error('Error:', error));
+                    .catch((error) => console.error("Error:", error));
                 });
               }
               unfollowCell.appendChild(unfollowLink);
@@ -584,8 +584,8 @@ shop -->
           }
         })
         .catch((error) => {
-          console.error('Error:', error);
-          if (error.message === 'Unauthorized') {
+          console.error("Error:", error);
+          if (error.message === "Unauthorized") {
             window.location.href = `login.html`;
           }
         });

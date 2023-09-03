@@ -31,7 +31,7 @@ export function pinDetail() {
           boardSelectionElement.removeChild(boardSelectionElement.firstChild);
         }
 
-        data.Boards.forEach((board) => {
+        data.results.Boards.forEach((board) => {
           const optionElement = document.createElement("option");
           optionElement.value = board.id;
           optionElement.textContent = board.title;
