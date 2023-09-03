@@ -13,6 +13,7 @@ export const INIT_MAP_LEVEL = 3;
 export const PIN_INFO_WINDOW = new kakao.maps.InfoWindow({});
 
 export const $container = document.getElementById('map');
+export const $staticContainer = document.getElementById('static_map');
 export const MAP_OPTIONS = { center: CURRENT_POSITION, level: INIT_MAP_LEVEL};
 export const MAP = new kakao.maps.Map($container, MAP_OPTIONS);
 export const BASE_MAP_LEVEL = {value:MAP_OPTIONS.level};
@@ -109,3 +110,11 @@ PIN_SAVE_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
 PIN_SAVE_OVERLAY.setVisible(false);
 
 export const MY_BOARDS = [];
+
+export const CURRENT_PINS = {value:''};
+
+export const PIN_DETAIL = {};
+
+export const requestUser = {email:''}  
+export const requestUserPk = {id: ''} 
+export const followingList = {list: ''} 

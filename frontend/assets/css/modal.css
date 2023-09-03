@@ -1,0 +1,43 @@
+.port-post-photo img {
+  width: 170px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.entry-image img {
+  width: 735px;
+  height: 370px;
+  object-fit: cover;
+  border-radius: 5%;
+}
+
+.title-wrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+#pinCreationSteps {
+  border: solid 1px #ccc;
+  padding: 10px;
+  margin: 10px 0 30px 0;
+}
+
+#pinCreationSteps .step {
+    margin-bottom: 20px; /* 각 단계 사이의 간격 */
+}
+
+.buttons-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.buttons-wrap button {
+  margin: 0 100px 0 100px;
+}
+
+.pin-con .fa-times {
+  display: flex;
+  flex-direction: row-reverse;
+  color: red;
+  cursor: pointer;
+}

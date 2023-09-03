@@ -4,6 +4,7 @@ a:visited {color:black}
 .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
 .map_wrap {display: inline-block; position:relative;width:60%;height:90vh; margin-top: 0.5rem; border-radius: 15px;}
 #map {width:100%;height:100%;position:relative;overflow: hidden; border-radius: 15px;}
+#static_map {width:100%;height:100%;position:relative;overflow: hidden; border-radius: 15px;}
 #search_result_box {display:inline-block;position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.8);z-index: 1;font-size:12px;border-radius: 10px;}
 .bg_white {background:#fff;}
 #search_result_box hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
@@ -46,7 +47,7 @@ a:visited {color:black}
 .marker_overlay_box * {padding: 0;margin: 0;}
 .marker_overlay_box .marker_overlay_content {min-width: 380px; min-height: 180px;border-radius: 20px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
 .marker_overlay_box .marker_overlay_content:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
-.marker_overlay_content .title_box {padding: 10px 15px 15px 20px;height: 20px;background: #eee;border-bottom: 1px solid #ddd;}
+.marker_overlay_content .title_box {padding: 2% 6%; background: #eee;border-bottom: 1px solid #ddd;}
 .marker_overlay_content .title_box .title {font-size: 18px;font-weight: bold;}
 .marker_overlay_content .title_box .category { margin-left: 5px; color: gray;}
 .marker_overlay_content .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
