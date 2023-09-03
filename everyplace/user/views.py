@@ -285,9 +285,9 @@ class UserInfoView(APIView):
         user_serializer = UserSerializer(user)
         # 유저가 작성한 보드 내역
         if not pk:
-            boards = Board.objects.filter(user_id=user.id).order_by('-created_at')
+            boards = Board.objects.filter(user_id=user.id, is_deleted=False).order_by('-created_at')
         else:
-            boards = Board.objects.filter(user_id=user.id, is_public=True).order_by('-created_at')
+            boards = Board.objects.filter(user_id=user.id, is_deleted=False, is_public=True).order_by('-created_at')
         
         # 페이지네이션 적용
         paginator = CustomPagination()
