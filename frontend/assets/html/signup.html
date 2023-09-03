@@ -83,7 +83,7 @@
               class="position-relative"
               style="width: 95vw"
             >
-              <a href="index.html">
+              <a href="../../index.html">
                 <img
                   id="logo_img"
                   src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/big_logo.png"
@@ -219,7 +219,7 @@ header -->
                     <span id="copyright">
                       <script>
                         document
-                          .getElementById('copyright')
+                          .getElementById("copyright")
                           .appendChild(
                             document.createTextNode(new Date().getFullYear())
                           );
@@ -276,7 +276,7 @@ header -->
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = '../js/';
+      var plugin_path = "../js/";
     </script>
 
     <!-- custom -->
@@ -284,10 +284,10 @@ header -->
 
     <script>
       fetch(`http://127.0.0.1:8000/user/me/`, {
-        method: 'GET',
-        credentials: 'include',
+        method: "GET",
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       })
         .then((response) => response.json())
@@ -295,56 +295,56 @@ header -->
           const requestUser = data.results.User.email;
           const requestUserPk = data.results.User.id;
           const requestUserProfileImg = data.results.User.profile_img;
-          console.log('프로필 사진', requestUserProfileImg);
+          console.log("프로필 사진", requestUserProfileImg);
           const followingList = data.results.User.following_list;
           console.log(
-            'request user',
+            "request user",
             requestUser,
             followingList,
             typeof followingList
           );
 
           if (requestUser) {
-            const email = document.querySelector('#email');
+            const email = document.querySelector("#email");
             email.textContent = requestUser;
-            const profileImg = document.querySelector('.profileImg');
+            const profileImg = document.querySelector(".profileImg");
             profileImg.src = requestUserProfileImg;
-            profileImg.style.borderRadius = '50%';
+            profileImg.style.borderRadius = "50%";
           }
 
-          const logout = document.querySelector('#logout');
-          logout.addEventListener('click', (event) => {
+          const logout = document.querySelector("#logout");
+          logout.addEventListener("click", (event) => {
             fetch(`http://127.0.0.1:8000/user/logout/`, {
-              method: 'GET',
-              credentials: 'include',
+              method: "GET",
+              credentials: "include",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
             })
               .then((response) => {
                 if (response.status === 200) {
-                  console.log('로그아웃 성공');
+                  console.log("로그아웃 성공");
                   location.reload(); // 페이지 새로고침
                 }
               })
               .catch((error) => {
-                console.error('Error:', error);
+                console.error("Error:", error);
               });
           });
-          const $signup = document.querySelector('.signup');
-          $signup.addEventListener('submit', (event) => {
+          const $signup = document.querySelector(".signup");
+          $signup.addEventListener("submit", (event) => {
             event.preventDefault();
-            const email = document.querySelector('#email').value;
-            const password = document.querySelector('#password').value;
+            const email = document.querySelector("#email").value;
+            const password = document.querySelector("#password").value;
             signup(email, password);
           });
 
           function signup(email, password) {
-            const signupError = document.getElementById('signupError');
-            fetch('http://127.0.0.1:8000/user/signup/', {
-              method: 'POST',
+            const signupError = document.getElementById("signupError");
+            fetch("http://127.0.0.1:8000/user/signup/", {
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify({ email, password }),
             })
@@ -358,7 +358,7 @@ header -->
               })
               .then((data) => {
                 // 회원가입 성공 시 처리
-                window.location.href = 'index.html';
+                window.location.href = "index.html";
               })
               .catch((error) => {
                 console.log(error, error.message);
@@ -367,30 +367,30 @@ header -->
           }
         })
         .catch((error) => {
-          console.error('Error:', error);
-          const authUser = document.querySelector('.shpping-cart');
+          console.error("Error:", error);
+          const authUser = document.querySelector(".shpping-cart");
           authUser.remove();
           // div 요소 생성
-          const div = document.createElement('div');
-          div.className = 'position-absolute top-0 end-0 mt-3';
+          const div = document.createElement("div");
+          div.className = "position-absolute top-0 end-0 mt-3";
 
           // 로그인 링크 생성
-          const loginLink = document.createElement('a');
-          loginLink.href = 'login.html';
-          loginLink.appendChild(document.createTextNode('Login'));
+          const loginLink = document.createElement("a");
+          loginLink.href = "login.html";
+          loginLink.appendChild(document.createTextNode("Login"));
 
           // 가입 링크 생성
-          const signupLink = document.createElement('a');
-          signupLink.href = 'signup.html';
-          signupLink.className = 'ms-3';
-          signupLink.appendChild(document.createTextNode('Signup'));
+          const signupLink = document.createElement("a");
+          signupLink.href = "signup.html";
+          signupLink.className = "ms-3";
+          signupLink.appendChild(document.createTextNode("Signup"));
 
           // 로그인 및 가입 링크를 div에 추가
           div.appendChild(loginLink);
           div.appendChild(signupLink);
 
           // 생성한 요소를 기존 요소에 추가
-          const headerContent = document.getElementById('headerContent');
+          const headerContent = document.getElementById("headerContent");
           headerContent.appendChild(div);
         });
     </script>

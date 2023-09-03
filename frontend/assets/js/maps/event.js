@@ -39,6 +39,7 @@ import {
   $boardAddModalContent,
   ACCOUNT,
   requestUser,
+  CURRENT_PINS,
 } from "./data.js";
 import {
   displayGeoLocationMap,
@@ -416,10 +417,11 @@ window.onload = function init() {
     boardCreateModalCloseEvent();
     boardCloseModalBtnEvent();
     mainBoardSetup();
-  } else if (page === "board_detail.html") {
+  } else if (page === "board_detail.html" || page === "board_detail.html#") {
     displayGeoLocationMap();
     mapSetup();
     clusterClickEvent();
+    loginProcess();
     boardDetailSetUp();
   } else {
     loginProcess();

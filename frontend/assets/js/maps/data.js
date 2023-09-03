@@ -20,7 +20,8 @@ export const $staticContainer = document.getElementById("static_map");
 export const MAP_OPTIONS = { center: CURRENT_POSITION, level: INIT_MAP_LEVEL };
 export const MAP = new kakao.maps.Map($container, MAP_OPTIONS);
 export const BASE_MAP_LEVEL = { value: MAP_OPTIONS.level };
-let imageSrc = "assets/img/fav.png";
+let imageSrc =
+  "https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/fav.png";
 let imageSize = new kakao.maps.Size(41, 45);
 export const MARKER_IMG = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
