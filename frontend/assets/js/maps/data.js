@@ -111,6 +111,8 @@ PIN_SAVE_OVERLAY.setVisible(false);
 
 export const MY_BOARDS = [];
 
+export const CURRENT_PINS = {value:''};
+
 export const PIN_DETAIL = {};
 
 export const requestUser = {email:''}  

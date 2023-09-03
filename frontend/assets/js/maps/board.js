@@ -49,6 +49,10 @@ export async function getBoards(keyword) {
 // 메인 보드 표시
 export function displayMainBoards(boards) {
     $mainBoard.textContent = '';
+
+    if (boards.length <= 0) {
+        return;
+    }
     let randomBoards = [];
 
     let oldIndex = 999999;
@@ -102,10 +106,10 @@ export function displayMainBoards(boards) {
         }
         thumbnail.alt = '';
         thumbnail.addEventListener('click', async ()=>{
-            let response = await findBoardRequest(randomBoards[i].id);
-            if (response.status >= 400 && response.status < 600) {
-                return;
-            }
+            // let response = await findBoardRequest(randomBoards[i].id);
+            // if (response.status >= 400 && response.status < 600) {
+            //     return;
+            // }
             window.localStorage.setItem('BOARD_ID', randomBoards[i].id);
             // location.href = '';
         });

@@ -1,9 +1,9 @@
 import { getPinContentsRequest, pinSimpleSaveRequest } from "../request/content.js";
 import { setMyBoard } from "./board.js";
-import { MAP, $searchResultList, $searchResultBox, $searchPagination, MARKERS, MARKER_IMG, MARKER_OVERLAY_CONTENT_BOX, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, PIN_DETAIL, ACCOUNT, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $staticContainer } from "./data.js";
+import { MAP, $searchResultList, $searchResultBox, $searchPagination, MARKERS, MARKER_IMG, MARKER_OVERLAY_CONTENT_BOX, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, PIN_DETAIL, ACCOUNT, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $staticContainer, $boardAddModal, $boardAddModalContent } from "./data.js";
 import { displayMarkerDetailInfo, } from "./event.js";
 import { removeAllMarker, displayMarkers, move } from "./map.js";
-import { displayPinContents, displayPinDetail, fetchUserInfo } from "./pinDetail.js";
+import { pinDetail } from "./pinDetail.js";
 
 export async function pinSimpleSave(board, place) {
     let response  = await pinSimpleSaveRequest(board, place);
@@ -356,12 +356,7 @@ export async function displayPinOverlay(markerInfo) {
         PIN_DETAIL.position = markerInfo.position;
         PIN_DETAIL.marker = markerInfo.marker;
 
-        fetchUserInfo()
-        .catch(() => {})
-        .finally(() => {
-            displayPinContents(1);
-            displayPinDetail();
-        });
+        pinDetail();
 
         const STATIC_MAP = new kakao.maps.StaticMap($staticContainer, {
             center: markerInfo.position,
