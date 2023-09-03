@@ -1,0 +1,42 @@
+.text-cell {
+    width: 350px; /* 원하는 너비로 설정 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pin-cell {
+    width: 170px; /* 원하는 너비로 설정 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#edit-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  #photoUpload {
+    width: 200px;
+    height: 40px;
+    border-radius: 5px;
+  }
+  
+  #textUpload {
+   width:400px;
+   padding-left :10px; 
+   resize:vertical ;
+
+  }
+  
+  .submitbtn {
+   background-color : indigo; 
+   color : white; 
+   padding :14px,20 px; 
+   margin :8 px, 0;
+   border:none ;
+   cursor:pointer; 
+   width: 100px;
+   height: 43px;
+  }
