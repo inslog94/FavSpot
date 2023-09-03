@@ -13,6 +13,7 @@ export const INIT_MAP_LEVEL = 3;
 export const PIN_INFO_WINDOW = new kakao.maps.InfoWindow({});
 
 export const $container = document.getElementById('map');
+export const $staticContainer = document.getElementById('static_map');
 export const MAP_OPTIONS = { center: CURRENT_POSITION, level: INIT_MAP_LEVEL};
 export const MAP = new kakao.maps.Map($container, MAP_OPTIONS);
 export const BASE_MAP_LEVEL = {value:MAP_OPTIONS.level};
@@ -38,8 +39,9 @@ export const $boardModalSaveBtn = document.getElementById('board_add_c_btn');
 export const $boardConfirmModal = document.getElementById('board_confirm_modal');
 export const $boardConfirmModalBtn = document.getElementById('board_add_confirm_btn');
 export const $boardAddResult = document.getElementById('board_add_result');
-
+export const ACCOUNT = {login:false}
 export const $mainBoard = document.getElementById('main_board');
+export const $accountBtn = document.getElementById('account_btn');
 
 export const MARKER = new kakao.maps.Marker({
         clickable: true
@@ -92,8 +94,8 @@ MARKER_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
 export const PIN_SAVE_OVERLAY = new kakao.maps.CustomOverlay({
     map: MAP,
     clickable: true,
-    xAnchor: 0,
-    yAnchor: 1,
+    xAnchor: -0.05,
+    yAnchor: 0.2,
     zIndex: 1
 });
 export const PIN_SAVE_OVERLAY_CONTENT = document.createElement('div');
@@ -108,3 +110,11 @@ PIN_SAVE_OVERLAY_CONTENT.addEventListener('mouseout', (e)=>{
 PIN_SAVE_OVERLAY.setVisible(false);
 
 export const MY_BOARDS = [];
+
+export const CURRENT_PINS = {value:''};
+
+export const PIN_DETAIL = {};
+
+export const requestUser = {email:''}  
+export const requestUserPk = {id: ''} 
+export const followingList = {list: ''} 

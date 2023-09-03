@@ -1,8 +1,8 @@
 import { origin } from "../maps/data.js";
 
-export async function pinContentsReadRequest(placeName, lat, lng) {
+export async function getPinContentsRequest(id) {
 
-    let url =  origin + '/pin/' + placeName + '/' + lat + ',' + lng + '/';
+    let url =  origin + '/pin/' + id + '/';
 
     const response = await fetch(url, {
         method: 'GET',
@@ -11,10 +11,10 @@ export async function pinContentsReadRequest(placeName, lat, lng) {
         }
     });
 
-    return response.json();
+    return response;
 }
 
-export async function boardReadRequest(keyword) {
+export async function getBoardRequest(keyword) {
     let url;
 
     if (keyword !== null && keyword !== undefined && keyword.length > 0) {
@@ -34,7 +34,22 @@ export async function boardReadRequest(keyword) {
     return response.json();
 }
 
-export async function loginUserBoardReadRequest() {
+export async function findBoardRequest(id) {
+
+    let url = origin + '/board/' + id + '/' ;
+
+    const response = await fetch(url, {
+        method: 'GET',
+        credentials: "include",
+        headers: {
+            Accept: 'application/json'
+        }
+    });
+
+    return response.json();
+}
+
+export async function getLoginUserInfoRequest() {
 
     let url = origin + '/user/me/'
 
@@ -46,20 +61,19 @@ export async function loginUserBoardReadRequest() {
         }
     });
 
-    return await response.json();
+    return response;
 }
 
-export async function pinSimpleCreateRequest(board, place) {
+export async function pinSimpleSaveRequest(board, place) {
 
     let url = origin + '/pin/';
-
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
             category: place.categoryGroupName,
             board_id: board.id,
             title: place.title,
-            place_id: place.id,
+            place_id: place.placeId,
             new_address: place.roadAddressName,
             old_address: place.addressName,
             lat_lng: place.lat + ',' + place.lng,
@@ -73,10 +87,28 @@ export async function pinSimpleCreateRequest(board, place) {
         alert(error);
     });
 
-    return await response.json();
+    return response;
 }
 
-export async function boardSimpleCreateRequest(title, tags) {
+export async function pinDeleteRequest(id) {
+
+    let url = origin + '/pin/content/' + id + '/';
+
+    const response = await fetch(url, {
+        method: 'DELETE',
+        credentials: "include",
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+        }
+    }).catch(error=>{
+        alert(error);
+    });
+
+    return response;
+}
+
+export async function boardSimpleSaveRequest(title, tags) {
     let url = origin + '/board/';
 
     const response = await fetch(url, {
@@ -94,5 +126,5 @@ export async function boardSimpleCreateRequest(title, tags) {
         alert(error);
     });
 
-    return await response.json();
+    return response;
 }

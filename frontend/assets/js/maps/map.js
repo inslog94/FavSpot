@@ -1,10 +1,6 @@
 import { MAP, CURRENT_POSITION, PIN_INFO_WINDOW, MARKERS, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, $screenBtn, screenMode, $container} from './data.js';
-import { markerInfoHoverEvent, markerClickZoomInEvent, markerDetailContentClickEvent, markerInfoClickEvent } from './event.js';
+import { markerInfoHoverEvent, markerClickZoomInEvent, markerInfoClickEvent } from './event.js';
 
-
-function displayMarker(pin) {
-    pin.setMap(MAP);
-}
 
 function displayMap(position) {
     MAP.setCenter(position);
