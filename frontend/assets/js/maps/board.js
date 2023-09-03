@@ -14,18 +14,22 @@ export async function boardSimpleSave(title, tags) {
 }
 
 // 해당 계정의 보드 세팅
-export async function setMyBoard() {
+export async function setMyBoard(boards) {
     MY_BOARDS.length = 0;
+    let response;
 
-    let response = await getLoginUserInfoRequest();
+    if (boards === null || boards === undefined || boards.length === 0) {
 
-    if (response.status >= 400 && response.status <= 500) {
-        return null;
+        response = await getLoginUserInfoRequest();
+
+        if (response.status >= 400 && response.status <= 500) {
+            return null;
+        }
+
+        response = await response.json();
+
+        boards = response.Boards;
     }
-
-    response = await response.json();
-
-    const boards = response.Boards;
 
     boards.forEach(board=>{
         MY_BOARDS.push(board);

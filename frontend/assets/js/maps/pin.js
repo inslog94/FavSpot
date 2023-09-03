@@ -1,8 +1,9 @@
 import { getPinContentsRequest, pinSimpleSaveRequest } from "../request/content.js";
 import { setMyBoard } from "./board.js";
-import { MAP, $searchResultList, $searchResultBox, $searchPagination, MARKERS, MARKER_IMG, MARKER_OVERLAY_CONTENT_BOX, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, PIN_DETAIL, ACCOUNT, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS } from "./data.js";
+import { MAP, $searchResultList, $searchResultBox, $searchPagination, MARKERS, MARKER_IMG, MARKER_OVERLAY_CONTENT_BOX, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, PIN_DETAIL, ACCOUNT, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $staticContainer } from "./data.js";
 import { displayMarkerDetailInfo, } from "./event.js";
 import { removeAllMarker, displayMarkers, move } from "./map.js";
+import { displayPinContents, displayPinDetail, fetchUserInfo } from "./pinDetail.js";
 
 export async function pinSimpleSave(board, place) {
     let response  = await pinSimpleSaveRequest(board, place);
@@ -15,8 +16,8 @@ export async function pinSimpleSave(board, place) {
 }
 
 // 서버로부터 pin 목록 가져옴
-export async function getPinContentsFromServer(placeName, lat, lng) {
-    const response = await getPinContentsRequest(placeName, lat, lng);
+export async function getPinContentsFromServer(id) {
+    const response = await getPinContentsRequest(id);
 
     // 해당 장소에 대해 핀이 하나도 없는 경우
     if (response.status >= 400 && response.status < 500) {
@@ -276,7 +277,7 @@ export async function displayPinOverlay(markerInfo) {
 
     // 해당 핀의 썸네일 여부 처리
     let pinThumbnail;
-    let pinContent = await getPinContentsFromServer(markerInfo.title, markerInfo.lat, markerInfo.lng);
+    let pinContent = await getPinContentsFromServer(markerInfo.placeId);
     let boxHeight = 170;
     let contentHeight = 160;
 
@@ -346,12 +347,27 @@ export async function displayPinOverlay(markerInfo) {
     showPinDetailBtn.addEventListener('click', ()=> {
         delete PIN_DETAIL.category, PIN_DETAIL.place_id, PIN_DETAIL.title, PIN_DETAIL.thumbnail_img, PIN_DETAIL.new_address, PIN_DETAIL.old_address, PIN_DETAIL.lat_lng;
         PIN_DETAIL.category = markerInfo.categoryGroupName;
-        PIN_DETAIL.place_id = markerInfo.placeId;
+        PIN_DETAIL.placeId = markerInfo.placeId;
         PIN_DETAIL.title = markerInfo.title;
         PIN_DETAIL.thumbnail_img = pinThumbnail;
         PIN_DETAIL.new_address = markerInfo.roadAddressName;
         PIN_DETAIL.old_address = markerInfo.addressName;
         PIN_DETAIL.lat_lng = markerInfo.lat + ',' + markerInfo.lng;
+        PIN_DETAIL.position = markerInfo.position;
+        PIN_DETAIL.marker = markerInfo.marker;
+
+        fetchUserInfo()
+        .catch(() => {})
+        .finally(() => {
+            displayPinContents(1);
+            displayPinDetail();
+        });
+
+        const STATIC_MAP = new kakao.maps.StaticMap($staticContainer, {
+            center: markerInfo.position,
+            level: 3,
+            marker: markerInfo.marker
+        });
     });
 
     // 핀 생성 버튼 클릭시 보드 목록 오버레이 표시 이벤트 

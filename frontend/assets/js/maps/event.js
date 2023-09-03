@@ -1,6 +1,6 @@
 import { getLoginUserInfoRequest } from '../request/content.js';
 import { boardSimpleSave, displayMainBoards, getBoards, setMyBoard } from './board.js';
-import { MAP, MAP_OPTIONS, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $boardAddModal, $boardModalNextBtn, $boardModalSaveBtn, $boardInputBox1, $boardInputBox2, $boardModalTagsInput, $boardModalTitleInput, $boardConfirmModal, $boardConfirmModalBtn, $boardAddResult, $boardAddModalContent, ACCOUNT } from './data.js';
+import { MAP, MAP_OPTIONS, CURRENT_POSITION, INIT_MAP_LEVEL, PIN_INFO_WINDOW, $keyword, $keywordSearchBtn, CLUSTERER, CLUSTER_OVRELAY, CLUSTER_OVERLAY_CONTENT, BASE_MAP_LEVEL, MARKER_OVERLAY_CONTENT, MARKER_OVERLAY, MARKER_OVERLAY_CONTENT_BOX, $screenBtn, screenMode, PIN_SAVE_OVERLAY, PIN_SAVE_OVERLAY_CONTENT, MY_BOARDS, $boardAddModal, $boardModalNextBtn, $boardModalSaveBtn, $boardInputBox1, $boardInputBox2, $boardModalTagsInput, $boardModalTitleInput, $boardConfirmModal, $boardConfirmModalBtn, $boardAddResult, $boardAddModalContent, ACCOUNT, requestUser, requestUserPk, followingList } from './data.js';
 import { displayGeoLocationMap, closeZoomInLocation, fullScreen, fullScreenEnd, move } from './map.js';
 import { displayPinOverlay } from './pin.js';
 import { searchPlaceAsKeyword } from './search.js';
@@ -264,29 +264,33 @@ async function mainBoardSetup() {
 // 로그인 여부에 따라 화면 출력
 export async function loginProcess() {
 
-    document.getElementById('account_login_btn').addEventListener('click', ()=>{
-        if(document.getElementById('account_login_option').style.display === 'flex') {
-            document.getElementById('account_login_option').style.display = 'none';
-            return;    
-        }
-        document.getElementById('account_login_option').style.display = 'flex';
-    });
+    // 로그인 버튼 클릭 이벤트
+    // document.getElementById('account_login_btn').addEventListener('click', ()=>{
+    //     if(document.getElementById('account_login_option').style.display === 'flex') {
+    //         document.getElementById('account_login_option').style.display = 'none';
+    //         return;    
+    //     }
+    //     document.getElementById('account_login_option').style.display = 'flex';
+    // });
 
     let response = await getLoginUserInfoRequest();
-    response = await response.json();
-    const loginEmail = response.User.email;
 
-    if (loginEmail === undefined || loginEmail === null || loginEmail === 0) {
+    if (response.status === 403 || response.status === 401) {
         document.getElementById('account_login').style.display = 'none';
         document.getElementById('account_anonymous').style.display = 'flex';
         ACCOUNT.login = false;
         return;
     }
 
-    document.getElementById('account_login').style.display = 'flex';
-    document.getElementById('account_anonymous').style.display = 'none';
+    // document.getElementById('account_login').style.display = 'flex';
+    // document.getElementById('account_anonymous').style.display = 'none';
     setMyBoard();
     ACCOUNT.login = true;
+
+    response = await response.json();
+    // requestUser.email =  response.results.User.email;
+    // requestUserPk.id = response.results.User.id;
+    // followingList.list = response.results.User.following_list;
 }
 
 // 전체 기능 초기화
@@ -310,5 +314,7 @@ window.onload = function init() {
         displayGeoLocationMap();
         mapSetup();
         clusterClickEvent();
+    } else {
+        loginProcess();
     }
 }

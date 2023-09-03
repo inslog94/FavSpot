@@ -1,8 +1,8 @@
 import { origin } from "../maps/data.js";
 
-export async function getPinContentsRequest(placeName, lat, lng) {
+export async function getPinContentsRequest(id) {
 
-    let url =  origin + '/pin/' + placeName + '/' + lat + ',' + lng + '/';
+    let url =  origin + '/pin/' + id + '/';
 
     const response = await fetch(url, {
         method: 'GET',
@@ -67,8 +67,6 @@ export async function getLoginUserInfoRequest() {
 export async function pinSimpleSaveRequest(board, place) {
 
     let url = origin + '/pin/';
-    console.log('########################################', board);
-    console.log('########################################', place);
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
