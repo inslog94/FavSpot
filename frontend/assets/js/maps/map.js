@@ -48,7 +48,11 @@ export function fullScreen() {
 
   board.style.display = "none";
   mapBox.style.width = "98%";
-  $screenBtn.style.left = "193vh";
+  if (window.innerWidth > 1800) {
+    $screenBtn.style.left = "177vh";
+  } else {
+    $screenBtn.style.left = "193vh";
+  }
   $screenBtn.innerText = "되돌리기";
   screenMode.fullScreen = true;
 
@@ -61,7 +65,11 @@ export function fullScreenEnd() {
 
   board.style.display = "block";
   mapBox.style.width = "60%";
-  $screenBtn.style.left = "112vh";
+  if (window.innerWidth > 1800) {
+    $screenBtn.style.left = "104vh";
+  } else {
+    $screenBtn.style.left = "112vh";
+  }
   $screenBtn.innerText = "전체화면";
   screenMode.fullScreen = false;
 
