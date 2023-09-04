@@ -366,20 +366,35 @@ export async function loginProcess() {
       console.error("Error:", error);
       const authUser = document.querySelector(".shpping-cart");
       authUser.remove();
+
+      let path = window.location.pathname;
+      let page = path.split("/").pop();
+
       // div 요소 생성
       const div = document.createElement("div");
       div.className = "position-absolute top-0 end-0 mt-3";
 
       // 로그인 링크 생성
       const loginLink = document.createElement("a");
-      loginLink.href = "login.html";
       loginLink.appendChild(document.createTextNode("Login"));
 
       // 가입 링크 생성
       const signupLink = document.createElement("a");
-      signupLink.href = "signup.html";
       signupLink.className = "ms-3";
       signupLink.appendChild(document.createTextNode("Signup"));
+
+      if (
+        page === "" ||
+        page === "index.html" ||
+        page === undefined ||
+        page === null
+      ) {
+        loginLink.href = "assets/html/login.html";
+        signupLink.href = "assets/html/signup.html";
+      } else {
+        loginLink.href = "login.html";
+        signupLink.href = "signup.html";
+      }
 
       // 로그인 및 가입 링크를 div에 추가
       div.appendChild(loginLink);
