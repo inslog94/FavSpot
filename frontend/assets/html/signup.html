@@ -92,31 +92,6 @@
                   class="mx-auto d-block"
                 />
               </a>
-
-              <div class="shpping-cart position-absolute top-0 end-0 mt-2">
-                <a class="cart-btn" href="#">
-                  <img
-                    class="profileImg"
-                    src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default_clear.png"
-                    alt=""
-                    style="object-fit: cover; width: 45px; height: 45px"
-                  />
-                </a>
-                <div class="cart">
-                  <div class="cart-title">
-                    <h6 id="email" class="uppercase mb-0"></h6>
-                  </div>
-                  <div class="cart-item">
-                    <div class="cart-name clearfix">
-                      <a href="user_info.html">User Detail</a>
-                    </div>
-                  </div>
-                  <div class="cart-total">
-                    <a class="button" href="profile_edit.html">Profile Edit</a>
-                    <a id="logout" class="button black" href="#">Logout</a>
-                  </div>
-                </div>
-              </div>
             </div>
             <!-- menu end -->
           </div>
@@ -292,45 +267,6 @@ header -->
       })
         .then((response) => response.json())
         .then((data) => {
-          const requestUser = data.results.User.email;
-          const requestUserPk = data.results.User.id;
-          const requestUserProfileImg = data.results.User.profile_img;
-          console.log("프로필 사진", requestUserProfileImg);
-          const followingList = data.results.User.following_list;
-          console.log(
-            "request user",
-            requestUser,
-            followingList,
-            typeof followingList
-          );
-
-          if (requestUser) {
-            const email = document.querySelector("#email");
-            email.textContent = requestUser;
-            const profileImg = document.querySelector(".profileImg");
-            profileImg.src = requestUserProfileImg;
-            profileImg.style.borderRadius = "50%";
-          }
-
-          const logout = document.querySelector("#logout");
-          logout.addEventListener("click", (event) => {
-            fetch(`http://127.0.0.1:8000/user/logout/`, {
-              method: "GET",
-              credentials: "include",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            })
-              .then((response) => {
-                if (response.status === 200) {
-                  console.log("로그아웃 성공");
-                  location.reload(); // 페이지 새로고침
-                }
-              })
-              .catch((error) => {
-                console.error("Error:", error);
-              });
-          });
           const $signup = document.querySelector(".signup");
           $signup.addEventListener("submit", (event) => {
             event.preventDefault();
@@ -358,7 +294,7 @@ header -->
               })
               .then((data) => {
                 // 회원가입 성공 시 처리
-                window.location.href = "index.html";
+                window.location.href = "/frontend/index.html";
               })
               .catch((error) => {
                 console.log(error, error.message);
@@ -368,30 +304,6 @@ header -->
         })
         .catch((error) => {
           console.error("Error:", error);
-          const authUser = document.querySelector(".shpping-cart");
-          authUser.remove();
-          // div 요소 생성
-          const div = document.createElement("div");
-          div.className = "position-absolute top-0 end-0 mt-3";
-
-          // 로그인 링크 생성
-          const loginLink = document.createElement("a");
-          loginLink.href = "login.html";
-          loginLink.appendChild(document.createTextNode("Login"));
-
-          // 가입 링크 생성
-          const signupLink = document.createElement("a");
-          signupLink.href = "signup.html";
-          signupLink.className = "ms-3";
-          signupLink.appendChild(document.createTextNode("Signup"));
-
-          // 로그인 및 가입 링크를 div에 추가
-          div.appendChild(loginLink);
-          div.appendChild(signupLink);
-
-          // 생성한 요소를 기존 요소에 추가
-          const headerContent = document.getElementById("headerContent");
-          headerContent.appendChild(div);
         });
     </script>
   </body>
