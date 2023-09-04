@@ -7,7 +7,7 @@ from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerial
 from pin.serializers import SimplePinSerializer, PinSerializer
 from user.serializers import BoardPinSerializer
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.decorators import authentication_classes, permission_classes
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
@@ -15,6 +15,9 @@ from django.db.models import Q
 
 # Board View
 class BoardView(APIView):
+    ## 모든 사용자가 조회 가능 
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     ## 특정 보드 상세 조회 메소드
     def get_object(self, pk):
         try:
@@ -33,6 +36,7 @@ class BoardView(APIView):
         return False, None
 
     def get(self, request, pk=None):
+
         ## 보드 전체 목록 조희
         if not pk:
             boards = Board.objects.filter(is_deleted=False)
