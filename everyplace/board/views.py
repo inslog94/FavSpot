@@ -4,7 +4,7 @@ from rest_framework import status
 from .models import Board, BoardTag, BoardComment, BoardLike
 from pin.models import Pin
 from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer, BoardLikeSerializer
-from pin.serializers import SimplePinSerializer
+from pin.serializers import SimplePinSerializer, PinSerializer
 from user.serializers import BoardPinSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -62,7 +62,7 @@ class BoardView(APIView):
             # 해당 보드에 대한 좋아요 개수 출력
             likes_count = BoardLike.objects.filter(board_id=pk, is_deleted=False).count()
             
-            pin_serializer = SimplePinSerializer(pins, many=True)
+            pin_serializer = PinSerializer(pins, many=True)
             comment_serializer = BoardCommentSerializer(comments, many=True)
             board_serializer = BoardSerializer(board)
 

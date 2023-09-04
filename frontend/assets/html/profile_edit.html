@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="keywords" content="HTML5 Template" />
+    <meta
+      name="description"
+      content="Webster - Responsive Multi-purpose HTML5 Template"
+    />
+    <meta name="author" content="potenzaglobalsolutions.com" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <title>FavSpot - User Profile Edit</title>
+
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      href="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/fav.png"
+    />
+
+    <!-- font -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,500,500i,600,700,800,900|Poppins:200,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900"
+    />
+
+    <!-- Plugins -->
+    <link rel="stylesheet" type="text/css" href="../css/plugins-css.css" />
+
+    <!-- Typography -->
+    <link rel="stylesheet" type="text/css" href="../css/typography.css" />
+
+    <!-- Shortcodes -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/shortcodes/shortcodes.css"
+    />
+
+    <!-- Style -->
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+
+    <!-- Responsive -->
+    <link rel="stylesheet" type="text/css" href="../css/responsive.css" />
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <!--=================================
+ preloader -->
+
+      <div id="pre-loader">
+        <img
+          class="img-fluid d-block mx-auto"
+          src="../img/pre-loader/loader-03.svg"
+          alt=""
+        />
+      </div>
+
+      <!--=================================
+ preloader -->
+      <!--=================================
+ header -->
+
+      <header
+        id="header"
+        class="header light logo-center"
+        style="background-color: beige"
+      >
+        <nav
+          id="menu"
+          class="mega-menu d-flex align-items-center"
+          style="min-height: 60px"
+        >
+          <!-- menu list items container -->
+          <div class="col-lg-12 col-md-12">
+            <!-- menu logo -->
+            <div
+              id="headerContent"
+              class="position-relative"
+              style="width: 95vw"
+            >
+              <a href="../../index.html">
+                <img
+                  id="logo_img"
+                  src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/big_logo.png"
+                  alt="logo"
+                  style="width: 80px; height: 60px"
+                  class="mx-auto d-block"
+                />
+              </a>
+
+              <div class="shpping-cart position-absolute top-0 end-0 mt-2">
+                <a class="cart-btn" href="#">
+                  <img
+                    class="profileImg"
+                    src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default_clear.png"
+                    alt=""
+                    style="object-fit: cover; width: 45px; height: 45px"
+                  />
+                </a>
+                <div class="cart">
+                  <div class="cart-title">
+                    <h6 id="headerEmail" class="uppercase mb-0"></h6>
+                  </div>
+                  <div class="cart-item">
+                    <div class="cart-name clearfix">
+                      <a href="user_info.html">User Detail</a>
+                    </div>
+                  </div>
+                  <div class="cart-total">
+                    <a class="button" href="profile_edit.html">Profile Edit</a>
+                    <a id="logout" class="button black" href="#">Logout</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- menu end -->
+          </div>
+        </nav>
+      </header>
+
+      <!--=================================
+header -->
+      <!--=================================
+ Register-->
+
+      <section class="white-bg page-section-ptb o-hidden pt-30">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 col-md-12">
+              <div class="section-title text-center">
+                <h6 class="">Can change your Profile and Password</h6>
+                <h2 class="title-effect">User Profile Edit</h2>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+              <div id="register-form" class="register-form">
+                <form class="profileEdit" method="post">
+                  <hr class="mt-50" />
+                  <h4 class="title-effect mt-20 mb-20">Profile Update</h4>
+                  <div class="section-field">
+                    <label class="form-label" for="nickname">Nickname</label>
+                    <div class="field-widget">
+                      <input
+                        id="nickname"
+                        class="web form-control"
+                        type="text"
+                        placeholder="Eenter your nickname"
+                        name="nickname"
+                      />
+                    </div>
+                  </div>
+                  <label class="form-label mr-3" for="profileImg"
+                    >Profile Image</label
+                  >
+                  <div class="section-field d-flex align-items-end">
+                    <img
+                      id="imagePreview"
+                      class="img-fluid ml-3"
+                      style="
+                        object-fit: cover;
+                        width: 100px;
+                        height: 100px;
+                        border-radius: 3px;
+                      "
+                      src="images/team/01.jpg"
+                      alt="profileImg"
+                    />
+                    <input
+                      id="profileImg"
+                      class="profileImg gui-input form-control"
+                      type="file"
+                      accept=".jpg, .jpeg, .png"
+                      placeholder="Upload your Profile Image"
+                      name="profileImg"
+                    />
+                  </div>
+
+                  <hr class="mt-50" />
+                  <h4 class="title-effect mt-20 mb-20">Password Change</h4>
+                  <div class="section-field">
+                    <label class="form-label" for="currentPassword"
+                      >Current Password*
+                    </label>
+                    <div class="field-widget">
+                      <input
+                        id="currentPassword"
+                        class="Password form-control"
+                        type="password"
+                        placeholder="Current Password"
+                        name="currentPassword"
+                      />
+                    </div>
+                  </div>
+                  <div class="section-field mt-40">
+                    <label class="form-label" for="newPassword1"
+                      >New Password1*
+                    </label>
+                    <div class="field-widget">
+                      <input
+                        id="newPassword1"
+                        class="Password form-control"
+                        type="password"
+                        placeholder="New Password"
+                        name="newPassword1"
+                      />
+                    </div>
+                  </div>
+                  <div class="section-field">
+                    <label class="form-label" for="newPassword2"
+                      >New Password2*
+                    </label>
+                    <div class="field-widget">
+                      <input
+                        id="newPassword2"
+                        class="Password form-control"
+                        type="password"
+                        placeholder="New Password Check"
+                        name="newPassword2"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <p id="passwordError" class="text-danger"></p>
+                  </div>
+                  <button class="button mt-40" type="submit">
+                    <span>Update</span>
+                    <i class="fa fa-check"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!--=================================
+ Register-->
+      <footer class="footer footer-topbar fixed-bottom">
+        <div class="copyright pt-10 pb-0" style="background-color: beige">
+          <div class="container m-0">
+            <div
+              class="row d-flex justify-content-between"
+              style="width: 100vw"
+            >
+              <div class="col-lg-6" style="width: 550px">
+                <img
+                  class="img-fluid mb-10 ml-20"
+                  style="height: 50px"
+                  src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/horizontal_logo.png"
+                  alt=""
+                />
+                <div style="color: #555">
+                  <p class="ml-20">
+                    &copy;Copyright
+                    <span id="copyright">
+                      <script>
+                        document
+                          .getElementById("copyright")
+                          .appendChild(
+                            document.createTextNode(new Date().getFullYear())
+                          );
+                      </script>
+                      by
+                      <a href="#" style="color: #ff5757"> FavSpot. </a> </span
+                    >Making Every Destination Yours.
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-6 mt-2" style="width: 550px">
+                <div class="footer-social">
+                  <p class="text-start text-lg-end mr-20">
+                    Leave Your Mark with
+                    <a href="#" style="color: #ff5757">FavSpot</a>, Everywhere
+                    You Go
+                  </p>
+                </div>
+                <div
+                  class="social-icons color-hover text-start text-lg-end mt-20"
+                >
+                  <ul class="clearfix">
+                    <li class="social-github">
+                      <a
+                        class="mr-20"
+                        href="https://github.com/inslog94/FavSpot"
+                        target="_blank"
+                        ><i class="fa fa-github"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <div id="back-to-top">
+      <a class="top arrow" href="#top"
+        ><i class="fa fa-angle-up"></i> <span>TOP</span></a
+      >
+    </div>
+
+    <!--=================================
+ jquery -->
+
+    <!-- jquery -->
+    <script src="../js/jquery-3.6.0.min.js"></script>
+
+    <!-- plugins-jquery -->
+    <script src="../js/plugins-jquery.js"></script>
+
+    <!-- plugin_path -->
+    <script>
+      var plugin_path = "../js/";
+    </script>
+
+    <!-- custom -->
+    <script src="../js/custom.js"></script>
+
+    <script>
+      // 프로필 이미지 추가시 img 태그에 미리보기 추가
+      document.addEventListener("DOMContentLoaded", function () {
+        const profileImgInput = document.getElementById("profileImg");
+        const imagePreview = document.getElementById("imagePreview");
+
+        profileImgInput.addEventListener("change", function () {
+          const selectedImage = profileImgInput.files[0];
+
+          if (selectedImage) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              imagePreview.src = event.target.result;
+            };
+            reader.readAsDataURL(selectedImage);
+          }
+        });
+      });
+
+      // 비밀번호 유효성 검사
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentPassword = document.getElementById("currentPassword");
+        const newPassword1 = document.getElementById("newPassword1");
+        const newPassword2 = document.getElementById("newPassword2");
+        const passwordError = document.getElementById("passwordError");
+        const profileEdit = document.querySelector(".profileEdit");
+        const passwordInputs = [currentPassword, newPassword1, newPassword2];
+
+        // 입력 이벤트를 감지하여 required 옵션을 동적으로 설정/해제
+        passwordInputs.forEach((input) => {
+          input.addEventListener("input", () => {
+            const atLeastOneInputFilled = passwordInputs.some(
+              (input) => input.value !== ""
+            );
+
+            // 모든 입력란이 비어있지 않다면 required 설정, 아니면 해제
+            passwordInputs.forEach((input) => {
+              input.required = atLeastOneInputFilled;
+            });
+
+            // 새로운 비밀번호 체크
+            const newPassword1Value = newPassword1.value;
+            const newPassword2Value = newPassword2.value;
+
+            if (newPassword1Value && newPassword2Value) {
+              if (newPassword1Value !== newPassword2Value) {
+                passwordError.textContent = "Passwords don't match.";
+              } else {
+                passwordError.textContent = "";
+
+                // 현재 비밀번호와 새로운 비밀번호가 같은지 체크
+                if (
+                  currentPassword.value === newPassword1Value ||
+                  currentPassword.value === newPassword2Value
+                ) {
+                  passwordError.textContent =
+                    "New password should be different from the current password.";
+                }
+              }
+            }
+          });
+        });
+
+        // passwordError가 있는 경우 폼 제출할 수 없게 처리
+        profileEdit.addEventListener("click", function (event) {
+          if (passwordError.textContent !== "") {
+            event.preventDefault();
+          }
+        });
+      });
+
+      // 기본 프로필 값 채워주기
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("http://127.0.0.1:8000/user/me/", {
+          method: "GET",
+          credentials: "include",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const requestUserPk = data.results.User.id;
+            const requestUser = data.results.User.email;
+            const followingList = data.results.User.following_list;
+
+            const requestUserProfileImg = data.results.User.profile_img;
+
+            if (requestUser) {
+              const email = document.querySelector("#headerEmail");
+              email.textContent = requestUser;
+              const profileImg = document.querySelector(".profileImg");
+              profileImg.src = requestUserProfileImg;
+              profileImg.style.borderRadius = "50%";
+            }
+
+            const logout = document.querySelector("#logout");
+            logout.addEventListener("click", (event) => {
+              fetch(`http://127.0.0.1:8000/user/logout/`, {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              })
+                .then((response) => {
+                  if (response.status === 200) {
+                    console.log("로그아웃 성공");
+                    location.reload(); // 페이지 새로고침
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+            });
+            // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
+            const nickname = (document.querySelector("#nickname").value =
+              data["results"]["User"]["nickname"]);
+            const profileImg = data["results"]["User"]["profile_img"];
+            const imagePreview = document.getElementById("imagePreview");
+            if (profileImg) {
+              imagePreview.src = profileImg;
+            }
+          })
+          .catch((error) => {
+            console.error("Failed to retrieve user data.", error);
+          });
+      });
+
+      const $profileEdit = document.querySelector(".profileEdit");
+      $profileEdit.addEventListener("submit", (event) => {
+        event.preventDefault();
+        console.log("제출");
+        const profileImg = document.querySelector("#profileImg");
+        const nickname = document.querySelector("#nickname").value;
+        const currentPassword =
+          document.querySelector("#currentPassword").value;
+        const newPassword1 = document.querySelector("#newPassword1").value;
+        const newPassword2 = document.querySelector("#newPassword2").value;
+
+        const formData = new FormData();
+        if (nickname !== "") {
+          formData.append("nickname", nickname);
+        }
+        if (profileImg.files[0]) {
+          formData.append("profile_img", profileImg.files[0]);
+        }
+        if (currentPassword !== "") {
+          formData.append("password", currentPassword);
+        }
+        if (newPassword1 !== "") {
+          formData.append("new_password1", newPassword1);
+        }
+        if (newPassword2 !== "") {
+          formData.append("new_password2", newPassword2);
+        }
+
+        profileEdit(formData);
+      });
+
+      async function profileEdit(formdata) {
+        const passwordError = document.getElementById("passwordError");
+        try {
+          const response = await fetch("http://127.0.0.1:8000/user/me/", {
+            method: "PATCH",
+            body: formdata,
+            credentials: "include",
+          });
+
+          if (!response.ok) {
+            const error = await response.text();
+            throw new Error(error);
+          }
+          const data = await response.json();
+          console.log(data);
+          alert("Profile Update success.");
+          location.reload();
+        } catch (error) {
+          const errData = JSON.parse(error.message);
+          console.log(errData);
+
+          for (const key in errData["err_msg"]) {
+            if (Array.isArray(errData["err_msg"][key])) {
+              const messages = errData["err_msg"][key];
+              console.log(typeof messages);
+              passwordError.textContent = messages.join(" ");
+            } else {
+              const messages = errData["err_msg"];
+              passwordError.textContent = messages;
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

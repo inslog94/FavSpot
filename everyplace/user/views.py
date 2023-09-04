@@ -1,14 +1,15 @@
 import os
 import requests
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import AnonymousUser
 from django.utils.translation import gettext_lazy as _
 from json.decoder import JSONDecodeError
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework_simplejwt.tokens import RefreshToken
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.google import views as google_view
@@ -18,6 +19,7 @@ from allauth.socialaccount.models import SocialAccount
 from .models import User, Follow
 from .serializers import UserSerializer, FollowingSerializer, FollowerSerializer, BoardPinSerializer
 from board.models import Board
+from pin.paginations import CustomPagination
 
 state = os.getenv('STATE')
 BASE_URL = os.getenv('BASE_URL')
@@ -211,7 +213,7 @@ class SignupView(APIView):
         except:
             pass
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'err_msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 # 일반 로그인
 class LoginView(APIView):
@@ -230,6 +232,9 @@ class LoginView(APIView):
                 return JsonResponse({'err_msg': 'Google로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
             elif social_user.provider == 'kakao':
                 return JsonResponse({'err_msg': 'Kakao로 가입된 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
+        except User.DoesNotExist:
+            return JsonResponse({'err_msg': '가입되지 않은 계정입니다.'}, status=status.HTTP_400_BAD_REQUEST)
+            
         except:
             pass
         
@@ -244,8 +249,8 @@ class LoginView(APIView):
                 response.set_cookie('access_token', str(refresh.access_token), httponly=True, secure=True)
                 response.set_cookie('refresh_token', str(refresh), httponly=True, secure=True)
                 return response
-            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-        return Response({'detail': 'Email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'err_msg': '비밀번호를 확인해주세요.'}, status=status.HTTP_401_UNAUTHORIZED)
+        return JsonResponse({'err_msg': 'Email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
 
 # 로그아웃
 class LogoutView(APIView):
@@ -260,10 +265,18 @@ class LogoutView(APIView):
 
 # 유저정보
 class UserInfoView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
     def get(self, request, pk=None):
         # 본인인지 다른 유저인지 구분
+        if request.user.is_anonymous:
+            print('비로그인 유저')
+            return JsonResponse({'err_msg': '로그인이 필요합니다.'}, status=status.HTTP_401_UNAUTHORIZED)
+        
         if not pk:
+            user = request.user
+        elif request.user == User.objects.get(id=pk):
+            print('로그인 유저 본인 프로필')
             user = request.user
         else:
             user = User.objects.get(id=pk)
@@ -271,9 +284,19 @@ class UserInfoView(APIView):
         # 유저 프로필
         user_serializer = UserSerializer(user)
         # 유저가 작성한 보드 내역
-        boards = Board.objects.filter(user_id=user.id)
-        board_pin_serializer = BoardPinSerializer(boards, many=True)
-        return JsonResponse({'User': user_serializer.data, 'Boards': board_pin_serializer.data}, status=status.HTTP_200_OK)
+        if not pk:
+            boards = Board.objects.filter(user_id=user.id, is_deleted=False).order_by('-created_at')
+        else:
+            boards = Board.objects.filter(user_id=user.id, is_deleted=False, is_public=True).order_by('-created_at')
+        
+        # 페이지네이션 적용
+        paginator = CustomPagination()
+        paginator.page_size = 4
+
+        # 쿼리셋 페이지네이트
+        boards_page = paginator.paginate_queryset(boards, request)
+        board_pin_serializer = BoardPinSerializer(boards_page, many=True)
+        return paginator.get_paginated_response({'User': user_serializer.data, 'Boards': board_pin_serializer.data})
     
     def patch(self, request):
         # 비밀번호 수정 = 기존 비밀번호 검증 and (새 비밀번호 1 == 새 비밀번호 2)
@@ -287,7 +310,7 @@ class UserInfoView(APIView):
             password_check = authenticate(email=str(user), password=password)
             if password_check:
                 if password == new_password1 == new_password2:
-                    return JsonResponse({'err_msg': "변경하려는 비밀번호가 기존 비밀번호와 동일합니다."}, status=status.HTTP_400_BAD_REQUEST)
+                    return JsonResponse({'err_msg': "변경하려는 비밀번호가 기존 비밀번호와 동일합니다."}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
                 
                 headers = {"Authorization": f"Bearer {request.COOKIES['access_token']}"}
                 change_password = {"new_password1": new_password1, "new_password2": new_password2}
@@ -298,28 +321,29 @@ class UserInfoView(APIView):
                     user.save()
                 else:
                     # 비밀번호 변경이 정상적으로 이루어지지 않은 이유를 담아 응답
-                    return JsonResponse({'err_msg': res.json()}, status=res.status_code)
+                    return JsonResponse({'err_msg': res.json()}, status=res.status_code, json_dumps_params={'ensure_ascii': False})
             else:
-                return JsonResponse({'err_msg': "기존 비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({'err_msg': "기존 비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
         
         if not password and (new_password1 or new_password2):
-            return JsonResponse({'err_msg': "비밀번호 변경 시 기존 비밀번호 확인이 필요합니다."}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'err_msg': "비밀번호 변경 시 기존 비밀번호 확인이 필요합니다."}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
         
         # 프로필 수정(기존 비밀번호 입력 없이 변경 가능)
         nickname = request.data.get('nickname', None)
         profile_img = request.data.get('profile_img', None)
         
-        data = {
-            'nickname': nickname,
-            'profile_img': profile_img if profile_img else None
-        }
+        data = {}
+        if nickname:
+            data['nickname'] = nickname
+        if profile_img:
+            data['profile_img'] = profile_img
         
         serializer = UserSerializer(user, data=data, partial=True)
         if serializer.is_valid():
             profile_update = serializer.save()
             return JsonResponse({'Profile Update': serializer.data}, status=status.HTTP_200_OK)
         
-        return JsonResponse({'err_msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'err_msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST, json_dumps_params={'ensure_ascii': False})
 
 # 유저 팔로우, 팔로우 해제
 class UserFollow(APIView):

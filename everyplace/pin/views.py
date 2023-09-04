@@ -98,12 +98,13 @@ class PinView(APIView):
 
     # ## pin 생성
     def post(self, request):
+        request_data = request.data.copy()
         # 로그인 되어있는 아이디로 pin content 생성
-        request.data['user_id'] = request.user.id
+        request_data['user_id'] = request.user.id
 
         # request에서 필요한 데이터 가져오기
-        board_id = request.data.get('board_id')
-        place_id = request.data.get('place_id')
+        board_id = request_data.get('board_id')
+        place_id = request_data.get('place_id')
 
         # place_id를 사용해서 thumbnail_img값 얻기
         thumbnail_img = get_thumbnail_img(place_id)
@@ -118,7 +119,7 @@ class PinView(APIView):
             pin_serializer = PinSerializer(existing_pin)
 
             # 존재하는 pin과 연결된 pin content 생성
-            pin_content_serializer = PinContentSerializer(data=request.data)
+            pin_content_serializer = PinContentSerializer(data=request_data)
             if pin_content_serializer.is_valid():
                 pin_content = pin_content_serializer.save(pin_id=existing_pin)
 
@@ -134,7 +135,6 @@ class PinView(APIView):
 
         # pin이 존재하지 않을 시 새로운 pin 생성
         # board_id를 list형태로 변환
-        request_data = request.data.copy()
         request_data["board_id"] = [request_data["board_id"]]
         request_data["thumbnail_img"] = thumbnail_img
         pin_serializer = PinSerializer(data=request_data)
