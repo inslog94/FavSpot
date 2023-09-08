@@ -304,5 +304,5 @@ class BoardSearchView(APIView):
                 queryset = queryset.filter(
                     tags__content__icontains=search_term)
 
-        serializer = BoardSerializer(queryset, many=True)
+        serializer = BoardPinSerializer(queryset, many=True)
         return Response(serializer.data)
