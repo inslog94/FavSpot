@@ -95,23 +95,16 @@ class BoardView(APIView):
         if serializer.is_valid():
             board = serializer.save()
 
+            tags = []
+            
             if tags_data:
                 for tag_data in tags_data:
                     # 기존 태그 테이블에 태그가 있는지 확인
-                    try:
-                        tag = BoardTag.objects.get(content=tag_data)
-
-                    except BoardTag.DoesNotExist:
-                        # 테그 테이블에 없다면 새로 생성
-                        tag_serializer = BoardTagSerializer(data={'content': tag_data})
-
-                        if tag_serializer.is_valid():
-                            tag = tag_serializer.save()
-
-                        else:
-                            return Response(tag_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                    # 태그를 보드와 태그 테이블의 연관(중간) 테이블의 관계 데이터로 추가
-                    board.tags.add(tag)
+                    # 있다면 기존 유지, 없으면 생성
+                    tag, created = BoardTag.objects.get_or_create(content=tag_data.strip())
+                    tags.append(tag)
+                
+                board.tags.set(tags)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -131,6 +124,7 @@ class BoardView(APIView):
         if 'tags' in data:
             tags_data = data.pop('tags')
 
+
         serializer = BoardSerializer(board, data=data, partial=True)
 
         if serializer.is_valid():
@@ -146,37 +140,16 @@ class BoardView(APIView):
                     board.pin_set.remove(pin) # 기존에 있던 핀을 보드에서 제거
                 
             # 태그 수정 작업 (추가 / 삭제)
+            tags = []
+
             if tags_data:
-                # 새로운 태그를 연결
-                new_tags = []
-                
                 for tag_data in tags_data:
-                    try:
-                        tag = BoardTag.objects.get(content=tag_data)
-                        
-                    except BoardTag.DoesNotExist:
-                        tag_serializer = BoardTagSerializer(data={'content': tag_data})
-                        
-                        if tag_serializer.is_valid():
-                            tag = tag_serializer.save()
-                            
-                        else:
-                            return Response(tag_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                        
-                    new_tags.append(tag)
-                    
-                # 현재 태그를 가져옴
-                current_tags = board.tags.all()
+                    # 기존 태그 테이블에 태그가 있는지 확인
+                    # 있다면 기존 유지, 없으면 생성
+                    tag, created = BoardTag.objects.get_or_create(content=tag_data.strip())
+                    tags.append(tag)
                 
-                # 기존 태그 중 제거할 태그를 삭제
-                tags_to_remove = set(current_tags) - set(new_tags)
-                for tag in tags_to_remove:
-                    board.tags.remove(tag)
-                    
-                # 새로운 태그 중 추가할 태그를 추가
-                tags_to_add = set(new_tags) - set(current_tags)
-                for tag in tags_to_add:
-                    board.tags.add(tag)
+            board.tags.set(tags)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
