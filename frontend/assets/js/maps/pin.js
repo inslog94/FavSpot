@@ -1,8 +1,8 @@
 import {
   getPinContentsRequest,
   pinSimpleSaveRequest,
-} from "../request/content.js";
-import { setMyBoard } from "./board.js";
+} from '../request/content.js';
+import { setMyBoard } from './board.js';
 import {
   MAP,
   $searchResultList,
@@ -21,10 +21,10 @@ import {
   $staticContainer,
   $boardAddModal,
   $boardAddModalContent,
-} from "./data.js";
-import { displayMarkerDetailInfo } from "./event.js";
-import { removeAllMarker, displayMarkers, move } from "./map.js";
-import { pinDetail } from "./pinDetail.js";
+} from './data.js';
+import { displayMarkerDetailInfo } from './event.js';
+import { removeAllMarker, displayMarkers, move } from './map.js';
+import { pinDetail } from './pinDetail.js';
 
 export async function pinSimpleSave(board, place) {
   let response = await pinSimpleSaveRequest(board, place);
@@ -57,12 +57,12 @@ export function displayPagination(pagination) {
 
   // 페이지 생성 및 클릭 이벤트 등록
   for (let i = 1; i <= pagination.last; i++) {
-    let page = document.createElement("a");
-    page.href = "#";
+    let page = document.createElement('a');
+    page.href = '#';
     page.innerHTML = i;
 
     if (i === pagination.current) {
-      page.className = "on";
+      page.className = 'on';
     } else {
       page.onclick = (function (i) {
         return function () {
@@ -129,7 +129,7 @@ export function setMarkersFromAPI(dataList) {
       data.category_group_name === undefined ||
       data.category_group_name.length === 0
     ) {
-      pin.categoryGroupName = "기타";
+      pin.categoryGroupName = '기타';
     }
 
     // 지번 주소가 없을 경우 공백 처리
@@ -138,7 +138,7 @@ export function setMarkersFromAPI(dataList) {
       data.address_name === undefined ||
       data.address_name.length === 0
     ) {
-      pin.addressName = "지번 주소 없음";
+      pin.addressName = '지번 주소 없음';
     }
 
     // 도로명 주소가 없을 경우 공백 처리
@@ -147,7 +147,7 @@ export function setMarkersFromAPI(dataList) {
       data.road_address_name === undefined ||
       data.road_address_name.length === 0
     ) {
-      pin.roadAddressName = "도로명 주소 없음";
+      pin.roadAddressName = '도로명 주소 없음';
     }
 
     pin.marker = new kakao.maps.Marker({
@@ -164,7 +164,7 @@ export function setMarkersFromAPI(dataList) {
 // 검색 결과 핀 -> 전역 변수 설정
 export function setMarkersFromServer(dataList) {
   dataList.forEach(function (data) {
-    let positions = data.lat_lng.split(",");
+    let positions = data.lat_lng.split(',');
 
     data.categoryGroupName = data.category;
     data.position = new kakao.maps.LatLng(positions[0], positions[1]);
@@ -186,7 +186,7 @@ export function setMarkersFromServer(dataList) {
 
 // 서버로부터 조회한 보드의 핀 -> 전역 변수 설정
 export function setMarkerFromServer(data) {
-  let positions = data.lat_lng.split(",");
+  let positions = data.lat_lng.split(',');
 
   data.categoryGroupName = data.category;
   data.position = new kakao.maps.LatLng(positions[0], positions[1]);
@@ -220,35 +220,35 @@ function pinListSetUp() {
 
 // 검색 결과 -> html 요소 변환
 function getListItem(index, places) {
-  let el = document.createElement("li");
+  let el = document.createElement('li');
 
   let itemStr =
     '<span class="markerbg marker_' +
     (index + 1) +
     '"></span>' +
     '<div class="info">' +
-    "   <h5>" +
+    '   <h5>' +
     places.title +
-    "</h5>";
+    '</h5>';
 
   if (places.roadAddressName) {
     itemStr +=
-      "    <span>" +
+      '    <span>' +
       places.roadAddressName +
-      "</span>" +
+      '</span>' +
       '   <span class="jibun gray">' +
       places.roadAddressName +
-      "</span>";
+      '</span>';
   } else {
-    itemStr += "    <span>" + places.roadAddressName + "</span>";
+    itemStr += '    <span>' + places.roadAddressName + '</span>';
   }
 
-  itemStr += '  <span class="tel">' + places.phone + "</span>" + "</div>";
+  itemStr += '  <span class="tel">' + places.phone + '</span>' + '</div>';
 
   el.innerHTML = itemStr;
-  el.className = "item";
+  el.className = 'item';
   // 리스트 요소 클릭시 오버레이 표시
-  el.addEventListener("click", () => {
+  el.addEventListener('click', () => {
     move(places.position);
     displayMarkerDetailInfo(places);
   });
@@ -263,40 +263,40 @@ function removeAllChildNods(el) {
 }
 
 export async function displayPinOverlay(markerInfo) {
-  let titleBox = document.createElement("div");
-  let infoBox = document.createElement("div");
-  let functionBox = document.createElement("div");
+  let titleBox = document.createElement('div');
+  let infoBox = document.createElement('div');
+  let functionBox = document.createElement('div');
 
-  let titleEl = document.createElement("span");
-  let categoryEl = document.createElement("span");
-  let contentBody = document.createElement("div");
-  let addressNameEl = document.createElement("div");
-  let roadAddressNameEl = document.createElement("div");
-  let phoneEl = document.createElement("div");
-  let showPinDetailBtn = document.createElement("div");
-  let showPinSaveOverlayBtn = document.createElement("div");
+  let titleEl = document.createElement('span');
+  let categoryEl = document.createElement('span');
+  let contentBody = document.createElement('div');
+  let addressNameEl = document.createElement('div');
+  let roadAddressNameEl = document.createElement('div');
+  let phoneEl = document.createElement('div');
+  let showPinDetailBtn = document.createElement('div');
+  let showPinSaveOverlayBtn = document.createElement('div');
 
-  titleBox.classList.add("title_box");
-  titleEl.classList.add("title");
-  categoryEl.classList.add("category");
-  contentBody.classList.add("body");
-  infoBox.classList.add("desc");
-  roadAddressNameEl.classList.add("ellipsis");
-  addressNameEl.classList.add("jibun", "ellipsis");
-  phoneEl.classList.add("phone");
-  functionBox.classList.add("func");
-  showPinDetailBtn.classList.add("btn");
-  showPinDetailBtn.setAttribute("data-bs-toggle", "modal");
-  showPinDetailBtn.setAttribute("data-bs-target", ".bd-example-modal-lg");
-  showPinSaveOverlayBtn.classList.add("btn");
+  titleBox.classList.add('title_box');
+  titleEl.classList.add('title');
+  categoryEl.classList.add('category');
+  contentBody.classList.add('body');
+  infoBox.classList.add('desc');
+  roadAddressNameEl.classList.add('ellipsis');
+  addressNameEl.classList.add('jibun', 'ellipsis');
+  phoneEl.classList.add('phone');
+  functionBox.classList.add('func');
+  showPinDetailBtn.classList.add('btn');
+  showPinDetailBtn.setAttribute('data-bs-toggle', 'modal');
+  showPinDetailBtn.setAttribute('data-bs-target', '.bd-example-modal-lg');
+  showPinSaveOverlayBtn.classList.add('btn');
 
   titleEl.innerText = markerInfo.title;
   addressNameEl.innerText = markerInfo.addressName;
   roadAddressNameEl.innerText = markerInfo.roadAddressName;
   categoryEl.innerText = markerInfo.categoryGroupName;
   phoneEl.innerText = markerInfo.phone;
-  showPinDetailBtn.innerText = "핀 보기";
-  showPinSaveOverlayBtn.innerText = "핀 생성";
+  showPinDetailBtn.innerText = '핀 보기';
+  showPinSaveOverlayBtn.innerText = '핀 생성';
 
   functionBox.appendChild(showPinDetailBtn);
   functionBox.appendChild(showPinSaveOverlayBtn);
@@ -323,29 +323,29 @@ export async function displayPinOverlay(markerInfo) {
     pinThumbnail !== undefined &&
     pinThumbnail.length > 0
   ) {
-    let imgBox = document.createElement("div");
-    let img = document.createElement("img");
+    let imgBox = document.createElement('div');
+    let img = document.createElement('img');
     img.src = pinThumbnail;
-    img.alt = "이미지";
-    imgBox.classList.add("img");
+    img.alt = '이미지';
+    imgBox.classList.add('img');
     imgBox.appendChild(img);
     contentBody.appendChild(imgBox);
 
     boxHeight += 60;
     contentHeight += 60;
-    MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + "px";
-    MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + "px";
-    MARKER_OVERLAY_CONTENT.style.minWidth = "380px";
-    MARKER_OVERLAY_CONTENT_BOX.style.minWidth = "380px";
-    MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = "-145px";
-    MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = "-188px";
+    MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
+    MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
+    MARKER_OVERLAY_CONTENT.style.minWidth = '380px';
+    MARKER_OVERLAY_CONTENT_BOX.style.minWidth = '380px';
+    MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = '-145px';
+    MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = '-188px';
   } else {
     // 이미지가 없을 경우 오버레이 크기 수정
-    MARKER_OVERLAY_CONTENT_BOX.style.minWidth = "290px";
-    MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + "px";
-    MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = "-145px";
-    MARKER_OVERLAY_CONTENT.style.minWidth = "290px";
-    MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + "px";
+    MARKER_OVERLAY_CONTENT_BOX.style.minWidth = '290px';
+    MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
+    MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = '-145px';
+    MARKER_OVERLAY_CONTENT.style.minWidth = '290px';
+    MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
 
     // 도로명 주소, 지번 주소, 전화번호 값이 있을 경우 오버레이 크기 수정
     if (
@@ -355,8 +355,8 @@ export async function displayPinOverlay(markerInfo) {
     ) {
       boxHeight += 15;
       contentHeight += 15;
-      MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + "px";
-      MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + "px";
+      MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
+      MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
     }
 
     if (
@@ -366,8 +366,8 @@ export async function displayPinOverlay(markerInfo) {
     ) {
       boxHeight += 10;
       contentHeight += 10;
-      MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + "px";
-      MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + "px";
+      MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
+      MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
     }
 
     if (
@@ -377,8 +377,8 @@ export async function displayPinOverlay(markerInfo) {
     ) {
       boxHeight += 10;
       contentHeight += 10;
-      MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + "px";
-      MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + "px";
+      MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
+      MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
     }
   }
   contentBody.appendChild(infoBox);
@@ -390,7 +390,7 @@ export async function displayPinOverlay(markerInfo) {
   MARKER_OVERLAY.setPosition(markerInfo.position);
   MARKER_OVERLAY.setMap(MAP);
 
-  showPinDetailBtn.addEventListener("click", () => {
+  showPinDetailBtn.addEventListener('click', () => {
     delete PIN_DETAIL.category,
       PIN_DETAIL.place_id,
       PIN_DETAIL.title,
@@ -404,7 +404,7 @@ export async function displayPinOverlay(markerInfo) {
     PIN_DETAIL.thumbnail_img = pinThumbnail;
     PIN_DETAIL.new_address = markerInfo.roadAddressName;
     PIN_DETAIL.old_address = markerInfo.addressName;
-    PIN_DETAIL.lat_lng = markerInfo.lat + "," + markerInfo.lng;
+    PIN_DETAIL.lat_lng = markerInfo.lat + ',' + markerInfo.lng;
     PIN_DETAIL.position = markerInfo.position;
     PIN_DETAIL.marker = markerInfo.marker;
 
@@ -412,16 +412,16 @@ export async function displayPinOverlay(markerInfo) {
   });
 
   // 핀 생성 버튼 클릭시 보드 목록 오버레이 표시 이벤트
-  showPinSaveOverlayBtn.addEventListener("click", () => {
+  showPinSaveOverlayBtn.addEventListener('click', () => {
     if (!ACCOUNT.login) {
-      alert("로그인이 필요합니다");
+      alert('로그인이 필요합니다');
       return;
     }
 
     let open = PIN_SAVE_OVERLAY.getVisible();
 
     if (open) {
-      PIN_SAVE_OVERLAY_CONTENT.textContent = "";
+      PIN_SAVE_OVERLAY_CONTENT.textContent = '';
       PIN_SAVE_OVERLAY.setContent(null);
       PIN_SAVE_OVERLAY.setMap(null);
       PIN_SAVE_OVERLAY.setVisible(false);
@@ -435,22 +435,22 @@ export async function displayPinOverlay(markerInfo) {
 // 핀 생성 버튼 클릭시 보드 목록 오버레이 표시
 function displayBoardsOnOverlay(markerInfo) {
   MY_BOARDS.forEach((board) => {
-    let boardBox = document.createElement("div");
-    let titleBox = document.createElement("div");
-    let thumbnail = document.createElement("img");
-    let title = document.createElement("span");
-    let pinSaveBtn = document.createElement("div");
+    let boardBox = document.createElement('div');
+    let titleBox = document.createElement('div');
+    let thumbnail = document.createElement('img');
+    let title = document.createElement('span');
+    let pinSaveBtn = document.createElement('div');
 
-    pinSaveBtn.innerText = "생성";
-    pinSaveBtn.classList.add("pin_save_btn");
+    pinSaveBtn.innerText = '생성';
+    pinSaveBtn.classList.add('pin_save_btn');
     let pinsaved = false;
 
     // 해당 핀이 보드에 생성된 경우 '생성됨' 처리
     for (let i = 0; i < board.pins.length; i++) {
       if (board.pins[i] == markerInfo.placeId) {
-        pinSaveBtn.innerText = "생성됨";
-        pinSaveBtn.classList.remove("pin_save_btn");
-        pinSaveBtn.classList.add("pin_saved_btn");
+        pinSaveBtn.innerText = '생성됨';
+        pinSaveBtn.classList.remove('pin_save_btn');
+        pinSaveBtn.classList.add('pin_saved_btn');
         pinsaved = true;
         break;
       }
@@ -462,7 +462,7 @@ function displayBoardsOnOverlay(markerInfo) {
       board.thumbnail_imgs === undefined ||
       board.thumbnail_imgs.length === 0
     ) {
-      thumbnail.src = "assets/img/favspot.png";
+      thumbnail.src = 'assets/img/favspot.png';
     } else {
       for (let i = 0; i < board.thumbnail_imgs.length; i++) {
         if (
@@ -477,17 +477,17 @@ function displayBoardsOnOverlay(markerInfo) {
     }
 
     title.innerText = board.title;
-    thumbnail.style.width = "50px";
-    thumbnail.style.height = "40px";
-    thumbnail.style.marginRight = "7px";
-    thumbnail.style.borderRadius = "10px";
+    thumbnail.style.width = '50px';
+    thumbnail.style.height = '40px';
+    thumbnail.style.marginRight = '7px';
+    thumbnail.style.borderRadius = '10px';
 
     titleBox.appendChild(thumbnail);
     titleBox.append(title);
     boardBox.appendChild(titleBox);
     boardBox.appendChild(pinSaveBtn);
 
-    boardBox.classList.add("pin_save_board");
+    boardBox.classList.add('pin_save_board');
 
     // 핀 생성 클릭 이벤트
     pinSimpleSaveEvent(pinSaveBtn, board, markerInfo, pinsaved);
@@ -496,20 +496,20 @@ function displayBoardsOnOverlay(markerInfo) {
   });
 
   // 보드 만들기 버튼/이벤트 추가
-  let boardAddBtnBox = document.createElement("div");
-  let boardAddBtn = document.createElement("div");
+  let boardAddBtnBox = document.createElement('div');
+  let boardAddBtn = document.createElement('div');
 
-  boardAddBtn.innerText = "보드 만들기";
-  boardAddBtnBox.classList.add("board_add_box");
+  boardAddBtn.innerText = '보드 만들기';
+  boardAddBtnBox.classList.add('board_add_box');
 
-  boardAddBtnBox.addEventListener("click", () => {
+  boardAddBtnBox.addEventListener('click', () => {
     if (!ACCOUNT.login) {
-      alert("로그인이 필요합니다");
+      alert('로그인이 필요합니다');
       return;
     }
 
-    $boardAddModal.style.display = "flex";
-    $boardAddModalContent.style.display = "flex";
+    $boardAddModal.style.display = 'flex';
+    $boardAddModalContent.style.display = 'flex';
   });
 
   boardAddBtnBox.appendChild(boardAddBtn);
@@ -523,24 +523,24 @@ function displayBoardsOnOverlay(markerInfo) {
 
 // 핀 생성 클릭시 핀 생성 이벤트
 function pinSimpleSaveEvent(element, board, place, pinsaved) {
-  element.addEventListener("click", async () => {
+  element.addEventListener('click', async () => {
     if (!pinsaved) {
       let saveSucceess = pinSimpleSave(board, place);
       if (saveSucceess) {
         setMyBoard();
-        element.innerText = "생성됨";
-        element.classList.remove("pin_save_btn");
-        element.classList.add("pin_saved_btn");
+        element.innerText = '생성됨';
+        element.classList.remove('pin_save_btn');
+        element.classList.add('pin_saved_btn');
         pinsaved = true;
         return;
       }
     } else {
-      if (confirm("핀을 삭제하시겠습니까?")) {
+      if (confirm('핀을 삭제하시겠습니까?')) {
         // let response = await pinDeleteRequest(place.id);
 
-        element.innerText = "생성";
-        element.classList.remove("pin_saved_btn");
-        element.classList.add("pin_save_btn");
+        element.innerText = '생성';
+        element.classList.remove('pin_saved_btn');
+        element.classList.add('pin_save_btn');
         pinsaved = false;
       }
     }

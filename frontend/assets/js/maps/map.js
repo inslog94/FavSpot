@@ -9,12 +9,12 @@ import {
   $screenBtn,
   screenMode,
   $container,
-} from "./data.js";
+} from './data.js';
 import {
   markerInfoHoverEvent,
   markerClickZoomInEvent,
   markerInfoClickEvent,
-} from "./event.js";
+} from './event.js';
 
 function displayMap(position) {
   MAP.setCenter(position);
@@ -43,34 +43,34 @@ export function move(location) {
 }
 
 export function fullScreen() {
-  let mapBox = document.getElementsByClassName("map_wrap")[0];
-  let board = document.getElementById("main_board");
+  let mapBox = document.getElementsByClassName('map_wrap')[0];
+  let board = document.getElementById('main_board');
 
-  board.style.display = "none";
-  mapBox.style.width = "98%";
+  board.style.display = 'none';
+  mapBox.style.width = '98%';
   if (window.innerWidth > 1800) {
-    $screenBtn.style.left = "177vh";
+    $screenBtn.style.left = '177vh';
   } else {
-    $screenBtn.style.left = "193vh";
+    $screenBtn.style.left = '193vh';
   }
-  $screenBtn.innerText = "되돌리기";
+  $screenBtn.innerText = '되돌리기';
   screenMode.fullScreen = true;
 
   MAP.relayout();
 }
 
 export function fullScreenEnd() {
-  let mapBox = document.getElementsByClassName("map_wrap")[0];
-  let board = document.getElementById("main_board");
+  let mapBox = document.getElementsByClassName('map_wrap')[0];
+  let board = document.getElementById('main_board');
 
-  board.style.display = "block";
-  mapBox.style.width = "60%";
+  board.style.display = 'block';
+  mapBox.style.width = '60%';
   if (window.innerWidth > 1800) {
-    $screenBtn.style.left = "104vh";
+    $screenBtn.style.left = '104vh';
   } else {
-    $screenBtn.style.left = "112vh";
+    $screenBtn.style.left = '112vh';
   }
-  $screenBtn.innerText = "전체화면";
+  $screenBtn.innerText = '전체화면';
   screenMode.fullScreen = false;
 
   MAP.relayout();
@@ -114,7 +114,7 @@ export function removeAllMarker() {
   MARKERS.length = 0;
   CLUSTER_OVRELAY.setMap(null);
   CLUSTER_OVRELAY.setContent(null);
-  CLUSTER_OVERLAY_CONTENT.textContent = "";
+  CLUSTER_OVERLAY_CONTENT.textContent = '';
   CLUSTERER.clear();
 }
 

@@ -1,11 +1,11 @@
-import { getLoginUserInfoRequest } from "../request/content.js";
+import { getLoginUserInfoRequest } from '../request/content.js';
 import {
   boardSimpleSave,
   displayMainBoards,
   getBoards,
   setMyBoard,
-} from "./board.js";
-import { boardDetail } from "./boardDetail.js";
+} from './board.js';
+import { boardDetail } from './boardDetail.js';
 import {
   MAP,
   MAP_OPTIONS,
@@ -40,7 +40,7 @@ import {
   ACCOUNT,
   requestUser,
   CURRENT_PINS,
-} from "./data.js";
+} from './data.js';
 import {
   displayGeoLocationMap,
   closeZoomInLocation,
@@ -48,9 +48,9 @@ import {
   fullScreenEnd,
   move,
   displayMarkers,
-} from "./map.js";
-import { displayPinOverlay, setMarkersFromServer } from "./pin.js";
-import { searchPlaceAsKeyword } from "./search.js";
+} from './map.js';
+import { displayPinOverlay, setMarkersFromServer } from './pin.js';
+import { searchPlaceAsKeyword } from './search.js';
 
 // 모든 오버레이 지도에서 제거
 export function removeAllOverlay() {
@@ -58,18 +58,18 @@ export function removeAllOverlay() {
   CLUSTER_OVRELAY.setMap(null);
   MARKER_OVERLAY.setContent(null);
   MARKER_OVERLAY.setMap(null);
-  MARKER_OVERLAY_CONTENT.textContent = "";
+  MARKER_OVERLAY_CONTENT.textContent = '';
   PIN_SAVE_OVERLAY.setContent(null);
   PIN_SAVE_OVERLAY.setMap(null);
   PIN_SAVE_OVERLAY.setVisible(false);
-  PIN_SAVE_OVERLAY_CONTENT.textContent = "";
+  PIN_SAVE_OVERLAY_CONTENT.textContent = '';
 }
 
 export function removePinSaveOverlay() {
   PIN_SAVE_OVERLAY.setContent(null);
   PIN_SAVE_OVERLAY.setMap(null);
   PIN_SAVE_OVERLAY.setVisible(false);
-  PIN_SAVE_OVERLAY_CONTENT.textContent = "";
+  PIN_SAVE_OVERLAY_CONTENT.textContent = '';
 }
 
 // 지도 초기화
@@ -83,17 +83,17 @@ function mapSetup() {
   MAP.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
   MAP.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
-  kakao.maps.event.addListener(MAP, "click", (mouseEvent) => {
+  kakao.maps.event.addListener(MAP, 'click', (mouseEvent) => {
     removeAllOverlay();
   });
 
   // 지도 확대/축소 직전, 지도 레벨 저장
-  kakao.maps.event.addListener(MAP, "zoom_start", () => {
+  kakao.maps.event.addListener(MAP, 'zoom_start', () => {
     BASE_MAP_LEVEL.value = MAP.getLevel();
   });
 
   // 지도 확대/축소시 클러스터 오버레이 위치 조정
-  kakao.maps.event.addListener(MAP, "zoom_changed", () => {
+  kakao.maps.event.addListener(MAP, 'zoom_changed', () => {
     if (CLUSTER_OVRELAY.getContent() !== null) {
       let overlayPosition = CLUSTER_OVRELAY.getPosition();
       let newOverlayPosition;
@@ -124,7 +124,7 @@ function mapSetup() {
   });
 
   // 지도 중심좌표 변경시 오버레이 삭제
-  kakao.maps.event.addListener(MAP, "center_changed", function () {
+  kakao.maps.event.addListener(MAP, 'center_changed', function () {
     removePinSaveOverlay();
   });
 }
@@ -136,12 +136,12 @@ export function markerInfoHoverEvent(marker, infoWindow) {
     return;
   }
 
-  kakao.maps.event.addListener(marker, "mouseover", function () {
+  kakao.maps.event.addListener(marker, 'mouseover', function () {
     infoWindow.setContent(content);
     infoWindow.open(MAP, marker);
   });
 
-  kakao.maps.event.addListener(marker, "mouseout", function () {
+  kakao.maps.event.addListener(marker, 'mouseout', function () {
     infoWindow.close();
   });
 }
@@ -156,7 +156,7 @@ export function markerInfoClickEvent(markerInfo) {
     return;
   }
 
-  kakao.maps.event.addListener(markerInfo.marker, "click", function () {
+  kakao.maps.event.addListener(markerInfo.marker, 'click', function () {
     displayMarkerDetailInfo(markerInfo);
   });
 }
@@ -165,7 +165,7 @@ export function markerInfoClickEvent(markerInfo) {
 export async function displayMarkerDetailInfo(markerInfo) {
   MARKER_OVERLAY.setMap(null);
   MARKER_OVERLAY.setContent(null);
-  MARKER_OVERLAY_CONTENT.textContent = "";
+  MARKER_OVERLAY_CONTENT.textContent = '';
   PIN_INFO_WINDOW.close();
 
   move(markerInfo.position);
@@ -175,66 +175,66 @@ export async function displayMarkerDetailInfo(markerInfo) {
 
 // 보드 생성 모달 닫기 이벤트
 function boardCreateModalCloseEvent() {
-  window.addEventListener("click", (event) => {
+  window.addEventListener('click', (event) => {
     if (event.target === $boardAddModal) {
-      $boardModalTitleInput.value = "";
-      $boardModalTagsInput.value = "";
-      $boardModalNextBtn.style.display = "block";
-      $boardModalSaveBtn.style.display = "none";
-      $boardInputBox1.style.display = "flex";
-      $boardInputBox2.style.display = "none";
-      $boardAddModal.style.display = "none";
-      $boardAddModalContent.style.display = "none";
-      $boardConfirmModal.style.display = "none";
+      $boardModalTitleInput.value = '';
+      $boardModalTagsInput.value = '';
+      $boardModalNextBtn.style.display = 'block';
+      $boardModalSaveBtn.style.display = 'none';
+      $boardInputBox1.style.display = 'flex';
+      $boardInputBox2.style.display = 'none';
+      $boardAddModal.style.display = 'none';
+      $boardAddModalContent.style.display = 'none';
+      $boardConfirmModal.style.display = 'none';
     }
   });
 }
 
 function boardCloseModalBtnEvent() {
   // 보드 생성 모달 '다음' 클릭 이벤트
-  $boardModalNextBtn.addEventListener("click", () => {
-    $boardModalNextBtn.style.display = "none";
-    $boardModalSaveBtn.style.display = "block";
-    $boardInputBox1.style.display = "none";
-    $boardInputBox2.style.display = "flex";
+  $boardModalNextBtn.addEventListener('click', () => {
+    $boardModalNextBtn.style.display = 'none';
+    $boardModalSaveBtn.style.display = 'block';
+    $boardInputBox1.style.display = 'none';
+    $boardInputBox2.style.display = 'flex';
   });
 
   // 보드 생성 모달 '생성' 클릭 이벤트
-  $boardModalSaveBtn.addEventListener("click", async () => {
+  $boardModalSaveBtn.addEventListener('click', async () => {
     let title = $boardModalTitleInput.value;
-    let tags = $boardModalTagsInput.value.split(",");
+    let tags = $boardModalTagsInput.value.split(',');
     let created = await boardSimpleSave(title, tags);
 
     if (created) {
       setMyBoard();
     } else {
       $boardAddResult.innerText =
-        "보드를 생성하는데 문제가 발생했습니다 다시 시도해주세요";
+        '보드를 생성하는데 문제가 발생했습니다 다시 시도해주세요';
     }
 
-    $boardModalTitleInput.value = "";
-    $boardModalTagsInput.value = "";
-    $boardAddModalContent.style.display = "none";
-    $boardConfirmModal.style.display = "flex";
+    $boardModalTitleInput.value = '';
+    $boardModalTagsInput.value = '';
+    $boardAddModalContent.style.display = 'none';
+    $boardConfirmModal.style.display = 'flex';
   });
 
   // 보드 생성 모달 '확인' 클릭 이벤트
-  $boardConfirmModalBtn.addEventListener("click", () => {
-    $boardModalTitleInput.value = "";
-    $boardModalTagsInput.value = "";
-    $boardModalNextBtn.style.display = "block";
-    $boardModalSaveBtn.style.display = "none";
-    $boardInputBox1.style.display = "flex";
-    $boardInputBox2.style.display = "none";
-    $boardAddModal.style.display = "none";
-    $boardAddModalContent.style.display = "none";
-    $boardConfirmModal.style.display = "none";
+  $boardConfirmModalBtn.addEventListener('click', () => {
+    $boardModalTitleInput.value = '';
+    $boardModalTagsInput.value = '';
+    $boardModalNextBtn.style.display = 'block';
+    $boardModalSaveBtn.style.display = 'none';
+    $boardInputBox1.style.display = 'flex';
+    $boardInputBox2.style.display = 'none';
+    $boardAddModal.style.display = 'none';
+    $boardAddModalContent.style.display = 'none';
+    $boardConfirmModal.style.display = 'none';
     removePinSaveOverlay();
   });
 }
 
 export function markerClickZoomInEvent(marker) {
-  kakao.maps.event.addListener(marker, "click", (mouseEvent) => {
+  kakao.maps.event.addListener(marker, 'click', (mouseEvent) => {
     let mapLevel = MAP.getLevel();
 
     if (mapLevel > 5) {
@@ -246,9 +246,9 @@ export function markerClickZoomInEvent(marker) {
 
 // KAKAO API 검색창 엔터, 버튼 클릭 감지 이벤트
 function placeSearchClickEvent() {
-  $keywordSearchBtn.addEventListener("click", searchPlaceAsKeyword);
-  $keyword.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
+  $keywordSearchBtn.addEventListener('click', searchPlaceAsKeyword);
+  $keyword.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
       searchPlaceAsKeyword();
     }
   });
@@ -256,7 +256,7 @@ function placeSearchClickEvent() {
 
 // 클러스터 클릭시 클러스터 오버레이 표시
 function clusterClickEvent() {
-  kakao.maps.event.addListener(CLUSTERER, "clusterclick", (cluster) => {
+  kakao.maps.event.addListener(CLUSTERER, 'clusterclick', (cluster) => {
     let mapLevel = MAP.getLevel();
 
     if (mapLevel > 2) {
@@ -266,14 +266,14 @@ function clusterClickEvent() {
 
     CLUSTER_OVRELAY.setContent(null);
     CLUSTER_OVRELAY.setMap(null);
-    CLUSTER_OVERLAY_CONTENT.textContent = "";
+    CLUSTER_OVERLAY_CONTENT.textContent = '';
 
     let clusterMarkers = cluster.getMarkers();
 
     clusterMarkers.forEach((marker) => {
-      let info = document.createElement("div");
+      let info = document.createElement('div');
       info.innerHTML = marker.getTitle();
-      info.classList.add("overlayinfo");
+      info.classList.add('overlayinfo');
       CLUSTER_OVERLAY_CONTENT.appendChild(info);
     });
 
@@ -301,7 +301,7 @@ function clusterClickEvent() {
 
 // 메인 페이지 화면 버튼 이벤트
 function mapSizeEvent() {
-  $screenBtn.addEventListener("click", () => {
+  $screenBtn.addEventListener('click', () => {
     if (screenMode.fullScreen) {
       fullScreenEnd();
     } else {
@@ -319,10 +319,10 @@ async function mainBoardSetup() {
 // 로그인 여부에 따라 화면 출력
 export async function loginProcess() {
   fetch(`http://127.0.0.1:8000/user/me/`, {
-    method: "GET",
-    credentials: "include",
+    method: 'GET',
+    credentials: 'include',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   })
     .then((response) => response.json())
@@ -334,22 +334,24 @@ export async function loginProcess() {
       requestUser.id = data.results.User.id;
       requestUser.profileImg = data.results.User.profile_img;
       requestUser.followingList = data.results.User.following_list;
-
       if (requestUser) {
-        const email = document.querySelector("#email");
+        const email = document.querySelector('#headerEmail');
         email.textContent = requestUser.email;
-        const profileImg = document.querySelector(".profileImg");
-        profileImg.src = requestUser.profileImg;
-        profileImg.style.borderRadius = "50%";
+        const profileImg = document.querySelector('.profileImg');
+        console.log('img', requestUser.profileImg);
+        if (requestUser.profileImg) {
+          profileImg.src = requestUser.profileImg;
+          profileImg.style.borderRadius = '50%';
+        }
       }
 
-      const logout = document.querySelector("#logout");
-      logout.addEventListener("click", (event) => {
+      const logout = document.querySelector('#logout');
+      logout.addEventListener('click', (event) => {
         fetch(`http://127.0.0.1:8000/user/logout/`, {
-          method: "GET",
-          credentials: "include",
+          method: 'GET',
+          credentials: 'include',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         })
           .then((response) => {
@@ -358,42 +360,42 @@ export async function loginProcess() {
             }
           })
           .catch((error) => {
-            console.error("Error:", error);
+            console.error('Error:', error);
           });
       });
     })
     .catch((error) => {
-      console.error("Error:", error);
-      const authUser = document.querySelector(".shpping-cart");
+      console.error('Error:', error);
+      const authUser = document.querySelector('.shpping-cart');
       authUser.remove();
 
       let path = window.location.pathname;
-      let page = path.split("/").pop();
+      let page = path.split('/').pop();
 
       // div 요소 생성
-      const div = document.createElement("div");
-      div.className = "position-absolute top-0 end-0 mt-3";
+      const div = document.createElement('div');
+      div.className = 'position-absolute top-0 end-0 mt-3';
 
       // 로그인 링크 생성
-      const loginLink = document.createElement("a");
-      loginLink.appendChild(document.createTextNode("Login"));
+      const loginLink = document.createElement('a');
+      loginLink.appendChild(document.createTextNode('Login'));
 
       // 가입 링크 생성
-      const signupLink = document.createElement("a");
-      signupLink.className = "ms-3";
-      signupLink.appendChild(document.createTextNode("Signup"));
+      const signupLink = document.createElement('a');
+      signupLink.className = 'ms-3';
+      signupLink.appendChild(document.createTextNode('Signup'));
 
       if (
-        page === "" ||
-        page === "index.html" ||
+        page === '' ||
+        page === 'index.html' ||
         page === undefined ||
         page === null
       ) {
-        loginLink.href = "assets/html/login.html";
-        signupLink.href = "assets/html/signup.html";
+        loginLink.href = 'assets/html/login.html';
+        signupLink.href = 'assets/html/signup.html';
       } else {
-        loginLink.href = "login.html";
-        signupLink.href = "signup.html";
+        loginLink.href = 'login.html';
+        signupLink.href = 'signup.html';
       }
 
       // 로그인 및 가입 링크를 div에 추가
@@ -401,7 +403,7 @@ export async function loginProcess() {
       div.appendChild(signupLink);
 
       // 생성한 요소를 기존 요소에 추가
-      const headerContent = document.getElementById("headerContent");
+      const headerContent = document.getElementById('headerContent');
       headerContent.appendChild(div);
     });
 }
@@ -415,11 +417,11 @@ async function boardDetailSetUp() {
 // 전체 기능 초기화
 window.onload = function init() {
   let path = window.location.pathname;
-  let page = path.split("/").pop();
+  let page = path.split('/').pop();
 
   if (
-    page === "" ||
-    page === "index.html" ||
+    page === '' ||
+    page === 'index.html' ||
     page === undefined ||
     page === null
   ) {
@@ -432,7 +434,7 @@ window.onload = function init() {
     boardCreateModalCloseEvent();
     boardCloseModalBtnEvent();
     mainBoardSetup();
-  } else if (page === "board_detail.html" || page === "board_detail.html#") {
+  } else if (page === 'board_detail.html' || page === 'board_detail.html#') {
     displayGeoLocationMap();
     mapSetup();
     clusterClickEvent();

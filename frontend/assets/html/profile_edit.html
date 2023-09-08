@@ -169,7 +169,7 @@ header -->
                         height: 100px;
                         border-radius: 3px;
                       "
-                      src="images/team/01.jpg"
+                      src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default.png"
                       alt="profileImg"
                     />
                     <input
@@ -262,7 +262,7 @@ header -->
                     <span id="copyright">
                       <script>
                         document
-                          .getElementById("copyright")
+                          .getElementById('copyright')
                           .appendChild(
                             document.createTextNode(new Date().getFullYear())
                           );
@@ -319,7 +319,7 @@ header -->
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = "../js/";
+      var plugin_path = '../js/';
     </script>
 
     <!-- custom -->
@@ -327,11 +327,11 @@ header -->
 
     <script>
       // 프로필 이미지 추가시 img 태그에 미리보기 추가
-      document.addEventListener("DOMContentLoaded", function () {
-        const profileImgInput = document.getElementById("profileImg");
-        const imagePreview = document.getElementById("imagePreview");
+      document.addEventListener('DOMContentLoaded', function () {
+        const profileImgInput = document.getElementById('profileImg');
+        const imagePreview = document.getElementById('imagePreview');
 
-        profileImgInput.addEventListener("change", function () {
+        profileImgInput.addEventListener('change', function () {
           const selectedImage = profileImgInput.files[0];
 
           if (selectedImage) {
@@ -345,19 +345,19 @@ header -->
       });
 
       // 비밀번호 유효성 검사
-      document.addEventListener("DOMContentLoaded", function () {
-        const currentPassword = document.getElementById("currentPassword");
-        const newPassword1 = document.getElementById("newPassword1");
-        const newPassword2 = document.getElementById("newPassword2");
-        const passwordError = document.getElementById("passwordError");
-        const profileEdit = document.querySelector(".profileEdit");
+      document.addEventListener('DOMContentLoaded', function () {
+        const currentPassword = document.getElementById('currentPassword');
+        const newPassword1 = document.getElementById('newPassword1');
+        const newPassword2 = document.getElementById('newPassword2');
+        const passwordError = document.getElementById('passwordError');
+        const profileEdit = document.querySelector('.profileEdit');
         const passwordInputs = [currentPassword, newPassword1, newPassword2];
 
         // 입력 이벤트를 감지하여 required 옵션을 동적으로 설정/해제
         passwordInputs.forEach((input) => {
-          input.addEventListener("input", () => {
+          input.addEventListener('input', () => {
             const atLeastOneInputFilled = passwordInputs.some(
-              (input) => input.value !== ""
+              (input) => input.value !== ''
             );
 
             // 모든 입력란이 비어있지 않다면 required 설정, 아니면 해제
@@ -373,7 +373,7 @@ header -->
               if (newPassword1Value !== newPassword2Value) {
                 passwordError.textContent = "Passwords don't match.";
               } else {
-                passwordError.textContent = "";
+                passwordError.textContent = '';
 
                 // 현재 비밀번호와 새로운 비밀번호가 같은지 체크
                 if (
@@ -381,7 +381,7 @@ header -->
                   currentPassword.value === newPassword2Value
                 ) {
                   passwordError.textContent =
-                    "New password should be different from the current password.";
+                    'New password should be different from the current password.';
                 }
               }
             }
@@ -389,18 +389,18 @@ header -->
         });
 
         // passwordError가 있는 경우 폼 제출할 수 없게 처리
-        profileEdit.addEventListener("click", function (event) {
-          if (passwordError.textContent !== "") {
+        profileEdit.addEventListener('click', function (event) {
+          if (passwordError.textContent !== '') {
             event.preventDefault();
           }
         });
       });
 
       // 기본 프로필 값 채워주기
-      document.addEventListener("DOMContentLoaded", function () {
-        fetch("http://127.0.0.1:8000/user/me/", {
-          method: "GET",
-          credentials: "include",
+      document.addEventListener('DOMContentLoaded', function () {
+        fetch('http://127.0.0.1:8000/user/me/', {
+          method: 'GET',
+          credentials: 'include',
         })
           .then((response) => response.json())
           .then((data) => {
@@ -411,84 +411,86 @@ header -->
             const requestUserProfileImg = data.results.User.profile_img;
 
             if (requestUser) {
-              const email = document.querySelector("#headerEmail");
+              const email = document.querySelector('#headerEmail');
               email.textContent = requestUser;
-              const profileImg = document.querySelector(".profileImg");
-              profileImg.src = requestUserProfileImg;
-              profileImg.style.borderRadius = "50%";
+              const profileImg = document.querySelector('.profileImg');
+              if (requestUserProfileImg) {
+                profileImg.src = requestUserProfileImg;
+                profileImg.style.borderRadius = '50%';
+              }
             }
 
-            const logout = document.querySelector("#logout");
-            logout.addEventListener("click", (event) => {
+            const logout = document.querySelector('#logout');
+            logout.addEventListener('click', (event) => {
               fetch(`http://127.0.0.1:8000/user/logout/`, {
-                method: "GET",
-                credentials: "include",
+                method: 'GET',
+                credentials: 'include',
                 headers: {
-                  "Content-Type": "application/json",
+                  'Content-Type': 'application/json',
                 },
               })
                 .then((response) => {
                   if (response.status === 200) {
-                    console.log("로그아웃 성공");
+                    console.log('로그아웃 성공');
                     location.reload(); // 페이지 새로고침
                   }
                 })
                 .catch((error) => {
-                  console.error("Error:", error);
+                  console.error('Error:', error);
                 });
             });
             // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
-            const nickname = (document.querySelector("#nickname").value =
-              data["results"]["User"]["nickname"]);
-            const profileImg = data["results"]["User"]["profile_img"];
-            const imagePreview = document.getElementById("imagePreview");
+            const nickname = (document.querySelector('#nickname').value =
+              data['results']['User']['nickname']);
+            const profileImg = data['results']['User']['profile_img'];
+            const imagePreview = document.getElementById('imagePreview');
             if (profileImg) {
               imagePreview.src = profileImg;
             }
           })
           .catch((error) => {
-            console.error("Failed to retrieve user data.", error);
+            console.error('Failed to retrieve user data.', error);
           });
       });
 
-      const $profileEdit = document.querySelector(".profileEdit");
-      $profileEdit.addEventListener("submit", (event) => {
+      const $profileEdit = document.querySelector('.profileEdit');
+      $profileEdit.addEventListener('submit', (event) => {
         event.preventDefault();
-        console.log("제출");
-        const profileImg = document.querySelector("#profileImg");
-        const nickname = document.querySelector("#nickname").value;
+        console.log('제출');
+        const profileImg = document.querySelector('#profileImg');
+        const nickname = document.querySelector('#nickname').value;
         const currentPassword =
-          document.querySelector("#currentPassword").value;
-        const newPassword1 = document.querySelector("#newPassword1").value;
-        const newPassword2 = document.querySelector("#newPassword2").value;
+          document.querySelector('#currentPassword').value;
+        const newPassword1 = document.querySelector('#newPassword1').value;
+        const newPassword2 = document.querySelector('#newPassword2').value;
 
         const formData = new FormData();
-        if (nickname !== "") {
-          formData.append("nickname", nickname);
+        if (nickname !== '') {
+          formData.append('nickname', nickname);
         }
         if (profileImg.files[0]) {
-          formData.append("profile_img", profileImg.files[0]);
+          formData.append('profile_img', profileImg.files[0]);
         }
-        if (currentPassword !== "") {
-          formData.append("password", currentPassword);
+        if (currentPassword !== '') {
+          formData.append('password', currentPassword);
         }
-        if (newPassword1 !== "") {
-          formData.append("new_password1", newPassword1);
+        if (newPassword1 !== '') {
+          formData.append('new_password1', newPassword1);
         }
-        if (newPassword2 !== "") {
-          formData.append("new_password2", newPassword2);
+        if (newPassword2 !== '') {
+          formData.append('new_password2', newPassword2);
         }
 
         profileEdit(formData);
       });
 
       async function profileEdit(formdata) {
-        const passwordError = document.getElementById("passwordError");
+        const passwordError = document.getElementById('passwordError');
         try {
-          const response = await fetch("http://127.0.0.1:8000/user/me/", {
-            method: "PATCH",
+          const response = await fetch('http://127.0.0.1:8000/user/me/', {
+            method: 'PATCH',
             body: formdata,
-            credentials: "include",
+            credentials: 'include',
           });
 
           if (!response.ok) {
@@ -497,19 +499,19 @@ header -->
           }
           const data = await response.json();
           console.log(data);
-          alert("Profile Update success.");
+          alert('Profile Update success.');
           location.reload();
         } catch (error) {
           const errData = JSON.parse(error.message);
           console.log(errData);
 
-          for (const key in errData["err_msg"]) {
-            if (Array.isArray(errData["err_msg"][key])) {
-              const messages = errData["err_msg"][key];
+          for (const key in errData['err_msg']) {
+            if (Array.isArray(errData['err_msg'][key])) {
+              const messages = errData['err_msg'][key];
               console.log(typeof messages);
-              passwordError.textContent = messages.join(" ");
+              passwordError.textContent = messages.join(' ');
             } else {
-              const messages = errData["err_msg"];
+              const messages = errData['err_msg'];
               passwordError.textContent = messages;
             }
           }

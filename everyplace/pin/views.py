@@ -7,17 +7,38 @@ from django.db.models import Q
 from .models import Pin, PinContent
 from .serializers import PinSerializer, PinContentSerializer
 from .paginations import CustomPagination
+import ssl
 import json
+import urllib3
 import requests
 from bs4 import BeautifulSoup
 
 
+class CustomHttpAdapter (requests.adapters.HTTPAdapter):
+
+    def __init__(self, ssl_context=None, **kwargs):
+        self.ssl_context = ssl_context
+        super().__init__(**kwargs)
+
+    def init_poolmanager(self, connections, maxsize, block=False):
+        self.poolmanager = urllib3.poolmanager.PoolManager(
+            num_pools=connections, maxsize=maxsize,
+            block=block, ssl_context=self.ssl_context)
+
+def get_legacy_session():
+    ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+    ctx.options |= 0x4  # OP_LEGACY_SERVER_CONNECT
+    session = requests.session()
+    session.mount('https://', CustomHttpAdapter(ctx))
+    return session
+
 # Create your views here.
 # 핀 장소의 대표 이미지 가져오는 함수
 def get_thumbnail_img(place_id):
-    url = f"https://place.map.kakao.com/photolist/v/{place_id}"
+    session = get_legacy_session()
+    url = f"http://place.map.kakao.com/photolist/v/{place_id}"
 
-    res = requests.get(url)
+    res = session.get(url)
     soup = BeautifulSoup(res.text, 'lxml')
     json_data = soup.find("p").text
 
@@ -34,9 +55,10 @@ def get_thumbnail_img(place_id):
 
 # 핀 장소의 메뉴 가져오는 함수
 def get_menu(place_id):
+    session = get_legacy_session()
     url = f"https://place.map.kakao.com/menuinfo/v/{place_id}"
 
-    res = requests.get(url)
+    res = session.get(url)
     soup = BeautifulSoup(res.text, 'lxml')
     json_data = soup.find("p").text
 

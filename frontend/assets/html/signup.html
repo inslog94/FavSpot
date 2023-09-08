@@ -194,7 +194,7 @@ header -->
                     <span id="copyright">
                       <script>
                         document
-                          .getElementById("copyright")
+                          .getElementById('copyright')
                           .appendChild(
                             document.createTextNode(new Date().getFullYear())
                           );
@@ -251,60 +251,48 @@ header -->
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = "../js/";
+      var plugin_path = '../js/';
     </script>
 
     <!-- custom -->
     <script src="../js/custom.js"></script>
 
     <script>
-      fetch(`http://127.0.0.1:8000/user/me/`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const $signup = document.querySelector(".signup");
-          $signup.addEventListener("submit", (event) => {
-            event.preventDefault();
-            const email = document.querySelector("#email").value;
-            const password = document.querySelector("#password").value;
-            signup(email, password);
-          });
+      const $signup = document.querySelector('.signup');
+      $signup.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const email = document.querySelector('#email').value;
+        const password = document.querySelector('#password').value;
+        signup(email, password);
+      });
 
-          function signup(email, password) {
-            const signupError = document.getElementById("signupError");
-            fetch("http://127.0.0.1:8000/user/signup/", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ email, password }),
-            })
-              .then((response) => {
-                if (!response.ok) {
-                  return response.json().then((data) => {
-                    throw new Error(data.err_msg);
-                  });
-                }
-                return response.json();
-              })
-              .then((data) => {
-                // 회원가입 성공 시 처리
-                window.location.href = "/frontend/index.html";
-              })
-              .catch((error) => {
-                console.log(error, error.message);
-                signupError.textContent = error.message;
-              });
-          }
+      function signup(email, password) {
+        const signupError = document.getElementById('signupError');
+        fetch('http://127.0.0.1:8000/user/signup/', {
+          credentials: 'include',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
         })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+          .then((response) => {
+            if (!response.ok) {
+              return response.json().then((data) => {
+                throw new Error(data.err_msg);
+              });
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // 회원가입 성공 시 처리
+            window.location.href = '/';
+          })
+          .catch((error) => {
+            console.log(error, error.message);
+            signupError.textContent = error.message;
+          });
+      }
     </script>
   </body>
 </html>
