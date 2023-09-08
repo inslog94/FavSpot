@@ -4,7 +4,7 @@ import {
   getLoginUserInfoRequest,
   findBoardRequest,
   pinDeleteRequest,
-} from "../request/content.js";
+} from '../request/content.js';
 import {
   $boardAddModal,
   $boardAddModalContent,
@@ -15,8 +15,8 @@ import {
   PIN_SAVE_OVERLAY,
   PIN_SAVE_OVERLAY_CONTENT,
   ACCOUNT,
-} from "./data.js";
-import { setMarkersFromServer, pinSimpleSave } from "./pin.js";
+} from './data.js';
+import { setMarkersFromServer, pinSimpleSave } from './pin.js';
 
 // 타이틀, 태그로 보드 생성
 export async function boardSimpleSave(title, tags) {
@@ -63,99 +63,181 @@ export async function getBoards(keyword) {
 
 // 메인 보드 표시
 export function displayMainBoards(boards) {
-  $mainBoard.textContent = "";
+  $mainBoard.textContent = '';
+  const randomSet = new Set();
+  let randomBoards = [];
 
   if (boards.length <= 0) {
     return;
+  } else if (boards.length <= 6) {
+    randomBoards = boards;
   }
-  let randomBoards = [];
 
-  let oldIndex = 999999;
-  for (; randomBoards.length !== 6; ) {
-    let newIndex = Math.floor(Math.random() * boards.length);
-    if (oldIndex === newIndex) {
-      continue;
+  if (boards.length > 6) {
+    for (; randomSet.size !== 6; ) {
+      randomSet.add(boards[Math.floor(Math.random() * boards.length)]);
     }
-    randomBoards.push(boards[newIndex]);
-    oldIndex = newIndex;
+    randomBoards = Array.from(randomSet);
   }
 
   let boardSet;
   for (let i = 0; i < randomBoards.length; i++) {
     if (i == 0 || i % 2 === 0) {
-      boardSet = document.createElement("div");
-      boardSet.classList.add("board_set");
+      boardSet = document.createElement('div');
+      boardSet.classList.add('board_set');
     }
+    const data = createBlogEntry(randomBoards[i]);
+    $mainBoard.appendChild(data);
+  }
 
-    let board = document.createElement("div");
-    let thumnailBox = document.createElement("div");
-    let thumbnail = document.createElement("img");
-    let infoBox = document.createElement("div");
-    let info1 = document.createElement("div");
-    let title = document.createElement("div");
-    let pinBox = document.createElement("div");
-    let pinLogo = document.createElement("img");
-    let pinCount = document.createElement("span");
-    let user = document.createElement("div");
+  // 함수로 동적 생성
+  function createBlogEntry(board) {
+    const masonryItem = document.createElement('div');
+    masonryItem.classList.add('masonry-item');
 
-    infoBox.classList.add("info");
-    thumnailBox.classList.add("img_box");
-    board.classList.add("board");
+    const blogEntry = document.createElement('div');
+    blogEntry.classList.add('blog-entry', 'mb-10');
 
-    pinLogo.style.width = "25px";
-    pinLogo.style.height = "25px";
-    pinLogo.alt = "like";
-    pinLogo.style.verticalAlign = "text-top";
-    pinLogo.src = "assets/img/fav.png";
+    // Swiper 컨테이너를 포함하는 div를 생성합니다.
+    const entryImage = document.createElement('div');
+    entryImage.classList.add('entry-image', 'clearfix');
 
-    if (
-      randomBoards[i].thumbnail_imgs !== null &&
-      randomBoards[i].thumbnail_imgs !== undefined &&
-      randomBoards[i].thumbnail_imgs.length > 0
-    ) {
-      for (let j = 0; j < randomBoards[i].thumbnail_imgs.length; j++) {
-        if (
-          randomBoards[i].thumbnail_imgs[j] !== null &&
-          randomBoards[i].thumbnail_imgs[j] !== undefined &&
-          randomBoards[i].thumbnail_imgs[j].length > 0
-        ) {
-          thumbnail.src = randomBoards[i].thumbnail_imgs[j];
-          break;
-        }
-      }
+    const swiperContainer = document.createElement('div');
+    swiperContainer.classList.add('swiper-container');
+
+    // Swiper 슬라이드들을 감싸는 div를 생성합니다.
+    const swiperWrapper = document.createElement('div');
+    swiperWrapper.classList.add('swiper-wrapper');
+    console.log(board);
+    if (board.thumbnail_imgs.length === 0) {
+      const swiperSlide = document.createElement('div');
+      swiperSlide.classList.add('swiper-slide');
+
+      const img = new Image(); // 이미지 엘리먼트 생성
+      img.classList.add('img-fluid');
+      // img.style.maxWidth = '100%'; // 이미지가 슬라이드를 넘어가지 않도록 설정
+      img.style = 'width: 250px; height: 250px; border: 3px solid #fffafa';
+      img.src =
+        'https://everyplacetest.s3.ap-northeast-2.amazonaws.com/images/19/profile/d1f9219a-ba25-474c-86b8-886bc612c91e';
+      img.alt = '';
+
+      swiperSlide.appendChild(img);
+      swiperWrapper.appendChild(swiperSlide);
     } else {
-      thumbnail.src = "assets/img/favspot.png";
+      // 이미지 슬라이드를 위한 반복문
+      board.thumbnail_imgs.forEach((imageSrc) => {
+        const swiperSlide = document.createElement('div');
+        swiperSlide.classList.add('swiper-slide');
+
+        const img = new Image(); // 이미지 엘리먼트 생성
+        img.classList.add('img-fluid');
+        // img.style.maxWidth = '100%'; // 이미지가 슬라이드를 넘어가지 않도록 설정
+        img.style = 'width: 250px; height: 250px; border: 3px solid #fffafa';
+        img.src = imageSrc;
+        img.alt = '';
+
+        swiperSlide.appendChild(img);
+        swiperWrapper.appendChild(swiperSlide);
+      });
     }
-    thumbnail.alt = "";
-    thumbnail.addEventListener("click", async () => {
-      // let response = await findBoardRequest(randomBoards[i].id);
-      // if (response.status >= 400 && response.status < 600) {
-      //     return;
-      // }
-      window.localStorage.setItem("selectedPk", randomBoards[i].id);
-      location.href = "./../html/board_detail.html";
+
+    swiperContainer.appendChild(swiperWrapper);
+    entryImage.appendChild(swiperContainer);
+    blogEntry.appendChild(entryImage);
+
+    // Swiper 초기화
+    initializeSwiper(swiperContainer); // Swiper 초기화 함수 호출
+
+    const blogDetail = document.createElement('div');
+    blogDetail.classList.add('blog-detail');
+
+    const entryTitle = document.createElement('div');
+    entryTitle.classList.add('entry-title', 'mb-1');
+    const titleLink = document.createElement('a');
+    titleLink.setAttribute('href', '#');
+    titleLink.textContent = board.title;
+    entryTitle.appendChild(titleLink);
+    blogDetail.appendChild(entryTitle);
+
+    const entryMeta = document.createElement('div');
+    entryMeta.classList.add('entry-meta', 'mb-10');
+    const ul = document.createElement('ul');
+    const li = document.createElement('li');
+    const hashTag = document.createElement('i');
+    hashTag.className = 'fa fa-solid fa-hashtag';
+    li.appendChild(hashTag);
+    const item = document.createElement('span');
+    if (!board.tag) {
+      item.textContent = 'None';
+    } else {
+      item.textContent = board.tags.join(' ');
+    }
+    li.appendChild(item);
+
+    const li2 = document.createElement('li');
+    const pins = document.createElement('i');
+    pins.className = 'fa fa-solid fa-map-marker';
+    li2.appendChild(pins);
+    const item2 = document.createElement('span');
+    item2.textContent = board.pins.length;
+    li2.appendChild(item2);
+
+    const li3 = document.createElement('li');
+    const star = document.createElement('i');
+    star.className = 'fa fa-solid fa-star';
+    li3.appendChild(star);
+    const item3 = document.createElement('span');
+    item3.textContent = board.likes;
+    li3.appendChild(item3);
+
+    ul.appendChild(li);
+    ul.appendChild(li2);
+    ul.appendChild(li3);
+    entryMeta.appendChild(ul);
+    blogDetail.appendChild(entryMeta);
+
+    const entryShare = document.createElement('div');
+    entryShare.classList.add('entry-share', 'clearfix', 'mt-0');
+    const entryButton = document.createElement('div');
+    entryButton.classList.add('entry-button');
+    const readMoreLink = document.createElement('a');
+    readMoreLink.classList.add('button', 'arrow');
+    readMoreLink.id = board.id;
+    readMoreLink.setAttribute('href', '#');
+    readMoreLink.textContent = 'Board Detail';
+
+    readMoreLink.addEventListener('click', (event) => {
+      localStorage.setItem('selectedPk', board.id);
+      window.location.href = 'assets/html/board_detail.html';
     });
 
-    title.innerText = randomBoards[i].title;
-    user.innerText = randomBoards[i].user_id;
-    pinCount.innerText = randomBoards[i].tags;
+    const arrowIcon = document.createElement('i');
+    arrowIcon.classList.add('fa', 'fa-angle-right');
+    readMoreLink.appendChild(arrowIcon);
+    entryButton.appendChild(readMoreLink);
+    entryShare.appendChild(entryButton);
+    blogDetail.appendChild(entryShare);
 
-    pinBox.appendChild(pinLogo);
-    pinBox.appendChild(pinCount);
+    blogEntry.appendChild(blogDetail);
+    masonryItem.appendChild(blogEntry);
 
-    info1.appendChild(title);
-    info1.appendChild(pinBox);
+    return masonryItem;
+  }
 
-    infoBox.appendChild(info1);
-    infoBox.appendChild(user);
-
-    thumnailBox.appendChild(thumbnail);
-
-    board.appendChild(thumnailBox);
-    board.appendChild(infoBox);
-
-    boardSet.appendChild(board);
-
-    $mainBoard.appendChild(boardSet);
+  // Swiper 초기화 함수
+  function initializeSwiper(container) {
+    new Swiper(container, {
+      loop: true,
+      autoplay: {
+        delay: 3000, // 각 슬라이드 간의 자동 슬라이딩 간격 (3초)
+      },
+      pagination: {
+        el: '.swiper-pagination',
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
   }
 }
