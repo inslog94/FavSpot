@@ -290,12 +290,12 @@ class BoardSearchView(APIView):
         search_field = request.query_params.get('search_field', None)
 
         queryset = Board.objects.filter(is_public=True, is_deleted=False)
-
+    
         if search_field and search_term:
             # 보드 제목 또는 태그 내용으로 검색
             if search_field == 'all':
                 queryset = queryset.filter(
-                    Q(title__icontains=search_term) | Q(tags__content__icontains=search_term))
+                    Q(title__icontains=search_term) | Q(tags__content__icontains=search_term)).distinct()
             # 보드 제목으로 검색
             elif search_field == 'title':
                 queryset = queryset.filter(title__icontains=search_term)
