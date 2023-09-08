@@ -54,9 +54,9 @@
     <!-- map -->
     <script
       type="text/javascript"
-      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8166b325e80b4bce3d1d6b725fbbba9f&libraries=services,clusterer,drawing"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=db5b73af306ab23a5a023f575a474746&libraries=services,clusterer,drawing"
     ></script>
-    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8166b325e80b4bce3d1d6b725fbbba9f"></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=db5b73af306ab23a5a023f575a474746"></script>
     <script type="module" src="../js/maps/event.js"></script>
     <script type="module" src="../js/maps/data.js"></script>
     <script type="module" src="../js/maps/map.js"></script>
@@ -378,7 +378,7 @@
                 </a>
                 <div class="cart">
                   <div class="cart-title">
-                    <h6 id="email" class="uppercase mb-0"></h6>
+                    <h6 id="headerEmail" class="uppercase mb-0"></h6>
                   </div>
                   <div class="cart-item">
                     <div class="cart-name clearfix">
@@ -408,8 +408,8 @@
               <div class="blog-entry mb-10">
                 <div class="entry-image clearfix">
                   <!--지도 넣어야함-->
-                  <div style="display: flex; width: 1600px; margin-left: 90px">
-                    <div class="map_wrap" style="height: 700px">
+                  <div style="display: flex; width: 1600px">
+                    <div class="map_wrap" style="width: 70%; height: 700px">
                       <div id="map"></div>
                     </div>
                   </div>
@@ -509,7 +509,7 @@
                           <div class="comments-photo">
                             <img
                               class="img-profile"
-                              src=""
+                              src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default.png"
                               alt=""
                             />
                           </div>
@@ -772,9 +772,7 @@
                   <!-- 핀 콘텐츠가 만들어질 컨테이너 -->
                   <div id="pinContentsContainer" class="modal-body">
                     <div class="port-post clearfix">
-                      <div class="port-post-photo">
-                        
-                      </div>
+                      <div class="port-post-photo"></div>
                       <div class="port-post-info">
                         <h3 class="theme-color">Kevin Martin</h3>
                         <button type="button" class="close btn btn-lg p-0">
@@ -830,7 +828,7 @@
       >
     </div>
 
-    <footer class="footer footer-topbar">
+    <footer class="footer footer-topbar fixed-bottom">
       <div class="copyright pt-10 pb-0" style="background-color: beige">
         <div class="container m-0">
           <div class="row d-flex justify-content-between" style="width: 100vw">
@@ -847,7 +845,7 @@
                   <span id="copyright">
                     <script>
                       document
-                        .getElementById("copyright")
+                        .getElementById('copyright')
                         .appendChild(
                           document.createTextNode(new Date().getFullYear())
                         );
@@ -902,120 +900,120 @@
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = "../js/";
+      var plugin_path = '../js/';
     </script>
 
     <!-- custom -->
     <script src="../js/custom.js"></script>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener('DOMContentLoaded', function () {
         // 로컬 스토리지로 보드 id 값 가져오기
-        const boardPk = localStorage.getItem("selectedPk");
+        const boardPk = localStorage.getItem('selectedPk');
 
         // 보드 공개 여부 상태 저장 변수
         let isPublic;
 
         // 보드 상세 정보 가져오기 위한 통신
         fetch(`http://127.0.0.1:8000/board/${boardPk}/`, {
-          credentials: "include",
+          credentials: 'include',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         })
           .then((response) => response.json())
           .then((data) => {
             // 공개 / 비공개 보드 표시 (모달)
-            const lockIcon2 = document.querySelector(".icon-lock-box .fa-lock");
+            const lockIcon2 = document.querySelector('.icon-lock-box .fa-lock');
             const unlockIcon2 = document.querySelector(
-              ".icon-lock-box .fa-unlock"
+              '.icon-lock-box .fa-unlock'
             );
 
             if (data.board.is_public) {
-              unlockIcon2.style.display = "inline";
-              lockIcon2.style.display = "none";
+              unlockIcon2.style.display = 'inline';
+              lockIcon2.style.display = 'none';
             } else {
-              lockIcon2.style.display = "inline";
-              unlockIcon2.style.display = "none";
+              lockIcon2.style.display = 'inline';
+              unlockIcon2.style.display = 'none';
             }
 
-            unlockIcon2.addEventListener("click", function () {
-              unlockIcon2.style.display = "none";
-              lockIcon2.style.display = "inline";
+            unlockIcon2.addEventListener('click', function () {
+              unlockIcon2.style.display = 'none';
+              lockIcon2.style.display = 'inline';
 
               isPublic = false; // 비공개로 변경
             });
 
-            lockIcon2.addEventListener("click", function () {
-              lockIcon2.style.display = "none";
-              unlockIcon2.style.display = "inline";
+            lockIcon2.addEventListener('click', function () {
+              lockIcon2.style.display = 'none';
+              unlockIcon2.style.display = 'inline';
 
               isPublic = true; // 공개로 변경
             });
 
             // 보드 이름
             const boardTitleElement =
-              document.querySelector(".input-board-title");
+              document.querySelector('.input-board-title');
             boardTitleElement.value = data.board.title;
 
             // 보드 태그 (모달)
-            const ulElement = document.createElement("ul"); // <ul> 요소 생성
+            const ulElement = document.createElement('ul'); // <ul> 요소 생성
 
             data.board.tags.forEach((tag) => {
               const liElement = createNewLiElement(tag); // 태그 생성 함수 호출
               ulElement.appendChild(liElement); // <li> 요소를 <ul>요 소의 자식으로 추가
             });
 
-            const boardTagsElement = document.querySelector(".board-tags2");
+            const boardTagsElement = document.querySelector('.board-tags2');
             boardTagsElement.appendChild(ulElement);
 
             // 핀 목록 (모달)
-            const containerElement = document.querySelector(".pins-container2");
+            const containerElement = document.querySelector('.pins-container2');
 
             data.pins.forEach((pin, index) => {
-              const postElement = document.createElement("div");
-              postElement.classList.add("port-post", "clearfix", "bg-white");
+              const postElement = document.createElement('div');
+              postElement.classList.add('port-post', 'clearfix', 'bg-white');
               postElement.dataset.id = pin.id; // data-id 속성 설정
 
               if (index === 0) {
-                postElement.classList.add("mt-20");
+                postElement.classList.add('mt-20');
               } else {
-                postElement.classList.add("mt-40", "mb-20");
+                postElement.classList.add('mt-40', 'mb-20');
               }
 
-              const boxElement = document.createElement("div");
-              boxElement.classList.add("pins-box");
+              const boxElement = document.createElement('div');
+              boxElement.classList.add('pins-box');
 
-              const photoDivElement = document.createElement("div");
-              photoDivElement.classList.add("port-post-photo");
+              const photoDivElement = document.createElement('div');
+              photoDivElement.classList.add('port-post-photo');
 
-              const imgElement = document.createElement("img");
+              const imgElement = document.createElement('img');
               imgElement.src = pin.thumbnail_img;
-              imgElement.classList.add("pin-thumbnail-img");
+              imgElement.classList.add('pin-thumbnail-img');
 
               photoDivElement.appendChild(imgElement);
 
-              const infoDivElement = document.createElement("div");
-              infoDivElement.classList.add("port-post-info");
+              const infoDivElement = document.createElement('div');
+              infoDivElement.classList.add('port-post-info');
 
-              const h3Element = document.createElement("h3");
-              h3Element.classList.add("theme-color");
+              const h3Element = document.createElement('h3');
+              h3Element.classList.add('theme-color');
               h3Element.innerHTML = `<span>상호명: </span>${pin.title}`;
 
               infoDivElement.appendChild(h3Element);
 
-              let pinsInfoDiv = document.createElement("div");
-              pinsInfoDiv.classList.add("pins-info");
+              let pinsInfoDiv = document.createElement('div');
+              pinsInfoDiv.classList.add('pins-info');
 
-              ["category", "new_address"].forEach((key) => {
+              ['category', 'new_address'].forEach((key) => {
                 if (pin[key]) {
-                  let h5Element = document.createElement("h5");
-                  let label = "";
+                  let h5Element = document.createElement('h5');
+                  let label = '';
 
-                  if (key === "category") {
-                    label = "카테고리";
-                  } else if (key === "new_address") {
-                    label = "주소";
+                  if (key === 'category') {
+                    label = '카테고리';
+                  } else if (key === 'new_address') {
+                    label = '주소';
                   }
 
                   h5Element.innerHTML = `<span>${label}: </span>${pin[key]}`;
@@ -1024,8 +1022,8 @@
               });
 
               // 삭제 아이콘을 위한 버튼 요소 생성
-              const deleteButton = document.createElement("button");
-              deleteButton.classList.add("fa", "fa-times-rectangle");
+              const deleteButton = document.createElement('button');
+              deleteButton.classList.add('fa', 'fa-times-rectangle');
 
               infoDivElement.append(pinsInfoDiv);
               infoDivElement.appendChild(deleteButton);
@@ -1034,45 +1032,45 @@
               containerElement.appendChild(postElement);
 
               // 삭제 아이콘 클릭 시 핀 삭제
-              deleteButton.addEventListener("click", function () {
+              deleteButton.addEventListener('click', function () {
                 postElement.remove();
               });
 
               infoDivElement.appendChild(deleteButton);
             });
           })
-          .catch((error) => console.error("Error:", error));
+          .catch((error) => console.error('Error:', error));
 
         // 새 태그 추가
-        const newTagInput = document.querySelector("#new-tag-input");
-        const addTagButton = document.querySelector("#add-tag-button");
+        const newTagInput = document.querySelector('#new-tag-input');
+        const addTagButton = document.querySelector('#add-tag-button');
 
-        addTagButton.addEventListener("click", function () {
+        addTagButton.addEventListener('click', function () {
           const newTag = newTagInput.value;
           if (newTag) {
             const liElement = createNewLiElement(newTag); // 태그 생성 함수 호출
 
             const boardTagsUlElement =
-              document.querySelector(".board-tags2 ul");
+              document.querySelector('.board-tags2 ul');
             boardTagsUlElement.appendChild(liElement);
 
-            newTagInput.value = ""; // 입력 필드 초기화
+            newTagInput.value = ''; // 입력 필드 초기화
           }
         });
 
         // 태그 생성 함수
         function createNewLiElement(tag) {
-          const liElement = document.createElement("li");
+          const liElement = document.createElement('li');
 
-          const aElement = document.createElement("a");
-          aElement.href = "#";
+          const aElement = document.createElement('a');
+          aElement.href = '#';
           aElement.textContent = `${tag}`;
 
-          const iDeleteIcon = document.createElement("i");
-          iDeleteIcon.classList.add("fa", "fa-times");
+          const iDeleteIcon = document.createElement('i');
+          iDeleteIcon.classList.add('fa', 'fa-times');
 
           // 삭제 아이콘 클릭 시 이벤트 리스너 등록
-          iDeleteIcon.addEventListener("click", function (event) {
+          iDeleteIcon.addEventListener('click', function (event) {
             event.preventDefault(); // a 태그의 기본 동작 취소
             liElement.remove(); // 태그 제거
           });
@@ -1087,15 +1085,15 @@
         // 보드 수정 기능
 
         document
-          .querySelector("#save-button")
-          .addEventListener("click", function () {
-            const title = document.querySelector(".input-board-title").value;
+          .querySelector('#save-button')
+          .addEventListener('click', function () {
+            const title = document.querySelector('.input-board-title').value;
             const tags = Array.from(
-              document.querySelectorAll(".board-tags2 ul li"),
+              document.querySelectorAll('.board-tags2 ul li'),
               (li) => li.textContent
             );
             const pins = Array.from(
-              document.querySelectorAll(".port-post"),
+              document.querySelectorAll('.port-post'),
               (post) => Number(post.dataset.id)
             );
 
@@ -1107,10 +1105,10 @@
             };
 
             fetch(`http://127.0.0.1:8000/board/${boardPk}/`, {
-              method: "PUT",
-              credentials: "include",
+              method: 'PUT',
+              credentials: 'include',
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify(updatedBoard),
             })
@@ -1118,22 +1116,22 @@
               .then((data) => {
                 location.reload(); // 페이지 새로고침
               })
-              .catch((error) => console.error("Error:", error));
+              .catch((error) => console.error('Error:', error));
           });
 
         // 수정 버튼 클릭 시 이벤트
         // 보드 수정 기능
 
         document
-          .querySelector("#save-button")
-          .addEventListener("click", function () {
-            const title = document.querySelector(".input-board-title").value;
+          .querySelector('#save-button')
+          .addEventListener('click', function () {
+            const title = document.querySelector('.input-board-title').value;
             const tags = Array.from(
-              document.querySelectorAll(".board-tags2 ul li"),
+              document.querySelectorAll('.board-tags2 ul li'),
               (li) => li.textContent
             );
             const pins = Array.from(
-              document.querySelectorAll(".port-post"),
+              document.querySelectorAll('.port-post'),
               (post) => Number(post.dataset.id)
             );
 
@@ -1145,10 +1143,10 @@
             };
 
             fetch(`http://127.0.0.1:8000/board/${boardPk}/`, {
-              method: "PUT",
-              credentials: "include",
+              method: 'PUT',
+              credentials: 'include',
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify(updatedBoard),
             })
@@ -1156,7 +1154,7 @@
               .then((data) => {
                 location.reload(); // 페이지 새로고침
               })
-              .catch((error) => console.error("Error:", error));
+              .catch((error) => console.error('Error:', error));
           });
       });
     </script>

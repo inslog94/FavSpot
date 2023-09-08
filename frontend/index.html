@@ -36,11 +36,71 @@
     <!-- Responsive -->
     <link rel="stylesheet" type="text/css" href="assets/css/responsive.css" />
 
+    <!-- Swiper 스타일시트를 로드합니다. -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <style>
+      .modal-content {
+        width: 900px;
+        position: absolute;
+        top: 50%;
+        right: -3%;
+      }
+
+      .modal-title {
+        width: 800px;
+      }
+
+      .blog-entry .entry-image img {
+        width: 800px;
+        height: 400px;
+      }
+      .masonry-item {
+        display: inline-block;
+        width: 250px;
+      }
+      img {
+        object-fit: cover !important;
+      }
+      .swiper-slide {
+        height: 250px;
+      }
+      #main_board {
+        display: inline-block !important;
+      }
+      .blog-detail {
+        padding: 10px 30px 10px 30px !important;
+      }
+      .entry-title a {
+        font-size: 16px !important;
+        font-weight: bold !important;
+      }
+      /* Swiper 컨테이너 스타일 */
+      .swiper-container {
+        width: 100%; /* 슬라이더 컨테이너의 너비를 100%로 설정 */
+        overflow: hidden; /* 넘치는 부분을 숨김 */
+        position: relative; /* 포지션을 상대적으로 설정하여 내부 요소의 위치를 조정 */
+      }
+
+      /* 슬라이더 영역 스타일 */
+      .swiper-wrapper {
+        display: flex; /* 슬라이드를 가로로 나열하기 위해 플렉스 디스플레이 사용 */
+        transition: transform 0.3s ease-in-out; /* 슬라이더 이동에 트랜지션 효과 적용 */
+      }
+
+      /* 슬라이드 스타일 */
+      .swiper-slide {
+        width: 100%; /* 슬라이드 너비를 100%로 설정하여 한 번에 하나만 보이도록 함 */
+      }
+    </style>
     <script
       type="text/javascript"
-      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8166b325e80b4bce3d1d6b725fbbba9f&libraries=services,clusterer,drawing"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=db5b73af306ab23a5a023f575a474746&libraries=services,clusterer,drawing"
     ></script>
-    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8166b325e80b4bce3d1d6b725fbbba9f"></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=db5b73af306ab23a5a023f575a474746"></script>
     <script type="module" src="assets/js/maps/event.js"></script>
     <script type="module" src="assets/js/maps/data.js"></script>
     <script type="module" src="assets/js/maps/map.js"></script>
@@ -90,7 +150,7 @@
               </a>
               <div class="cart">
                 <div class="cart-title">
-                  <h6 id="email" class="uppercase mb-0"></h6>
+                  <h6 id="headerEmail" class="uppercase mb-0"></h6>
                 </div>
                 <div class="cart-item">
                   <div class="cart-name clearfix">
@@ -128,18 +188,17 @@
           <div id="search_pagination"></div>
         </div>
 
-        <button
-          id="screen_btn"
-          class="button full_screen_btn"
-        >
-          전체화면
-        </button>
+        <button id="screen_btn" class="button full_screen_btn">전체화면</button>
       </div>
       <div id="main_board" class="main_board_list"></div>
     </main>
     <!-- 보드 간편 생성 모달 -->
     <div id="board_add_modal" class="board_add_modal_cls">
-      <div id="board_content_modal" class="board_add_modal_content">
+      <div
+        id="board_content_modal"
+        style="height=300px;"
+        class="board_add_modal_content"
+      >
         <div>
           <span>어떤 보드를 만드실건가요?</span>
         </div>
@@ -169,7 +228,7 @@
       <div
         id="board_confirm_modal"
         class="board_add_modal_content"
-        style="height: 100px; display: none"
+        style="height: 250px; display: none"
       >
         <div>
           <span id="board_add_result">보드가 성공적으로 생성되었습니다 !</span>
@@ -184,7 +243,7 @@
       role="dialog"
       aria-labelledby="myLargeModalLabel"
       aria-hidden="true"
-      stylezzzzzzzzzz
+      style=""
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -359,7 +418,7 @@
                   <span id="copyright">
                     <script>
                       document
-                        .getElementById("copyright")
+                        .getElementById('copyright')
                         .appendChild(
                           document.createTextNode(new Date().getFullYear())
                         );
@@ -409,7 +468,7 @@
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = "assets/js/";
+      var plugin_path = 'assets/js/';
     </script>
 
     <!-- custom -->

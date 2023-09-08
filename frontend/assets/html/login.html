@@ -199,7 +199,7 @@ header -->
                     <span id="copyright">
                       <script>
                         document
-                          .getElementById("copyright")
+                          .getElementById('copyright')
                           .appendChild(
                             document.createTextNode(new Date().getFullYear())
                           );
@@ -256,61 +256,48 @@ header -->
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = "../js/";
+      var plugin_path = '../js/';
     </script>
 
     <!-- custom -->
     <script src="../js/custom.js"></script>
 
     <script>
-      fetch(`http://127.0.0.1:8000/user/me/`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const $login = document.querySelector(".login");
-          $login.addEventListener("submit", (event) => {
-            event.preventDefault();
-            const email = document.querySelector("#email").value;
-            const password = document.querySelector("#password").value;
+      const $login = document.querySelector('.login');
+      $login.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const email = document.querySelector('#email').value;
+        const password = document.querySelector('#password').value;
 
-            login(email, password);
-          });
+        login(email, password);
+      });
 
-          function login(email, password) {
-            const loginError = document.getElementById("loginError");
-            fetch("http://127.0.0.1:8000/user/login/", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ email, password }),
-              credentials: "include",
-            })
-              .then((response) => {
-                if (!response.ok) {
-                  return response.json().then((data) => {
-                    throw new Error(data.err_msg);
-                  });
-                }
-                return response.json();
-              })
-              .then((data) => {
-                // 로그인 성공 시 처리
-                window.location.href = "/frontend/index.html";
-              })
-              .catch((error) => {
-                loginError.textContent = error.message;
-              });
-          }
+      function login(email, password) {
+        const loginError = document.getElementById('loginError');
+        fetch('http://127.0.0.1:8000/user/login/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+          credentials: 'include',
         })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+          .then((response) => {
+            if (!response.ok) {
+              return response.json().then((data) => {
+                throw new Error(data.err_msg);
+              });
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // 로그인 성공 시 처리
+            window.location.href = '/';
+          })
+          .catch((error) => {
+            loginError.textContent = error.message;
+          });
+      }
     </script>
   </body>
 </html>
