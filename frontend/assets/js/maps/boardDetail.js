@@ -106,7 +106,29 @@ export async function boardDetail() {
       boardTitleElement.textContent = data.board.title;
 
       // 보드 작성자
+      const userProfileLink = document.querySelector('.user-profile-link');
       const boardUserElement = document.querySelector('.board-userId');
+      
+      // 이메일 클릭 시 작성자 프로필로 이동
+      userProfileLink.addEventListener('click', function(event) {
+        const boardUserEmail = data.board.user.email;
+        event.preventDefault();
+
+        const boardUserPk = data.board.user.id;
+
+        let userProfileUrl;
+
+        if (loggedInUserEmail === boardUserEmail) {
+          userProfileUrl = '../html/user_info.html';
+        }
+        else {
+          userProfileUrl = `../html/user_info.html?pk=${boardUserPk}`;
+        }
+        
+        window.location.href = userProfileUrl;
+      });
+
+      // 보드 작성자 출력
       boardUserElement.textContent = data.board.user.email;
 
       // 보드 작성일
@@ -276,14 +298,23 @@ export async function boardDetail() {
         let h4Tag = document.createElement('h5');
         h4Tag.className = 'theme-color mb-20';
 
+        let aTag = document.createElement('a');
+        if (loggedInUserEmail === comment.user.email) {
+          aTag.href = '../html/user_info.html';
+        }
+        else {
+          const boardCommentUserPk = comment.user.id;
+          aTag.href = `../html/user_info.html?pk=${boardCommentUserPk}`;
+        }
+
         let textNode = document.createTextNode(comment.user.email);
+        aTag.appendChild(textNode);
+
         let spanTag = document.createElement('span');
-
         let dateNode = document.createTextNode(formatDate(comment.created_at));
-
         spanTag.appendChild(dateNode);
 
-        h4Tag.appendChild(textNode);
+        h4Tag.appendChild(aTag);
         h4Tag.appendChild(spanTag);
 
         let pElement = document.createElement('p');
