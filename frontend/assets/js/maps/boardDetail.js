@@ -129,27 +129,36 @@ export async function boardDetail() {
       }
 
       // 보드 태그
-      const ulElement = document.createElement('ul');
+      if(data.board.tags.length === 0) {
+        const noTagsMessage = document.createElement('div');
+        noTagsMessage.textContent = '보드에 등록된 태그가 없습니다.';
+        noTagsMessage.classList.add('no-tags-message');
+        const boardTagsElement = document.querySelector('.board-tags');
+        boardTagsElement.appendChild(noTagsMessage);
+      }
+      else {
+        const ulElement = document.createElement('ul');
 
-      data.board.tags.forEach((tag) => {
-        const liElement = document.createElement('li');
+        data.board.tags.forEach((tag) => {
+          const liElement = document.createElement('li');
 
-        const aElement = document.createElement('a');
-        aElement.href = '#';
-        aElement.textContent = `${tag}`;
+          const aElement = document.createElement('a');
+          aElement.href = '#';
+          aElement.textContent = `${tag}`;
 
-        // aElement.appendChild(iElement);  <i> 요소를 <a> 요소의 자식으로 추가
-        liElement.appendChild(aElement); // <a> 요소를 <li> 요소의 자식으로 추가
-        ulElement.appendChild(liElement); // <li> 요소를 <ul>요 소의 자식으로 추가
-      });
+          liElement.appendChild(aElement); // <a> 요소를 <li> 요소의 자식으로 추가
+          ulElement.appendChild(liElement); // <li> 요소를 <ul>요 소의 자식으로 추가
+        });
 
-      // 최종적으로 생성된 HTML 코드 출력
-      const boardTagsElement = document.querySelector('.board-tags');
-      boardTagsElement.appendChild(ulElement);
+        // 최종적으로 생성된 HTML 코드 출력
+        const boardTagsElement = document.querySelector('.board-tags');
+        boardTagsElement.appendChild(ulElement);
+      }
 
       // 핀 목록
       const containerElement = document.querySelector('.pins-container');
 
+      // 등록된 핀이 없는 경우
       if (data.pins.length === 0) {
         const noPinsMessage = document.createElement('div');
         noPinsMessage.textContent = '보드에 등록된 핀이 없습니다.';
@@ -213,14 +222,17 @@ export async function boardDetail() {
 
           postElement.append(boxElement);
 
+          // 특정 핀 마우스오버시 스타일 추가
           postElement.addEventListener('mouseover', function () {
             postElement.classList.add('pins-hovered');
           });
 
+          // 특정 핀 마우스오버 해제시 스타일 제거
           postElement.addEventListener('mouseout', function () {
             postElement.classList.remove('pins-hovered');
           });
 
+          // 특정 핀 클릭 시 핀 상세보기 모달 표시
           postElement.addEventListener('click', function () {
             $('#myModal').modal('show');
             let place_id = pin.place_id;
@@ -286,14 +298,19 @@ export async function boardDetail() {
         commentDiv.appendChild(infoDiv);
 
         commentsSection.append(commentDiv);
-
+        
         // 댓글 삭제 아이콘 표시
         // 로그인된 유저와 댓글 작성자가 같은 경우
         if (comment.user.email === loggedInUserEmail) {
           const deleteIconDiv = document.createElement('div');
           deleteIconDiv.classList.add('fa', 'fa-times');
           infoDiv.appendChild(deleteIconDiv);
-
+          
+          // 댓글 삭제 아이콘 마우스오버시 스타일 추가
+          deleteIconDiv.addEventListener('mouseover', function () {
+            deleteIconDiv.style.cursor = 'pointer';
+          });
+          
           // 댓글 삭제 기능
           // 클릭 이벤트 추가
           deleteIconDiv.addEventListener('click', function () {
