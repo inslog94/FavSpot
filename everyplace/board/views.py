@@ -39,7 +39,17 @@ class BoardView(APIView):
 
         ## 보드 전체 목록 조희
         if not pk:
-            boards = Board.objects.filter(is_deleted=False)
+            # 현재 로그인한 사용자 정보
+            user = request.user
+
+            if user.is_authenticated:
+                # 사용자와 보드 작성자가 같은 경우 공개/비공개에 상관 없이 사용자의 모든 보드 출력
+                # 사용자와 보드 작성자가 다른 경우 공개 보드만 보드만 출력
+                boards = Board.objects.filter(Q(user_id=user) | Q(is_public=True), is_deleted=False)
+            else:
+                # 로그인하지 않은 사용자는 공개 보드만 출력
+                boards = Board.objects.filter(is_public=True, is_deleted=False)
+
             serializer = BoardPinSerializer(boards, many=True)
 
             return Response(serializer.data)
