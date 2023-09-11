@@ -150,72 +150,88 @@ export async function boardDetail() {
       // 핀 목록
       const containerElement = document.querySelector('.pins-container');
 
-      data.pins.forEach((pin, index) => {
-        const postElement = document.createElement('div');
-        postElement.classList.add('port-post', 'clearfix', 'bg-white');
+      if (data.pins.length === 0) {
+        const noPinsMessage = document.createElement('div');
+        noPinsMessage.textContent = '보드에 등록된 핀이 없습니다.';
+        noPinsMessage.classList.add('no-pins-message');
+        containerElement.appendChild(noPinsMessage);
+      }
+      else {
+        data.pins.forEach((pin, index) => {
+          const postElement = document.createElement('div');
+          postElement.classList.add('port-post', 'clearfix', 'bg-white');
 
-        if (index === 0) {
-          postElement.classList.add('mt-20');
-        } else {
-          postElement.classList.add('mt-40', 'mb-20');
-        }
-
-        const boxElement = document.createElement('div');
-        boxElement.classList.add('pins-box');
-
-        const photoDivElement = document.createElement('div');
-        photoDivElement.classList.add('port-post-photo');
-
-        const imgElement = document.createElement('img');
-        imgElement.src = pin.thumbnail_img;
-        imgElement.classList.add('pin-thumbnail-img');
-
-        photoDivElement.appendChild(imgElement);
-
-        const infoDivElement = document.createElement('div');
-        infoDivElement.classList.add('port-post-info');
-
-        const h3Element = document.createElement('h3');
-        h3Element.classList.add('theme-color');
-        h3Element.innerHTML = `<span>상호명: </span>${pin.title}`;
-
-        infoDivElement.appendChild(h3Element);
-
-        let pinsInfoDiv = document.createElement('div');
-        pinsInfoDiv.classList.add('pins-info');
-
-        ['category', 'new_address'].forEach((key) => {
-          if (pin[key]) {
-            let h5Element = document.createElement('h5');
-            let label = '';
-
-            if (key === 'category') {
-              label = '카테고리';
-            } else if (key === 'new_address') {
-              label = '주소';
-            }
-
-            h5Element.innerHTML = `<span>${label}: </span>${pin[key]}`;
-            pinsInfoDiv.append(h5Element);
+          if (index === 0) {
+            postElement.classList.add('mt-20');
+          } else {
+            postElement.classList.add('mt-40', 'mb-20');
           }
+
+          const boxElement = document.createElement('div');
+          boxElement.classList.add('pins-box');
+
+          const photoDivElement = document.createElement('div');
+          photoDivElement.classList.add('port-post-photo');
+
+          const imgElement = document.createElement('img');
+          imgElement.src = pin.thumbnail_img;
+          imgElement.classList.add('pin-thumbnail-img');
+
+          photoDivElement.appendChild(imgElement);
+
+          const infoDivElement = document.createElement('div');
+          infoDivElement.classList.add('port-post-info');
+
+          const h3Element = document.createElement('h3');
+          h3Element.classList.add('theme-color');
+          h3Element.innerHTML = `<span>상호명: </span>${pin.title}`;
+
+          infoDivElement.appendChild(h3Element);
+
+          let pinsInfoDiv = document.createElement('div');
+          pinsInfoDiv.classList.add('pins-info');
+
+          ['category', 'new_address'].forEach((key) => {
+            if (pin[key]) {
+              let h5Element = document.createElement('h5');
+              let label = '';
+
+              if (key === 'category') {
+                label = '카테고리';
+              } else if (key === 'new_address') {
+                label = '주소';
+              }
+
+              h5Element.innerHTML = `<span>${label}: </span>${pin[key]}`;
+              pinsInfoDiv.append(h5Element);
+            }
+          });
+
+          infoDivElement.append(pinsInfoDiv);
+
+          boxElement.append(photoDivElement, infoDivElement);
+
+          postElement.append(boxElement);
+
+          postElement.addEventListener('mouseover', function () {
+            postElement.classList.add('pins-hovered');
+          });
+
+          postElement.addEventListener('mouseout', function () {
+            postElement.classList.remove('pins-hovered');
+          });
+
+          postElement.addEventListener('click', function () {
+            $('#myModal').modal('show');
+            let place_id = pin.place_id;
+            console.log(place_id);
+            PIN_DETAIL.placeId = place_id;
+            pinDetail();
+          });
+
+          containerElement.appendChild(postElement);
         });
-
-        infoDivElement.append(pinsInfoDiv);
-
-        boxElement.append(photoDivElement, infoDivElement);
-
-        postElement.append(boxElement);
-
-        postElement.addEventListener('click', function () {
-          $('#myModal').modal('show');
-          let place_id = pin.place_id;
-          console.log(place_id);
-          PIN_DETAIL.placeId = place_id;
-          pinDetail();
-        });
-
-        containerElement.appendChild(postElement);
-      });
+      }
 
       // 댓글 목록
       var commentsSection = document.querySelector('.comments-container');
