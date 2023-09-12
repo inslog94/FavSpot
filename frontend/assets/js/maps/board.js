@@ -92,6 +92,7 @@ export function displayMainBoards(boards) {
 
   // 함수로 동적 생성
   function createBlogEntry(board) {
+
     const masonryItem = document.createElement('div');
     masonryItem.classList.add('masonry-item');
 
@@ -156,6 +157,17 @@ export function displayMainBoards(boards) {
     const titleLink = document.createElement('a');
     titleLink.setAttribute('href', '#');
     titleLink.textContent = board.title;
+
+    // 본인의 비공개 보드 표기
+    const entryLock = document.createElement('span');
+    if (board.is_public === false) {
+      const lock = document.createElement('i');
+      lock.className = 'fa fa-solid fa-lock mr-10';
+      lock.style.color = '#bf6447';
+      entryLock.appendChild(lock);
+      entryTitle.appendChild(entryLock);
+    }
+
     entryTitle.appendChild(titleLink);
     blogDetail.appendChild(entryTitle);
 

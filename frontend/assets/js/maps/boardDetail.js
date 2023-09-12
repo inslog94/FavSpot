@@ -73,6 +73,11 @@ export async function boardDetail() {
   })
     .then((response) => response.json())
     .then((data) => {
+      // 핀이 존재하지 않는 보드의 경우 지도 미표시
+      if (data.pins.length === 0) {
+        document.querySelector(".entry-image.clearfix.map").style.display = 'none';
+      }
+      
       CURRENT_PINS.value = '';
       CURRENT_PINS.value = data.pins;
 
@@ -101,7 +106,29 @@ export async function boardDetail() {
       boardTitleElement.textContent = data.board.title;
 
       // 보드 작성자
+      const userProfileLink = document.querySelector('.user-profile-link');
       const boardUserElement = document.querySelector('.board-userId');
+      
+      // 이메일 클릭 시 작성자 프로필로 이동
+      userProfileLink.addEventListener('click', function(event) {
+        const boardUserEmail = data.board.user.email;
+        event.preventDefault();
+
+        const boardUserPk = data.board.user.id;
+
+        let userProfileUrl;
+
+        if (loggedInUserEmail === boardUserEmail) {
+          userProfileUrl = '../html/user_info.html';
+        }
+        else {
+          userProfileUrl = `../html/user_info.html?pk=${boardUserPk}`;
+        }
+        
+        window.location.href = userProfileUrl;
+      });
+
+      // 보드 작성자 출력
       boardUserElement.textContent = data.board.user.email;
 
       // 보드 작성일
@@ -124,93 +151,121 @@ export async function boardDetail() {
       }
 
       // 보드 태그
-      const ulElement = document.createElement('ul');
+      if(data.board.tags.length === 0) {
+        const noTagsMessage = document.createElement('div');
+        noTagsMessage.textContent = '보드에 등록된 태그가 없습니다.';
+        noTagsMessage.classList.add('no-tags-message');
+        const boardTagsElement = document.querySelector('.board-tags');
+        boardTagsElement.appendChild(noTagsMessage);
+      }
+      else {
+        const ulElement = document.createElement('ul');
 
-      data.board.tags.forEach((tag) => {
-        const liElement = document.createElement('li');
+        data.board.tags.forEach((tag) => {
+          const liElement = document.createElement('li');
 
-        const aElement = document.createElement('a');
-        aElement.href = '#';
-        aElement.textContent = `${tag}`;
+          const aElement = document.createElement('a');
+          aElement.href = '#';
+          aElement.textContent = `${tag}`;
 
-        // aElement.appendChild(iElement);  <i> 요소를 <a> 요소의 자식으로 추가
-        liElement.appendChild(aElement); // <a> 요소를 <li> 요소의 자식으로 추가
-        ulElement.appendChild(liElement); // <li> 요소를 <ul>요 소의 자식으로 추가
-      });
+          liElement.appendChild(aElement); // <a> 요소를 <li> 요소의 자식으로 추가
+          ulElement.appendChild(liElement); // <li> 요소를 <ul>요 소의 자식으로 추가
+        });
 
-      // 최종적으로 생성된 HTML 코드 출력
-      const boardTagsElement = document.querySelector('.board-tags');
-      boardTagsElement.appendChild(ulElement);
+        // 최종적으로 생성된 HTML 코드 출력
+        const boardTagsElement = document.querySelector('.board-tags');
+        boardTagsElement.appendChild(ulElement);
+      }
 
       // 핀 목록
       const containerElement = document.querySelector('.pins-container');
 
-      data.pins.forEach((pin, index) => {
-        const postElement = document.createElement('div');
-        postElement.classList.add('port-post', 'clearfix', 'bg-white');
+      // 등록된 핀이 없는 경우
+      if (data.pins.length === 0) {
+        const noPinsMessage = document.createElement('div');
+        noPinsMessage.textContent = '보드에 등록된 핀이 없습니다.';
+        noPinsMessage.classList.add('no-pins-message');
+        containerElement.appendChild(noPinsMessage);
+      }
+      else {
+        data.pins.forEach((pin, index) => {
+          const postElement = document.createElement('div');
+          postElement.classList.add('port-post', 'clearfix', 'bg-white');
 
-        if (index === 0) {
-          postElement.classList.add('mt-20');
-        } else {
-          postElement.classList.add('mt-40', 'mb-20');
-        }
-
-        const boxElement = document.createElement('div');
-        boxElement.classList.add('pins-box');
-
-        const photoDivElement = document.createElement('div');
-        photoDivElement.classList.add('port-post-photo');
-
-        const imgElement = document.createElement('img');
-        imgElement.src = pin.thumbnail_img;
-        imgElement.classList.add('pin-thumbnail-img');
-
-        photoDivElement.appendChild(imgElement);
-
-        const infoDivElement = document.createElement('div');
-        infoDivElement.classList.add('port-post-info');
-
-        const h3Element = document.createElement('h3');
-        h3Element.classList.add('theme-color');
-        h3Element.innerHTML = `<span>상호명: </span>${pin.title}`;
-
-        infoDivElement.appendChild(h3Element);
-
-        let pinsInfoDiv = document.createElement('div');
-        pinsInfoDiv.classList.add('pins-info');
-
-        ['category', 'new_address'].forEach((key) => {
-          if (pin[key]) {
-            let h5Element = document.createElement('h5');
-            let label = '';
-
-            if (key === 'category') {
-              label = '카테고리';
-            } else if (key === 'new_address') {
-              label = '주소';
-            }
-
-            h5Element.innerHTML = `<span>${label}: </span>${pin[key]}`;
-            pinsInfoDiv.append(h5Element);
+          if (index === 0) {
+            postElement.classList.add('mt-20');
+          } else {
+            postElement.classList.add('mt-40', 'mb-20');
           }
+
+          const boxElement = document.createElement('div');
+          boxElement.classList.add('pins-box');
+
+          const photoDivElement = document.createElement('div');
+          photoDivElement.classList.add('port-post-photo');
+
+          const imgElement = document.createElement('img');
+          imgElement.src = pin.thumbnail_img;
+          imgElement.classList.add('pin-thumbnail-img');
+
+          photoDivElement.appendChild(imgElement);
+
+          const infoDivElement = document.createElement('div');
+          infoDivElement.classList.add('port-post-info');
+
+          const h3Element = document.createElement('h3');
+          h3Element.classList.add('theme-color');
+          h3Element.innerHTML = `<span>상호명: </span>${pin.title}`;
+
+          infoDivElement.appendChild(h3Element);
+
+          let pinsInfoDiv = document.createElement('div');
+          pinsInfoDiv.classList.add('pins-info');
+
+          ['category', 'new_address'].forEach((key) => {
+            if (pin[key]) {
+              let h5Element = document.createElement('h5');
+              let label = '';
+
+              if (key === 'category') {
+                label = '카테고리';
+              } else if (key === 'new_address') {
+                label = '주소';
+              }
+
+              h5Element.innerHTML = `<span>${label}: </span>${pin[key]}`;
+              pinsInfoDiv.append(h5Element);
+            }
+          });
+
+          infoDivElement.append(pinsInfoDiv);
+
+          boxElement.append(photoDivElement, infoDivElement);
+
+          postElement.append(boxElement);
+
+          // 특정 핀 마우스오버시 스타일 추가
+          postElement.addEventListener('mouseover', function () {
+            postElement.classList.add('pins-hovered');
+          });
+
+          // 특정 핀 마우스오버 해제시 스타일 제거
+          postElement.addEventListener('mouseout', function () {
+            postElement.classList.remove('pins-hovered');
+          });
+
+          // 특정 핀 클릭 시 핀 상세보기 모달 표시
+          postElement.addEventListener('click', function () {
+            $('#myModal').modal('show');
+            let place_id = pin.place_id;
+            console.log(place_id);
+            PIN_DETAIL.placeId = place_id;
+            pinDetail();
+          });
+
+          containerElement.appendChild(postElement);
         });
-
-        infoDivElement.append(pinsInfoDiv);
-
-        boxElement.append(photoDivElement, infoDivElement);
-
-        postElement.append(boxElement);
-
-        postElement.addEventListener('click', function () {
-          $('#myModal').modal('show');
-          let place_id = pin.place_id;
-          console.log(place_id);
-          PIN_DETAIL.placeId = place_id;
-          pinDetail();
-        });
-
-        containerElement.appendChild(postElement);
-      });
+      }
 
       // 댓글 목록
       var commentsSection = document.querySelector('.comments-container');
@@ -243,14 +298,23 @@ export async function boardDetail() {
         let h4Tag = document.createElement('h5');
         h4Tag.className = 'theme-color mb-20';
 
+        let aTag = document.createElement('a');
+        if (loggedInUserEmail === comment.user.email) {
+          aTag.href = '../html/user_info.html';
+        }
+        else {
+          const boardCommentUserPk = comment.user.id;
+          aTag.href = `../html/user_info.html?pk=${boardCommentUserPk}`;
+        }
+
         let textNode = document.createTextNode(comment.user.email);
+        aTag.appendChild(textNode);
+
         let spanTag = document.createElement('span');
-
         let dateNode = document.createTextNode(formatDate(comment.created_at));
-
         spanTag.appendChild(dateNode);
 
-        h4Tag.appendChild(textNode);
+        h4Tag.appendChild(aTag);
         h4Tag.appendChild(spanTag);
 
         let pElement = document.createElement('p');
@@ -265,14 +329,19 @@ export async function boardDetail() {
         commentDiv.appendChild(infoDiv);
 
         commentsSection.append(commentDiv);
-
+        
         // 댓글 삭제 아이콘 표시
         // 로그인된 유저와 댓글 작성자가 같은 경우
         if (comment.user.email === loggedInUserEmail) {
           const deleteIconDiv = document.createElement('div');
           deleteIconDiv.classList.add('fa', 'fa-times');
           infoDiv.appendChild(deleteIconDiv);
-
+          
+          // 댓글 삭제 아이콘 마우스오버시 스타일 추가
+          deleteIconDiv.addEventListener('mouseover', function () {
+            deleteIconDiv.style.cursor = 'pointer';
+          });
+          
           // 댓글 삭제 기능
           // 클릭 이벤트 추가
           deleteIconDiv.addEventListener('click', function () {
