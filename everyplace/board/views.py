@@ -259,7 +259,7 @@ class BoardLikeView(APIView):
         # 추출한 객체들의 id값 리스트로 저장
         boards = [board_like.board_id for board_like in board_likes]
 
-        serializer = BoardSerializer(instance=boards, many=True)
+        serializer = BoardPinSerializer(instance=boards, many=True)
 
         return Response(serializer.data)
 
