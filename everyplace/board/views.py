@@ -309,3 +309,23 @@ class BoardSearchView(APIView):
 
         serializer = BoardPinSerializer(queryset, many=True)
         return Response(serializer.data)
+
+
+# BoardTag View
+class UserTaggedBoardView(APIView):
+    # 로그인된 사용자만 접근 가능
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        # 쿼리 파라미터로부터 'tag' 값 가져오기
+        tag = request.query_params.get('tag', None)
+        
+        if not tag:
+            return Response({"error": "No tag provided."}, status=400)
+
+        # 본인 보드 중에서 특정 태그를 가진 보드 조회
+        queryset = Board.objects.filter(user_id=request.user.id, tags__content__icontains=tag)
+
+        serializer = BoardPinSerializer(queryset, many=True)
+        
+        return Response(serializer.data)
