@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'board',
     'pin',
     'user',
+    'notification',
     # django-storages
     'storages',
     # django rest framework
