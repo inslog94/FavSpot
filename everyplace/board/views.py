@@ -292,17 +292,23 @@ class BoardSearchView(APIView):
         else:
             # 로그인된 사용자가 작성한 공개/비공개 보드
             user_boards = Board.objects.filter(user_id=request.user.id, is_deleted=False)
-            
-            if search_field == 'all':
-                user_boards_filtered = user_boards.filter(
-                    Q(title__icontains=search_term) | Q(tags__content__icontains=search_term)).distinct()
 
             # 로그인된 사용자가 작성자가 아닌 다른 사용자의 공개 보드
             public_boards_except_user_ones = Board.objects.exclude(user_id=request.user.id).filter(is_public=True, is_deleted=False)
-            
+
+            # 제목 또는 태그 내용으로 검색
             if search_field == 'all':
+                user_boards_filtered = user_boards.filter(
+                    Q(title__icontains=search_term) | Q(tags__content__icontains=search_term)).distinct()
                 public_boards_filtered_except_user_ones = public_boards_except_user_ones.filter(
                     Q(title__icontains=search_term) | Q(tags__content__icontains=search_term)).distinct()
+
+            # 태그 내용으로 검색
+            elif search_field == 'tag':
+                user_boards_filtered = user_boards.filter(
+                    tags__content__icontains=search_term).distinct()
+                public_boards_filtered_except_user_ones = public_boards_except_user_ones.filter(
+                    tags__content__icontains=search_term).distinct()
 
             # 결합
             queryset = (user_boards_filtered | public_boards_filtered_except_user_ones).distinct()
