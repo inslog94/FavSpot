@@ -157,6 +157,12 @@
                     <a href="assets/html/user_info.html">User Detail</a>
                   </div>
                 </div>
+                <div class="cart-item">
+                  <ul id="notification-list">
+                    <!-- 알림 메시지 표시 공간 -->
+                    <li>알림이 없습니다</li>
+                  </ul>
+                </div>
                 <div class="cart-total">
                   <a class="button" href="assets/html/profile_edit.html"
                     >Profile Edit</a
@@ -196,7 +202,7 @@
     <div id="board_add_modal" class="board_add_modal_cls">
       <div
         id="board_content_modal"
-        style="height=300px;"
+        style="height: 300px"
         class="board_add_modal_content"
       >
         <div>
@@ -243,7 +249,6 @@
       role="dialog"
       aria-labelledby="myLargeModalLabel"
       aria-hidden="true"
-      style=""
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -418,7 +423,7 @@
                   <span id="copyright">
                     <script>
                       document
-                        .getElementById('copyright')
+                        .getElementById("copyright")
                         .appendChild(
                           document.createTextNode(new Date().getFullYear())
                         );
@@ -468,10 +473,13 @@
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = 'assets/js/';
+      var plugin_path = "assets/js/";
     </script>
 
     <!-- custom -->
     <script src="assets/js/custom.js"></script>
+
+    <!-- websocket -->
+    <script type="module" src="assets/js/maps/websocket.js"></script>
   </body>
 </html>
