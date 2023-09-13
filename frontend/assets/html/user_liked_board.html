@@ -683,7 +683,7 @@ header -->
             if (board.tags.length === 0) {
               item.textContent = 'None';
             } else {
-              item.textContent = board.tags.join(', ');
+              item.textContent = board.tags.slice(0, 4).join(', ');
             }
             li.appendChild(item);
 
