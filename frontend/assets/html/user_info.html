@@ -497,7 +497,7 @@ header -->
               tags.forEach((tag) => {
                 const newLi = document.createElement('li');
                 const newTag = document.createElement('a');
-                newTag.setAttribute('href', '#');
+                newTag.setAttribute('href', 'user_tagged_board.html?tag=' + encodeURIComponent(tag));
                 newTag.textContent = tag;
 
                 newLi.appendChild(newTag);
@@ -517,6 +517,8 @@ header -->
 
               // 데이터를 보여주는 함수
               function showBoards(boards) {
+                console.log(boards);
+
                 // 기존 데이터를 모두 제거
                 while (parentElement.firstChild) {
                   parentElement.removeChild(parentElement.firstChild);
@@ -664,10 +666,10 @@ header -->
             hashTag.className = 'fa fa-solid fa-hashtag';
             li.appendChild(hashTag);
             const item = document.createElement('span');
-            if (!board.tag) {
+            if (board.tags.length === 0) {
               item.textContent = 'None';
             } else {
-              item.textContent = board.tags.join(' ');
+              item.textContent = board.tags.join(', ');
             }
             li.appendChild(item);
 

@@ -499,7 +499,7 @@ header -->
               tags.forEach((tag) => {
                 const newLi = document.createElement('li');
                 const newTag = document.createElement('a');
-                newTag.setAttribute('href', '#');
+                newTag.setAttribute('href', 'user_tagged_board.html?tag=' + encodeURIComponent(tag));
                 newTag.textContent = tag;
 
                 newLi.appendChild(newTag);
@@ -680,10 +680,10 @@ header -->
             hashTag.className = 'fa fa-solid fa-hashtag';
             li.appendChild(hashTag);
             const item = document.createElement('span');
-            if (!board.tag) {
+            if (board.tags.length === 0) {
               item.textContent = 'None';
             } else {
-              item.textContent = board.tags.join(' ');
+              item.textContent = board.tags.join(', ');
             }
             li.appendChild(item);
 
