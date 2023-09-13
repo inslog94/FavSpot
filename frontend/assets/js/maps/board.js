@@ -179,10 +179,10 @@ export function displayMainBoards(boards) {
     hashTag.className = 'fa fa-solid fa-hashtag';
     li.appendChild(hashTag);
     const item = document.createElement('span');
-    if (!board.tag) {
+    if (board.tags.length === 0) {
       item.textContent = 'None';
     } else {
-      item.textContent = board.tags.join(' ');
+      item.textContent = board.tags.slice(0, 2).join(', ');
     }
     li.appendChild(item);
 

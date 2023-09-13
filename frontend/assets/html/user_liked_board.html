@@ -168,8 +168,8 @@ header -->
           <div class="row">
             <div class="col-lg-12 col-md-12">
               <div class="section-title text-center">
-                <h6 class="">Check User Profile and Board List</h6>
-                <h2 class="title-effect">User Info</h2>
+                <h6 class="">View Your Liked Boards</h6>
+                <h2 class="title-effect">Liked Board</h2>
               </div>
             </div>
           </div>
@@ -329,6 +329,7 @@ header -->
     <script src="../js/custom.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
+
       fetch(`http://127.0.0.1:8000/user/me/`, {
         method: 'GET',
         credentials: 'include',
@@ -338,6 +339,7 @@ header -->
       })
         .then((response) => response.json())
         .then((data) => {
+
           const requestUserPk = data.results.User.id;
           const requestUser = data.results.User.email;
           const followingList = data.results.User.following_list;
@@ -515,10 +517,22 @@ header -->
               // 초기 페이지 번호
               let currentPage = 1;
 
+              // 유저가 좋아요한 보드 목록 가져오기 위한 통신
+              fetch('http://127.0.0.1:8000/board/like/', {
+                  credentials: 'include',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                })
+                  .then((response) => response.json())
+                  .then((data2) => { 
+                    // 데이터를 보여주는 함수에 가져온 데이터 전달
+                    showBoards(data2);
+                  })
+                  .catch((error) => console.error('Error:', error));
+
               // 데이터를 보여주는 함수
               function showBoards(boards) {
-                console.log(boards);
-
                 // 기존 데이터를 모두 제거
                 while (parentElement.firstChild) {
                   parentElement.removeChild(parentElement.firstChild);
