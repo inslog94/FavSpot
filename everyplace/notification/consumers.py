@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from board.models import BoardComment
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from .models import Notification
 
 
 class NotificationConsumer(AsyncWebsocketConsumer):
@@ -49,10 +50,10 @@ def send_notification_to_owner(sender, instance, created, **kwargs):
     if created:
         # 댓글 단 보드의 주인 유저 확인
         board_owner_id = instance.board_id.user_id.id
-        # 댓글 단 보드의 주인과 댓글 단 유저가 다를 시 신호 보냄
+        # 댓글 단 보드의 주인과 댓글 단 유저가 다를 시 알림 보냄
         if board_owner_id != instance.user_id.id:
             channel_layer = get_channel_layer()
-            message = f"'{instance.board_id.title}'에 새 댓글이 달렸습니다"
+            message = f"'{instance.board_id.title}' 보드에 새 댓글이 달렸습니다"
 
             # WebSocket 연결을 통해 보드 주인에게 알림
             async_to_sync(channel_layer.group_send)(
@@ -61,4 +62,12 @@ def send_notification_to_owner(sender, instance, created, **kwargs):
                     "type": "send.notification",
                     "message": message,
                 }
+            )
+            # DB에 알림 저장
+            Notification.objects.create(
+                message=message,
+                sender=instance.user_id,
+                receiver=instance.board_id.user_id,
+                is_read=False,
+                is_deleted=False,
             )
