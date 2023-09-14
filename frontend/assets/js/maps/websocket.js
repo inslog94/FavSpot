@@ -31,13 +31,16 @@ fetch(`http://127.0.0.1:8000/user/me/`, {
         notifications.shift();
       }
 
+      // 새로운 알림이 도착했으므로 붉은 점 표시
+      document.querySelector(".notification-dot").style.display = "inline";
+
       // 기존 내용 초기화
       const notificationList = document.getElementById("notification-list");
       notificationList.innerHTML = "";
       // 최신 순으로 반복하여 li 요소 추가
       for (let i = notifications.length - 1; i >= 0; i--) {
         const listItem = document.createElement("li");
-        listItem.textContent = notifications[i];
+        listItem.textContent = `새 알림: ${notifications[i]}`;
         notificationList.appendChild(listItem);
       }
     });
@@ -60,3 +63,26 @@ fetch(`http://127.0.0.1:8000/user/me/`, {
 // }
 
 // export { sendWebSocketData };
+
+// 페이지 로드시 읽지않은 알림이 있는지 확인 후 없다면 붉은 점 표시
+document.addEventListener("DOMContentLoaded", function () {
+  fetch(`http://127.0.0.1:8000/notification/`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const unreadNotifications = data.filter(
+        (notification) => !notification.is_read
+      );
+
+      if (unreadNotifications.length > 0) {
+        document.querySelector(".notification-dot").style.display = "inline";
+      } else {
+        document.querySelector(".notification-dot").style.display = "none";
+      }
+    });
+});
