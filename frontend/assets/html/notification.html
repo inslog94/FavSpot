@@ -417,6 +417,10 @@ shop -->
       function createTableRow(data) {
         const notification = data;
         const tableRow = document.createElement("tr");
+        // is_read 값에 따라 배경색 클래스 추가
+        if (data.is_read) {
+          tableRow.classList.add("read-notification");
+        }
 
         // 읽음 여부 셀 생성
         const readCell = document.createElement("td");
