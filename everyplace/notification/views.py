@@ -19,3 +19,21 @@ class NotificationList(APIView):
         serializer = NotificationSerializer(all_notifications, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# 알림 읽음 여부 체크
+class NotificationReadMark(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        user = request.user
+
+        try:
+            notification = Notification.objects.get(pk=pk, receiver=user)
+        except Notification.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        notification.is_read = True
+        notification.save()
+
+        return Response(status=status.HTTP_200_OK)

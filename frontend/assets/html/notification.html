@@ -440,8 +440,25 @@ shop -->
         tableRow.appendChild(messageCell);
 
         messageLink.addEventListener("click", (event) => {
-          localStorage.setItem("selectedPk", data.related_url);
-          window.location.href = "board_detail.html";
+          event.preventDefault();
+          // is_read를 True로 변경하는 요청
+          fetch(`${url}/notification/${data.id}/read/`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("적절하지 않은 응답입니다");
+              }
+
+              // 성공적으로 처리된 후 페이지 이동
+              localStorage.setItem("selectedPk", data.related_url);
+              window.location.href = "board_detail.html";
+            })
+            .catch((error) => console.error("error:", error));
         });
 
         // 보낸 유저 이메일 셀 생성
