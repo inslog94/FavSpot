@@ -165,7 +165,7 @@ export async function boardDetail() {
           const liElement = document.createElement('li');
 
           const aElement = document.createElement('a');
-          aElement.href = '#';
+          aElement.setAttribute('href', 'tagged_board_list.html?tag=' + encodeURIComponent(tag));
           aElement.textContent = `${tag}`;
 
           liElement.appendChild(aElement); // <a> 요소를 <li> 요소의 자식으로 추가

@@ -81,11 +81,13 @@
 
       /* 상단 안내문구의 태그 이름 스타일*/
       .tag-name {
-        font-size: medium;
-        border: 1px solid #00000047;
-        border-radius: 5px;
-        padding: 5px 15px;
-        background-color: #f6f7f8
+        background: #f6f7f8;
+        color: #323232;
+        border-radius: 3px;
+        padding: 8px 16px;
+        line-height: 40px;
+        font-size: 16px;
+        margin-right: 2px;
       }
     </style>
   </head>
@@ -177,8 +179,8 @@ header -->
           <div class="row">
             <div class="col-lg-12 col-md-12">
               <div class="section-title text-center">
-                <h6 class="">View Boards with Your Tag - <span class="tag-name"></span></h6>
-                <h2 class="title-effect mt-10">Tagged Board</h2>
+                <h6 class="">View Your Boards with Tag - <span class="tag-name"></span></h6>
+                <h2 class="title-effect mt-10">Tagged Your Board</h2>
               </div>
             </div>
           </div>
@@ -690,6 +692,18 @@ header -->
             const titleLink = document.createElement('a');
             titleLink.setAttribute('href', '#');
             titleLink.textContent = board.title;
+
+            // 본인의 비공개 보드 표기
+            const entryLock = document.createElement('span');
+            if (board.is_public === false) {
+              const lock = document.createElement('i');
+              lock.className = 'fa fa-solid fa-lock mr-10';
+              lock.style.color = '#bf6447';
+              lock.style.fontSize = '22px';
+              entryLock.appendChild(lock);
+              entryTitle.appendChild(entryLock);
+            }
+            
             entryTitle.appendChild(titleLink);
             blogDetail.appendChild(entryTitle);
 
