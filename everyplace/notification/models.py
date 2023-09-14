@@ -7,6 +7,7 @@ User = get_user_model()
 # Create your models here.
 class Notification(models.Model):
     message = models.CharField(max_length=255)
+    related_url = models.CharField(max_length=255, blank=True)
     sender = models.ForeignKey(
         User, related_name='notification_sender', on_delete=models.CASCADE)
     receiver = models.ForeignKey(

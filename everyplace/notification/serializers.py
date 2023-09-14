@@ -8,4 +8,4 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = ['message', 'sender', 'receiver',
-                  'is_read', 'created_at', 'sender_email']
+                  'is_read', 'created_at', 'sender_email', 'related_url']
