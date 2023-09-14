@@ -70,4 +70,5 @@ def send_notification_to_owner(sender, instance, created, **kwargs):
                 receiver=instance.board_id.user_id,
                 is_read=False,
                 is_deleted=False,
+                related_url=f"{instance.board_id.id}",
             )

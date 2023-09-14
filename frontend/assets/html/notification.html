@@ -439,6 +439,11 @@ shop -->
         messageCell.appendChild(messageLink);
         tableRow.appendChild(messageCell);
 
+        messageLink.addEventListener("click", (event) => {
+          localStorage.setItem("selectedPk", data.related_url);
+          window.location.href = "board_detail.html";
+        });
+
         // 보낸 유저 이메일 셀 생성
         const senderCell = document.createElement("td");
         senderCell.classList.add("description", "pt-10", "pb-10", "pin-cell");
@@ -447,6 +452,10 @@ shop -->
         senderLink.textContent = data.sender_email;
         senderCell.appendChild(senderLink);
         tableRow.appendChild(senderCell);
+
+        senderLink.addEventListener("click", (event) => {
+          window.location.href = `user_info.html?pk=${data.sender}`;
+        });
 
         // 알림 시간 셀 생성
         const timeCell = document.createElement("td");
