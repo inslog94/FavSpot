@@ -1,10 +1,11 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
-from board.models import BoardComment, BoardLike
+from board.models import BoardComment, BoardLike, Board
 from user.models import Follow
+from pin.models import Pin
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .models import Notification
@@ -131,3 +132,35 @@ def send_follow_notification(sender, instance, created, **kwargs):
             is_deleted=False,
             related_url="",
         )
+
+
+# 좋아요한 Board에 Pin이 추가되었을때 실행되는 데코레이터
+@receiver(m2m_changed, sender=Pin.board_id.through)
+def send_likedboard_addpin_notification(sender, instance, action, pk_set, **kwargs):
+    # ManyToManyField에 새로운 객체가 추가된 트리거 확인
+    if action == 'post_add':
+        board_id = list(pk_set)[0]
+        board = Board.objects.get(pk=board_id)  # 핀이 추가된 보드
+        # 보드에 좋아요를 한 사용자들
+        for like in board.boardlike_set.all():
+            if like.user_id.id != board.user_id.id:
+                channel_layer = get_channel_layer()
+                message = f"'{board.user_id.email}'님이 '{board.title}' 보드에 '{instance.title}' 핀을 추가했습니다"
+
+                # WebSocket 연결을 통해 좋아요한 사용자들에게 알림
+                async_to_sync(channel_layer.group_send)(
+                    f'notification_{like.user_id.id}',
+                    {
+                        "type": "send.notification",
+                        "message": message,
+                    }
+                )
+                # DB에 알림 저장
+                Notification.objects.create(
+                    message=message,
+                    sender=board.user_id,
+                    receiver=like.user_id,
+                    is_read=False,
+                    is_deleted=False,
+                    related_url=f"{board.id}"
+                )
