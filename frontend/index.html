@@ -148,6 +148,19 @@
                   style="object-fit: cover; width: 45px; height: 45px"
                 />
               </a>
+              <span
+                class="notification-dot"
+                style="
+                  position: absolute;
+                  top: -1px;
+                  right: -3px;
+                  width: 12px;
+                  height: 12px;
+                  background-color: red;
+                  border-radius: 50%;
+                  display: none;
+                "
+              ></span>
               <div class="cart">
                 <div class="cart-title">
                   <h6 id="headerEmail" class="uppercase mb-0"></h6>
@@ -158,9 +171,11 @@
                   </div>
                 </div>
                 <div class="cart-item">
+                  <div class="cart-name clearfix">
+                    <a href="assets/html/notification.html">Notification</a>
+                  </div>
                   <ul id="notification-list">
                     <!-- 알림 메시지 표시 공간 -->
-                    <li>알림이 없습니다</li>
                   </ul>
                 </div>
                 <div class="cart-total">

@@ -417,6 +417,10 @@ shop -->
       function createTableRow(data) {
         const notification = data;
         const tableRow = document.createElement("tr");
+        // is_read 값에 따라 배경색 클래스 추가
+        if (data.is_read) {
+          tableRow.classList.add("read-notification");
+        }
 
         // 읽음 여부 셀 생성
         const readCell = document.createElement("td");
@@ -440,8 +444,25 @@ shop -->
         tableRow.appendChild(messageCell);
 
         messageLink.addEventListener("click", (event) => {
-          localStorage.setItem("selectedPk", data.related_url);
-          window.location.href = "board_detail.html";
+          event.preventDefault();
+          // is_read를 True로 변경하는 요청
+          fetch(`${url}/notification/${data.id}/read/`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("적절하지 않은 응답입니다");
+              }
+
+              // 성공적으로 처리된 후 페이지 이동
+              localStorage.setItem("selectedPk", data.related_url);
+              window.location.href = "board_detail.html";
+            })
+            .catch((error) => console.error("error:", error));
         });
 
         // 보낸 유저 이메일 셀 생성
