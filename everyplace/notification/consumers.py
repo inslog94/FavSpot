@@ -4,6 +4,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from board.models import BoardComment, BoardLike
+from user.models import Follow
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .models import Notification
@@ -103,3 +104,30 @@ def send_like_notification(sender, instance, created, **kwargs):
                 is_deleted=False,
                 related_url=f"{instance.board_id.id}",
             )
+
+
+# Follow가 생성되었을때 실행되는 데코레이터
+@receiver(post_save, sender=Follow)
+def send_follow_notification(sender, instance, created, **kwargs):
+    # 생성 트리거 확인
+    if created:
+        channel_layer = get_channel_layer()
+        message = f"'{instance.following_user.email}'님이 당신을 팔로우하였습니다"
+
+        # WebSocket 연결을 통해 보드 주인에게 알림
+        async_to_sync(channel_layer.group_send)(
+            f'notification_{instance.followed_user.id}',
+            {
+                "type": "send.notification",
+                "message": message,
+            }
+        )
+        # DB에 알림 저장
+        Notification.objects.create(
+            message=message,
+            sender=instance.following_user,
+            receiver=instance.followed_user,
+            is_read=False,
+            is_deleted=False,
+            related_url="",
+        )
