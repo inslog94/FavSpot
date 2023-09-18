@@ -136,7 +136,7 @@
       .icons-box,
       .icons-box1 {
         display: flex;
-        justify-content: space-between;
+        /* justify-content: space-between; */
       }
 
       .icons-box button {
@@ -197,6 +197,20 @@
 
       .modal-title {
         width: 800px;
+      }
+
+      .lock-desc {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+        margin-top: 10px;
+        color: gray;
+        font-size: 15px;
+      }
+
+      .no-pins-message {
+        display: flex;
+        justify-content: center;
       }
     </style>
   </head>
@@ -395,7 +409,7 @@ header -->
                                   <i class="fa fa-unlock"></i>
                                 </button>
                               </div>
-                              
+                              <span class="lock-desc">공개 / 비공개 보드 설정</span>
                             </div>
                             <h3 class="theme-color mt-40">
                               Title
@@ -428,6 +442,15 @@ header -->
                                   </div>
 
                                   <div class="board-tags2"></div>
+                                </div>
+
+                                <h3 class="theme-color">Pins</h3>
+                                <div class="pins-box">
+                                  <div class="port-post clearfix mt-20">
+                                    <div class="pins-container">
+                                      <div class="no-pins-message">메인페이지에서 해당 보드에 핀을 추가할 수 있습니다.</div>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>

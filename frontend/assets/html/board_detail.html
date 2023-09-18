@@ -199,7 +199,10 @@
         font-size: medium;
       }
 
-      .icons-box,
+      .icons-box {
+        display: flex;
+      }
+
       .icons-box1 {
         display: flex;
         justify-content: space-between;
@@ -346,6 +349,15 @@
         padding: 5px;
         background-color: #84ba3f;
         color: white;
+      }
+
+      .lock-desc {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+        margin-top: 10px;
+        color: gray;
+        font-size: 15px;
       }
     </style>
   </head>
@@ -598,6 +610,7 @@
                                     <i class="fa fa-unlock"></i>
                                   </button>
                                 </div>
+                                <span class="lock-desc">공개 / 비공개 보드 설정</span>
                               </div>
                               <h3 class="theme-color mt-30">
                                 Title
@@ -996,7 +1009,15 @@
             // 핀 목록 (모달)
             const containerElement = document.querySelector('.pins-container2');
 
-            data.pins.forEach((pin, index) => {
+             // 등록된 핀이 없는 경우
+            if (data.pins.length === 0) {
+              const noPinsMessage = document.createElement('div');
+              noPinsMessage.textContent = '보드에 등록된 핀이 없습니다.';
+              noPinsMessage.classList.add('no-pins-message');
+              containerElement.appendChild(noPinsMessage);
+            }
+            else{
+              data.pins.forEach((pin, index) => {
               const postElement = document.createElement('div');
               postElement.classList.add('port-post', 'clearfix', 'bg-white');
               postElement.dataset.id = pin.id; // data-id 속성 설정
@@ -1064,6 +1085,8 @@
 
               infoDivElement.appendChild(deleteButton);
             });
+            }
+            
           })
           .catch((error) => console.error('Error:', error));
 
