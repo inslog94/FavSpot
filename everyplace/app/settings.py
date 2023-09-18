@@ -65,6 +65,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.kakao',
     'allauth.socialaccount.providers.google',
+    # drf-spectacular
+    'drf_spectacular',
 ]
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -91,7 +93,18 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ),
+    # drf-spectacular
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+# SPECTACULAR_SETTINGS = {
+#     'SERVE_URL_PATTERN': [
+#         '^/board/$',  # /board/에 해당하는 URL 패턴
+#     ],
+#     'SERVE_URL_METHODS': {
+#         '^/board/$': ['GET', 'POST'],  # /board/ URL에 대한 허용할 메소드 목록 설정
+#     },
+# }
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
