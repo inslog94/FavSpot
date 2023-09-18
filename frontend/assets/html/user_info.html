@@ -107,6 +107,14 @@
       }
 
       /* 보드 생성 모달 스타일 */
+      .modal-title-text {
+        text-align: center;
+        border-radius: 30px;
+        padding: 5px;
+        background-color: #84ba3f;
+        color: white;
+      }
+
       .board-box-modal {
         border: 5px solid #84ba3f;
         border-radius: 30px;
@@ -373,7 +381,8 @@ header -->
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header align-items-start">
-                    <div class="modal-title" id="exampleModalLongTitle">
+                    <div class="modal-title" id="exampleModalLongTitle" style="width: auto;">
+                        <h2 class="modal-title-text">Board Create</h2>
                       <div class="section-title mb-10">
                         <div class="blog-entry mb-10">
                           <div class="board-box-modal" style="width: 830px">
@@ -393,7 +402,7 @@ header -->
                             </h3>
                             <div class="">
                               <div class="title-box mb-60">
-                                <h2><input class="input-board-title-02" /></h2>
+                                <h2><input class="input-board-title-02" placeholder="보드 이름 입력"/></h2>
                               </div>
                             </div>
 
