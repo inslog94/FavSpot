@@ -44,12 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    
+
     'corsheaders',
     # my app
     'board',
     'pin',
     'user',
+    'notification',
     # django-storages
     'storages',
     # django rest framework
@@ -65,6 +66,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.kakao',
     'allauth.socialaccount.providers.google',
+    # django-channels
+    'channels',
     # drf-spectacular
     'drf_spectacular',
 ]
@@ -143,6 +146,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
+ASGI_APPLICATION = 'app.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

@@ -8,6 +8,7 @@ urlpatterns = [
     path('board/', include('board.urls')),
     path('pin/', include('pin.urls')),
     path('user/', include('user.urls')),
+    path('notification/', include('notification.urls')),
 
     # drf-spectacular
     path("docs/json/", SpectacularJSONAPIView.as_view(), name="schema-json"),

@@ -148,6 +148,19 @@
                   style="object-fit: cover; width: 45px; height: 45px"
                 />
               </a>
+              <span
+                class="notification-dot"
+                style="
+                  position: absolute;
+                  top: -1px;
+                  right: -3px;
+                  width: 12px;
+                  height: 12px;
+                  background-color: red;
+                  border-radius: 50%;
+                  display: none;
+                "
+              ></span>
               <div class="cart">
                 <div class="cart-title">
                   <h6 id="headerEmail" class="uppercase mb-0"></h6>
@@ -156,6 +169,14 @@
                   <div class="cart-name clearfix">
                     <a href="assets/html/user_info.html">User Detail</a>
                   </div>
+                </div>
+                <div class="cart-item">
+                  <div class="cart-name clearfix">
+                    <a href="assets/html/notification.html">Notification</a>
+                  </div>
+                  <ul id="notification-list">
+                    <!-- 알림 메시지 표시 공간 -->
+                  </ul>
                 </div>
                 <div class="cart-total">
                   <a class="button" href="assets/html/profile_edit.html"
@@ -196,7 +217,7 @@
     <div id="board_add_modal" class="board_add_modal_cls">
       <div
         id="board_content_modal"
-        style="height=300px;"
+        style="height: 300px"
         class="board_add_modal_content"
       >
         <div>
@@ -243,7 +264,6 @@
       role="dialog"
       aria-labelledby="myLargeModalLabel"
       aria-hidden="true"
-      style=""
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -418,7 +438,7 @@
                   <span id="copyright">
                     <script>
                       document
-                        .getElementById('copyright')
+                        .getElementById("copyright")
                         .appendChild(
                           document.createTextNode(new Date().getFullYear())
                         );
@@ -468,10 +488,13 @@
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = 'assets/js/';
+      var plugin_path = "assets/js/";
     </script>
 
     <!-- custom -->
     <script src="assets/js/custom.js"></script>
+
+    <!-- websocket -->
+    <script type="module" src="assets/js/maps/websocket.js"></script>
   </body>
 </html>
