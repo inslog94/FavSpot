@@ -329,6 +329,7 @@
       .no-pins-message {
         display: flex;
         justify-content: center;
+        text-align: center;
       }
 
       .pins-hovered {
@@ -1012,7 +1013,7 @@
              // 등록된 핀이 없는 경우
             if (data.pins.length === 0) {
               const noPinsMessage = document.createElement('div');
-              noPinsMessage.textContent = '보드에 등록된 핀이 없습니다.';
+              noPinsMessage.innerHTML = '보드에 등록된 핀이 없습니다. <br>메인페이지에서 해당 보드에 핀을 추가할 수 있습니다.';
               noPinsMessage.classList.add('no-pins-message');
               containerElement.appendChild(noPinsMessage);
             }
