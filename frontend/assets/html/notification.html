@@ -203,6 +203,7 @@ shop -->
                       <tr>
                         <th>Read</th>
                         <th>Message</th>
+                        <th>Type</th>
                         <th>Sender</th>
                         <th>Time</th>
                         <th>Delete</th>
@@ -459,10 +460,11 @@ shop -->
                 throw new Error("적절하지 않은 응답입니다");
               }
 
+              const relatedId = data.related_url.split(",")[0];
               // 성공적으로 처리된 후 페이지 이동
-              if (data.related_url) {
+              if (relatedId) {
                 // 보드 관련 알림인 경우
-                localStorage.setItem("selectedPk", data.related_url);
+                localStorage.setItem("selectedPk", relatedId);
                 window.location.href = "board_detail.html";
               } else {
                 // 팔로우 관련 알림인 경우
@@ -471,6 +473,14 @@ shop -->
             })
             .catch((error) => console.error("error:", error));
         });
+
+        // 알림 종류 셀 생성
+        const typeCell = document.createElement("td");
+        typeCell.classList.add("description", "pt-10", "pb-10", "pin-cell");
+        const typeLink = document.createElement("div");
+        typeLink.textContent = data.related_url.split(",")[1];
+        typeCell.appendChild(typeLink);
+        tableRow.appendChild(typeCell);
 
         // 보낸 유저 이메일 셀 생성
         const senderCell = document.createElement("td");

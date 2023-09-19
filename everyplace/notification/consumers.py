@@ -72,7 +72,7 @@ def send_comment_notification(sender, instance, created, **kwargs):
                 receiver=instance.board_id.user_id,
                 is_read=False,
                 is_deleted=False,
-                related_url=f"{instance.board_id.id}",
+                related_url=f"{instance.board_id.id},commented",
             )
 
 
@@ -103,7 +103,7 @@ def send_like_notification(sender, instance, created, **kwargs):
                 receiver=instance.board_id.user_id,
                 is_read=False,
                 is_deleted=False,
-                related_url=f"{instance.board_id.id}",
+                related_url=f"{instance.board_id.id},liked",
             )
 
 
@@ -130,7 +130,7 @@ def send_follow_notification(sender, instance, created, **kwargs):
             receiver=instance.followed_user,
             is_read=False,
             is_deleted=False,
-            related_url="",
+            related_url=",followed",
         )
 
 
@@ -162,5 +162,5 @@ def send_likedboard_addpin_notification(sender, instance, action, pk_set, **kwar
                     receiver=like.user_id,
                     is_read=False,
                     is_deleted=False,
-                    related_url=f"{board.id}"
+                    related_url=f"{board.id},updated"
                 )
