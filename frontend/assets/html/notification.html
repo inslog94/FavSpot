@@ -205,6 +205,7 @@ shop -->
                         <th>Message</th>
                         <th>Sender</th>
                         <th>Time</th>
+                        <th>Delete</th>
                       </tr>
                     </thead>
                     <tbody id="notificationList"></tbody>
@@ -508,6 +509,41 @@ shop -->
         timeLink.textContent = timeText;
         timeCell.appendChild(timeLink);
         tableRow.appendChild(timeCell);
+
+        // 삭제 버튼 셀 생성
+        const deleteCell = document.createElement("td");
+        deleteCell.classList.add("td-quantity", "pt-10", "pb-10");
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "btn btn-danger";
+        deleteButton.textContent = "X";
+
+        /// 삭제 버튼 클릭 이벤트
+        deleteButton.addEventListener("click", () => {
+          if (confirm("이 리뷰를 삭제하시겠습니까?")) {
+            fetch(`${url}/notification/${data.id}/`, {
+              method: "DELETE",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => {
+                if (response.status === 204) {
+                  tableRow.remove();
+                  window.alert("알림을 삭제했습니다.");
+                } else if (response.status === 403) {
+                  window.alert("알림은 본인만 삭제할 수 있습니다.");
+                }
+              })
+              .catch((error) => {
+                console.error("삭제시 문제가 발생했습니다:", error);
+              });
+          }
+        });
+
+        deleteCell.appendChild(deleteButton);
+        tableRow.appendChild(deleteCell);
 
         return tableRow;
       }
