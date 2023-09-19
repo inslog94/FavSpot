@@ -459,8 +459,14 @@ shop -->
               }
 
               // 성공적으로 처리된 후 페이지 이동
-              localStorage.setItem("selectedPk", data.related_url);
-              window.location.href = "board_detail.html";
+              if (data.related_url) {
+                // 보드 관련 알림인 경우
+                localStorage.setItem("selectedPk", data.related_url);
+                window.location.href = "board_detail.html";
+              } else {
+                // 팔로우 관련 알림인 경우
+                window.location.href = `user_info.html?pk=${data.sender}`;
+              }
             })
             .catch((error) => console.error("error:", error));
         });
