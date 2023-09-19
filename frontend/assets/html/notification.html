@@ -429,9 +429,9 @@ shop -->
         readCell.classList.add("description", "pt-10", "pb-10");
         const readLink = document.createElement("div");
         if (data.is_read == true) {
-          readLink.textContent = "읽음";
+          readLink.innerHTML = '<i class="fa fa-envelope-open-o"></i>';
         } else {
-          readLink.textContent = "안읽음";
+          readLink.innerHTML = '<i class="fa fa-envelope"></i>';
         }
         readCell.appendChild(readLink);
         tableRow.appendChild(readCell);
@@ -485,9 +485,19 @@ shop -->
         // 보낸 유저 이메일 셀 생성
         const senderCell = document.createElement("td");
         senderCell.classList.add("description", "pt-10", "pb-10", "pin-cell");
-        const senderLink = document.createElement("a");
-        senderLink.href = "#";
-        senderLink.textContent = data.sender_email;
+        const senderLink = document.createElement("img");
+        senderLink.classList.add("img-fluid");
+        senderLink.style.width = "75px";
+        senderLink.style.height = "75px";
+        senderLink.style.borderRadius = "50%";
+        senderLink.style.cursor = "pointer";
+        if (data.sender_profile_img) {
+          senderLink.src = data.sender_profile_img;
+        } else {
+          senderLink.src =
+            "https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default_clear.png";
+        }
+        senderLink.alt = "";
         senderCell.appendChild(senderLink);
         tableRow.appendChild(senderCell);
 
