@@ -42,6 +42,7 @@
 
     <!-- Style -->
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/modal.css" />
 
     <!-- Responsive -->
     <link rel="stylesheet" type="text/css" href="../css/responsive.css" />
@@ -77,6 +78,139 @@
       .liked-board-btn {
         background-color: #ffc107;
         border: none;
+      }
+
+      /* 보드 생성 버튼 스타일 */
+      .board-plus-text, .board-plus-text:active, .board-plus-text:focus {
+        width: 220px;
+        padding: 10px;
+        text-align: center;
+        background-color: #beceff;
+        color: black;
+        border: 2px solid transparent;
+        box-shadow: none !important;
+      }
+
+      .board-plus-text:hover {
+          background-color: black !important;
+          color: white !important;
+          border-color : none !important;
+      }
+
+      .board-plus-box {
+        display: flex;
+        flex-direction: row-reverse;
+      }
+
+      .fa-plus {
+        font-size: 20px;
+      }
+
+      /* 보드 생성 모달 스타일 */
+      .modal-title-text {
+        text-align: center;
+        border-radius: 30px;
+        padding: 5px;
+        background-color: #84ba3f;
+        color: white;
+      }
+
+      .board-box-modal {
+        border: 5px solid #84ba3f;
+        border-radius: 30px;
+        padding: 20px;
+        margin-top: 50px;
+        background-color: white;
+      }
+
+      .fa-times {
+        font-size: 18px;
+        margin-left: 7px;
+      }
+
+      .fa-lock,
+      .fa-unlock {
+        font-size: 40px;
+      }
+
+      .icons-box,
+      .icons-box1 {
+        display: flex;
+        /* justify-content: space-between; */
+      }
+
+      .icons-box button {
+        border: none;
+        background: none;
+      }
+
+      .input-board-title-02 {
+        border: 3px solid gray;
+        border-radius: 10px;
+        background-color: #beceff;
+        color: black;
+        padding: 10px;
+        width: 100%;
+      }
+
+      .input-tag-box {
+        display: flex;
+      }
+
+      .input-tag {
+        padding: 10px;
+        border-radius: 10px;
+        font-size: medium;
+        color: black;
+        border: 3px solid gray;
+        flex: 70;
+      }
+
+      .button-tag-02 {
+        padding: 10px;
+        margin-left: 10px;
+        border: 3px solid gray;
+        border-radius: 10px;
+        color: black;
+        background-color: #beceff;
+        font-weight: bold;
+        flex: 20;
+        font-size: medium;
+      }
+
+      .fa-lock,
+      .fa-unlock {
+        color: #626262;
+      }
+
+      .fa-lock:hover,
+      .fa-unlock:hover {
+        color: #84ba3f;
+      }
+
+      .modal-content {
+        width: 900px;
+        position: absolute;
+        top: 50%;
+        right: -3%;
+      }
+
+      .modal-title {
+        width: 800px;
+      }
+
+      .lock-desc {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+        margin-top: 10px;
+        color: gray;
+        font-size: 15px;
+      }
+
+      .no-pins-message {
+        display: flex;
+        justify-content: center;
       }
     </style>
   </head>
@@ -190,7 +324,15 @@ header -->
                 </li>
               </ul>
             </nav>
+            <!-- 보드 생성 버튼 -->
+            <div class="board-plus-box mr-120 mb-20">
+              <a type="button" href="#" class="btn btn-primary board-plus-text" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg">
+                <i class="fa fa-plus btn-board-plus mr-15"></i>
+                <span class="span-board-plus">Create Board</span>
+              </a>
+            </div>
           </div>
+
           <div id="main" class="row">
             <div class="col-lg-3">
               <div class="sidebar-widget">
@@ -237,6 +379,105 @@ header -->
             <div id="boardlist" class="col-lg-9">
               <div class="masonry columns-2">
                 <div class="grid-sizer"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 보드 생성 모달 -->
+          <div class="col-lg-12 col-md-12">
+            <div
+              class="modal fade bd-example-modal-lg"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="myLargeModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header align-items-start">
+                    <div class="modal-title" id="exampleModalLongTitle" style="width: auto;">
+                        <h2 class="modal-title-text">Board Create</h2>
+                      <div class="section-title mb-10">
+                        <div class="blog-entry mb-10">
+                          <div class="board-box-modal" style="width: 830px">
+                            <div class="icons-box">
+                              <div class="icon-lock-box">
+                                <button>
+                                  <i class="fa fa-lock"></i>
+                                </button>
+                                <button>
+                                  <i class="fa fa-unlock"></i>
+                                </button>
+                              </div>
+                              <span class="lock-desc">공개 / 비공개 보드 설정</span>
+                            </div>
+                            <h3 class="theme-color mt-40">
+                              Title
+                            </h3>
+                            <div class="">
+                              <div class="title-box mb-60">
+                                <h2><input class="input-board-title-02" placeholder="보드 이름 입력"/></h2>
+                              </div>
+                            </div>
+
+                            <div class="mt-20 mb-30 post-1">
+                              <div class="entry-share">
+                                <div class="tags mb-40" style="width: 100%">
+                                  <h3 class="theme-color mt-20 mb-20">
+                                    Tags
+                                  </h3>
+                                  <div class="input-tag-box mb-20">
+                                    <input
+                                      type="text"
+                                      id="new-tag-input"
+                                      class="input-tag"
+                                      placeholder="새 태그 입력"
+                                    />
+                                    <button
+                                      id="add-tag-button"
+                                      class="button-tag-02"
+                                    >
+                                      ADD
+                                    </button>
+                                  </div>
+
+                                  <div class="board-tags2"></div>
+                                </div>
+
+                                <h3 class="theme-color">Pins</h3>
+                                <div class="pins-box">
+                                  <div class="port-post clearfix mt-20">
+                                    <div class="pins-container">
+                                      <div class="no-pins-message">메인페이지에서 해당 보드에 핀을 추가할 수 있습니다.</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      data-bs-dismiss="modal"
+                      id="boardCreateBtn"
+                    >
+                      Create
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -758,6 +999,111 @@ header -->
             window.location.href = `login.html`;
           }
         });
+
+      // 보드 생성 모달 관련 JS
+      // 보드 공개 여부 상태 저장 변수
+      let isPublic = true;
+        
+      // 공개 / 비공개 보드 표시 (모달)
+      const lockIcon2 = document.querySelector('.icon-lock-box .fa-lock');
+      const unlockIcon2 = document.querySelector('.icon-lock-box .fa-unlock');
+
+      // 초기 상태 설정
+      lockIcon2.style.display = 'none'; // lockIcon2 보이게
+      unlockIcon2.style.display = 'inline'; // unlockIcon2 숨기게
+
+      unlockIcon2.addEventListener('click', function () {
+        unlockIcon2.style.display = 'none';
+        lockIcon2.style.display = 'inline';
+
+        isPublic = false; // 비공개로 변경
+      });
+
+      lockIcon2.addEventListener('click', function () {
+        lockIcon2.style.display = 'none';
+        unlockIcon2.style.display = 'inline';
+
+        isPublic = true; // 공개로 변경
+      });
+
+      // 보드 이름
+      const boardTitleElement = document.querySelector('.input-board-title-02');
+
+      // 보드 태그 (모달)
+      const ulElement = document.createElement('ul'); // <ul> 요소 생성
+
+      const boardTagsElement = document.querySelector('.board-tags2');
+      boardTagsElement.appendChild(ulElement);
+
+      // 새 태그 추가
+      const newTagInput = document.querySelector('#new-tag-input');
+      const addTagButton = document.querySelector('#add-tag-button');
+
+      addTagButton.addEventListener('click', function () {
+        const newTag = newTagInput.value;
+        if (newTag) {
+          const liElement = createNewLiElement(newTag); // 태그 생성 함수 호출
+
+          const boardTagsUlElement =
+            document.querySelector('.board-tags2 ul');
+          boardTagsUlElement.appendChild(liElement);
+
+          newTagInput.value = ''; // 입력 필드 초기화
+        }
+      });
+
+      // 태그 생성 함수
+      function createNewLiElement(tag) {
+        const liElement = document.createElement('li');
+
+        const aElement = document.createElement('a');
+        aElement.href = '#';
+        aElement.textContent = `${tag}`;
+
+        const iDeleteIcon = document.createElement('i');
+        iDeleteIcon.classList.add('fa', 'fa-times');
+
+        // 삭제 아이콘 클릭 시 이벤트 리스너 등록
+        iDeleteIcon.addEventListener('click', function (event) {
+          event.preventDefault(); // a 태그의 기본 동작 취소
+          liElement.remove(); // 태그 제거
+        });
+
+        aElement.appendChild(iDeleteIcon);
+        liElement.appendChild(aElement);
+
+        return liElement;
+      }
+
+      //보드 생성 버튼 클릭 시 이벤트
+      //보드 생성 기능
+      document.querySelector('#boardCreateBtn').addEventListener('click', function () {
+        const title = document.querySelector('.input-board-title-02').value;
+        const tags = Array.from(
+          document.querySelectorAll('.board-tags2 ul li'),
+          (li) => li.textContent
+        );
+
+        const newBoard = {
+          title: title,
+          tags: tags,
+          is_public: isPublic,
+        };
+
+        fetch(`http://127.0.0.1:8000/board/`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newBoard),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          location.reload(); // 페이지 새로고침
+        })
+        .catch((error) => console.error('Error:', error));
+      });
     </script>
   </body>
 </html>

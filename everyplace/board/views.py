@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, serializers, viewsets
 from .models import Board, BoardTag, BoardComment, BoardLike
 from pin.models import Pin
 from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer, BoardLikeSerializer
@@ -11,6 +11,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticate
 from rest_framework.decorators import authentication_classes, permission_classes
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes, OpenApiResponse, extend_schema_view
+from rest_framework.decorators import api_view
+from drf_spectacular.types import OpenApiTypes
 
 
 # Board View
@@ -35,6 +38,23 @@ class BoardView(APIView):
     
         return False, None
 
+    @extend_schema(
+        summary="보드 목록 및 상세 정보 조회 API",
+        description="""이 엔드포인트는 인증된 사용자가 자신이 작성한 모든 보드와 다른 사용자가 작성하고 공개 설정한 보드를 볼 수 있게 해줍니다. 비인증 사용자는 공개 설정된 보드만 볼 수 있습니다.\n\n 특정 pk 값을 제공하면, 해당 pk에 대응하는 특정 게시판의 상세 정보를 제공합니다. 이 때 반환되는 정보에는 게시판 정보 외에도 연결된 모든 핀(Pin)과 댓글(Comment), 그리고 로그인 한 유저가 해당 게시판을 좋아하는지 여부와 좋아요 개수 등이 포함됩니다.
+        """,
+        responses={
+            200: OpenApiResponse(description="조회 성공", examples={
+                "application/json": {
+                    "board": BoardSerializer().data,
+                    "user_liked": True,
+                    "likes_count": 5,
+                    "pins": PinSerializer(many=True).data,
+                    "comments": BoardCommentSerializer(many=True).data
+                }
+            }),
+            404: {'description': "해당 게시글을 찾을 수 없습니다."},
+        },
+    )
     def get(self, request, pk=None):
 
         ## 보드 전체 목록 조희
@@ -90,6 +110,16 @@ class BoardView(APIView):
 
             return Response(data)
 
+    @extend_schema(
+        summary="보드 생성 API",
+        description="""이 엔드포인트는 인증된 사용자를 위해 새로운 보드를 생성합니다. 요청 본문에는 'title'과 'is_public', is_deleted 필드가 포함되어야 합니다. 이 때 is_public은 True, is_deleted는 false가 기본값입니다. 또한  선택적으로 'tags' 필드를 포함시킬 수 있으며, 이는 태그의 배열입니다. 성공적으로 보드가 생성되면 생성된 Board 객체를 반환하고, 그렇지 않으면 오류 메시지를 반환합니다.""",
+        request=BoardSerializer,
+        responses={
+            201: BoardSerializer,
+            400: OpenApiResponse(description="잘못된 입력값 입니다."),
+            401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다.")
+        }
+    )
     ## 보드 생성
     def post(self, request):
         data = request.data.copy()
@@ -119,7 +149,19 @@ class BoardView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        
+    @extend_schema(
+        summary="보드 수정 API",
+        description="""이 엔드포인트는 인증된 사용자가 자신이 작성한 보드를 수정하는 것을 허용합니다. 요청 본문에는 'title', 'is_public' 등의 필드가 포함될 수 있습니다. 이 때, is_public은 선택적 필드로, 공개 여부를 나타냅니다. 사용자는 is_public을 true 또는 false로 바꾸어 공개 여부를 수정할 수 있습니다. 또한, 선택적으로 'tags' 필드를 포함시킬 수 있는데, 이는 태그의 배열입니다. 사용자는 배열에 태그를 문자열 형태로 담아 원하는 태그를 추가하거나 삭제할 수 있습니다. 보드에 연결된 핀도 요청 본문에서 제공되는 새로운 핀 배열에 따라 삭제할 수 있습니다. 성공적으로 보드가 수정되면 수정된 Board 객체를 반환하고, 그렇지 않으면 오류 메시지를 반환합니다.""",
+        request=BoardSerializer,
+        responses={
+            200: BoardSerializer,
+            400: OpenApiResponse(description="잘못된 입력값 입니다."),
+            401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
+            403: OpenApiResponse(description="권한 없음 - 보드의 소유자가 아닙니다."),
+            404: OpenApiResponse(description="해당 게시글을 찾을 수 없습니다.")
+        }
+    )
     ## 보드 수정
     def put(self, request, pk):
         board = get_object_or_404(Board, id=pk)
@@ -164,7 +206,17 @@ class BoardView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+    
+    @extend_schema(
+        summary="보드 삭제 API",
+        description="이 엔드포인트는 인증된 사용자가 자신이 작성한 보드를 삭제하는 것을 허용합니다. 삭제 작업은 실제로 데이터베이스에서 보드를 제거하는 것이 아니라 'is_deleted' 필드의 값을 True로 변경하여 '삭제됨' 상태로 표시합니다. 이 방식은 실수로 인한 데이터 손실을 방지하고, 필요한 경우 데이터 복구를 용이하게 합니다.",
+        responses={
+            204: OpenApiResponse(description="성공적으로 삭제되었습니다."),
+            401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
+            403: OpenApiResponse(description="권한 없음 - 보드의 소유자가 아닙니다."),
+            404: OpenApiResponse(description="해당 게시글을 찾을 수 없습니다.")
+        },
+    )
     ## 보드 삭제
     def delete(self, request, pk):
         board = get_object_or_404(Board, id=pk)
@@ -182,6 +234,17 @@ class BoardView(APIView):
 
 ## BoardComment View
 class BoardCommentView(APIView):
+    @extend_schema(
+        summary="보드 댓글 생성 API",
+        description="이 엔드포인트는 인증된 사용자가 특정 보드에 댓글을 작성하는 것을 허용합니다. 요청 본문에는 'content' 필드가 포함되어야 합니다. 이는 댓글 내용입니다. 성공적으로 댓글이 생성되면 생성된 BoardComment 객체를 반환하고, 그렇지 않으면 오류 메시지를 반환합니다.",
+        request=BoardCommentSerializer,
+        responses={
+            201: BoardCommentSerializer,
+            400: OpenApiResponse(description="잘못된 입력값 입니다."),
+            401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
+            404: OpenApiResponse(description="해당 게시글을 찾을 수 없습니다.")
+        },
+    )
     ## 보드 댓글 생성
     def post(self, request, pk):
         try:
@@ -201,6 +264,16 @@ class BoardCommentView(APIView):
         
         return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @extend_schema(
+        summary="보드 댓글 삭제 API",
+        description="이 엔드포인트는 인증된 사용자가 자신이 작성한 보드의 댓글을 삭제하는 것을 허용합니다. 삭제 작업은 데이터베이스에서 댓글 객체를 제거하는 것이 아니라 'is_deleted' 필드의 값을 True로 변경하여 '삭제됨' 상태로 표시합니다.",
+        responses={
+            204: OpenApiResponse(description="성공적으로 삭제되었습니다."),
+            401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
+            403: OpenApiResponse(description="권한 없음 - 본인이 작성한 댓글만 삭제할 수 있습니다."),
+            404: OpenApiResponse(description="해당 댓글을 찾을 수 없습니다.")
+        },
+    )
     ## 보드 댓글 삭제
     def delete(self, request, pk):
         comment = get_object_or_404(BoardComment, id=pk)
@@ -217,6 +290,18 @@ class BoardCommentView(APIView):
 
 ## BoardLike View
 class BoardLikeView(APIView):
+    @extend_schema(
+        summary="보드 좋아요 등록 API",
+        description="이 엔드포인트는 인증된 사용자가 특정 보드에 좋아요를 등록하는 것을 허용합니다.",
+        request=BoardLikeSerializer,
+        responses={
+            201: BoardLikeSerializer,
+            400: OpenApiResponse(description="잘못된 입력값 입니다."),
+            401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
+            403: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
+            404: OpenApiResponse(description="해당 게시글을 찾을 수 없습니다.")
+        },
+    )
     ## 보드 좋아요 등록
     def post(self, request, pk):
         board = get_object_or_404(Board, pk=pk)
@@ -234,6 +319,16 @@ class BoardLikeView(APIView):
         
         return Response(serializer.error, status=400)
     
+    @extend_schema(
+        summary="보드 좋아요 해제 API",
+        description="이 엔드포인트는 인증된 사용자가 자신이 좋아요한 보드의 좋아요를 해제하는 것을 허용합니다.",
+        responses={
+            204: OpenApiResponse(description="성공적으로 삭제되었습니다."),
+            401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
+            403: OpenApiResponse(description="권한 없음 - 본인이 누른 좋아요만 삭제할 수 있습니다."),
+            404: OpenApiResponse(description="해당 댓글을 찾을 수 없습니다.")
+        },
+    )
     ## 보드 좋아요 해제
     def delete(self, request, pk):
         user = request.user
@@ -248,6 +343,16 @@ class BoardLikeView(APIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+    @extend_schema(
+        summary="보드 좋아요 목록 조회 API",
+        description="이 엔드포인트는 인증된 사용자가 자신이 누른 보드의 좋아요 목록을 조회하는 것을 허용합니다.",
+        responses={
+            200: BoardPinSerializer(many=True),
+            401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
+            403: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
+            404: OpenApiResponse(description="해당 게시글을 찾을 수 없습니다.")
+        }
+    )
     ## 보드 좋아요 목록 조회
     def get(self, request):
         user = request.user
@@ -268,6 +373,18 @@ class BoardLikeView(APIView):
 class BoardSearchView(APIView):
     permission_classes = [AllowAny]
 
+    @extend_schema(
+        summary="보드 검색 API",
+        description="""이 엔드포인트는 주어진 검색 조건에 따라 보드를 검색합니다. 'search' 쿼리 파라미터로 검색어를, 'search_field' 쿼리 파라미터로 검색 필드('all', 'tag')를 지정할 수 있습니다. 로그인하지 않은 사용자는 공개된 보드만 검색 가능하며, 로그인한 사용자는 자신이 작성한 모든 보드와 다른 사용자가 작성한 공개된 보드를 검색할 수 있습니다.""",
+        parameters=[
+            OpenApiParameter(name='search', description='검색어', required=False),
+            OpenApiParameter(name='search_field', description='검색 필드 (all | title | tag)', required=False)
+        ],
+        responses={
+            200: BoardPinSerializer(many=True),
+            400: OpenApiResponse(description="잘못된 입력값 입니다.")
+        }
+    )
     def get(self, request, format=None):
         search_term = request.query_params.get('search', None)
         search_field = request.query_params.get('search_field', None)
@@ -322,6 +439,16 @@ class UserTaggedBoardView(APIView):
     # 로그인된 사용자만 접근 가능
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        summary="특정 태그가 달린 보드 조회 API",
+        description="이 엔드포인트는 인증된 사용자가 특정 태그를 가진 보드 목록을 조회하는 것을 허용합니다. 쿼리 파라미터로 'tag' 값을 받아 해당 태그가 포함된 모든 보드를 반환합니다.",
+        responses={
+            200: BoardPinSerializer(many=True),
+            400: OpenApiResponse(description="태그 값이 제공되지 않았습니다."),
+            401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
+            403: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다.")
+        },
+    )
     def get(self, request, format=None):
         # 쿼리 파라미터로부터 'tag' 값 가져오기
         tag = request.query_params.get('tag', None)

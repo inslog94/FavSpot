@@ -199,7 +199,10 @@
         font-size: medium;
       }
 
-      .icons-box,
+      .icons-box {
+        display: flex;
+      }
+
       .icons-box1 {
         display: flex;
         justify-content: space-between;
@@ -338,6 +341,23 @@
         padding: 12px;
         display: flex;
         justify-content: center;
+      }
+
+      .modal-title-text {
+        text-align: center;
+        border-radius: 30px;
+        padding: 5px;
+        background-color: #84ba3f;
+        color: white;
+      }
+
+      .lock-desc {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+        margin-top: 10px;
+        color: gray;
+        font-size: 15px;
       }
     </style>
   </head>
@@ -576,7 +596,8 @@
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header align-items-start">
-                      <div class="modal-title" id="exampleModalLongTitle">
+                      <div class="modal-title" id="exampleModalLongTitle" style="width: auto;">
+                          <h2 class="modal-title-text">Board Edit</h2>
                         <div class="section-title mb-10">
                           <div class="blog-entry mb-10">
                             <div class="board-box-modal" style="width: 830px">
@@ -589,14 +610,13 @@
                                     <i class="fa fa-unlock"></i>
                                   </button>
                                 </div>
-                                <div class="icn-save-box">
-                                  <button id="save-button">
-                                    <i class="fa fa-save"></i>
-                                  </button>
-                                </div>
+                                <span class="lock-desc">공개 / 비공개 보드 설정</span>
                               </div>
-                              <div class="blog-detail">
-                                <div class="title-box">
+                              <h3 class="theme-color mt-30">
+                                Title
+                              </h3>
+                              <div class="">
+                                <div class="title-box mb-40">
                                   <h1><input class="input-board-title" /></h1>
                                 </div>
                               </div>
@@ -640,6 +660,12 @@
                     </div>
 
                     <div class="modal-footer">
+                      <button
+                        id="save-button"
+                        class="btn btn-primary">
+                        Save
+                      </button>
+
                       <button
                         type="button"
                         class="btn btn-secondary"
@@ -983,7 +1009,15 @@
             // 핀 목록 (모달)
             const containerElement = document.querySelector('.pins-container2');
 
-            data.pins.forEach((pin, index) => {
+             // 등록된 핀이 없는 경우
+            if (data.pins.length === 0) {
+              const noPinsMessage = document.createElement('div');
+              noPinsMessage.textContent = '보드에 등록된 핀이 없습니다.';
+              noPinsMessage.classList.add('no-pins-message');
+              containerElement.appendChild(noPinsMessage);
+            }
+            else{
+              data.pins.forEach((pin, index) => {
               const postElement = document.createElement('div');
               postElement.classList.add('port-post', 'clearfix', 'bg-white');
               postElement.dataset.id = pin.id; // data-id 속성 설정
@@ -1051,6 +1085,8 @@
 
               infoDivElement.appendChild(deleteButton);
             });
+            }
+            
           })
           .catch((error) => console.error('Error:', error));
 
@@ -1093,44 +1129,6 @@
 
           return liElement;
         }
-
-        // 수정 버튼 클릭 시 이벤트
-        // 보드 수정 기능
-
-        document
-          .querySelector('#save-button')
-          .addEventListener('click', function () {
-            const title = document.querySelector('.input-board-title').value;
-            const tags = Array.from(
-              document.querySelectorAll('.board-tags2 ul li'),
-              (li) => li.textContent
-            );
-            const pins = Array.from(
-              document.querySelectorAll('.port-post'),
-              (post) => Number(post.dataset.id)
-            );
-
-            const updatedBoard = {
-              title: title,
-              tags: tags,
-              pins: pins,
-              is_public: isPublic,
-            };
-
-            fetch(`http://127.0.0.1:8000/board/${boardPk}/`, {
-              method: 'PUT',
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(updatedBoard),
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                location.reload(); // 페이지 새로고침
-              })
-              .catch((error) => console.error('Error:', error));
-          });
 
         // 수정 버튼 클릭 시 이벤트
         // 보드 수정 기능
