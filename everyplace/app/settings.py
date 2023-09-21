@@ -100,14 +100,11 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-# SPECTACULAR_SETTINGS = {
-#     'SERVE_URL_PATTERN': [
-#         '^/board/$',  # /board/에 해당하는 URL 패턴
-#     ],
-#     'SERVE_URL_METHODS': {
-#         '^/board/$': ['GET', 'POST'],  # /board/ URL에 대한 허용할 메소드 목록 설정
-#     },
-# }
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'FavSpot API Document',  # API 제목 설정
+    'DESCRIPTION': 'drf-spectacular를 이용하여 만든 FavSpot의 API 문서입니다.',
+    "SCHEMA_PATH": os.path.join(BASE_DIR, "schema.json"),
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
