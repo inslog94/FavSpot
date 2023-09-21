@@ -93,7 +93,7 @@ export async function boardDetail() {
       // 보드 수정 / 삭제 아이콘 표시
       // 로그인된 유저와 보드 작성자가 같은 경우
       const settingsBox = document.querySelector('.settings-box');
-      const boardUserEmail = data.board.user.email;
+      const boardUserEmail = data.board.user;
 
       if (loggedInUserEmail === boardUserEmail) {
         settingsBox.style.display = 'block';
@@ -111,10 +111,10 @@ export async function boardDetail() {
       
       // 이메일 클릭 시 작성자 프로필로 이동
       userProfileLink.addEventListener('click', function(event) {
-        const boardUserEmail = data.board.user.email;
+        const boardUserEmail = data.board.user;
         event.preventDefault();
 
-        const boardUserPk = data.board.user.id;
+        const boardUserPk = data.board.user_id;
 
         let userProfileUrl;
 
@@ -129,7 +129,7 @@ export async function boardDetail() {
       });
 
       // 보드 작성자 출력
-      boardUserElement.textContent = data.board.user.email;
+      boardUserElement.textContent = data.board.user;
 
       // 보드 작성일
       const boardCreatedAtElement = document.querySelector('.board-createdAt');
