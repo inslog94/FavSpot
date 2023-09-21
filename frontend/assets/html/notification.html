@@ -203,8 +203,10 @@ shop -->
                       <tr>
                         <th>Read</th>
                         <th>Message</th>
+                        <th>Type</th>
                         <th>Sender</th>
                         <th>Time</th>
+                        <th>Delete</th>
                       </tr>
                     </thead>
                     <tbody id="notificationList"></tbody>
@@ -427,9 +429,9 @@ shop -->
         readCell.classList.add("description", "pt-10", "pb-10");
         const readLink = document.createElement("div");
         if (data.is_read == true) {
-          readLink.textContent = "읽음";
+          readLink.innerHTML = '<i class="fa fa-envelope-open-o"></i>';
         } else {
-          readLink.textContent = "안읽음";
+          readLink.innerHTML = '<i class="fa fa-envelope"></i>';
         }
         readCell.appendChild(readLink);
         tableRow.appendChild(readCell);
@@ -458,10 +460,11 @@ shop -->
                 throw new Error("적절하지 않은 응답입니다");
               }
 
+              const relatedId = data.related_url.split(",")[0];
               // 성공적으로 처리된 후 페이지 이동
-              if (data.related_url) {
+              if (relatedId) {
                 // 보드 관련 알림인 경우
-                localStorage.setItem("selectedPk", data.related_url);
+                localStorage.setItem("selectedPk", relatedId);
                 window.location.href = "board_detail.html";
               } else {
                 // 팔로우 관련 알림인 경우
@@ -471,12 +474,30 @@ shop -->
             .catch((error) => console.error("error:", error));
         });
 
+        // 알림 종류 셀 생성
+        const typeCell = document.createElement("td");
+        typeCell.classList.add("description", "pt-10", "pb-10", "pin-cell");
+        const typeLink = document.createElement("div");
+        typeLink.textContent = data.related_url.split(",")[1];
+        typeCell.appendChild(typeLink);
+        tableRow.appendChild(typeCell);
+
         // 보낸 유저 이메일 셀 생성
         const senderCell = document.createElement("td");
         senderCell.classList.add("description", "pt-10", "pb-10", "pin-cell");
-        const senderLink = document.createElement("a");
-        senderLink.href = "#";
-        senderLink.textContent = data.sender_email;
+        const senderLink = document.createElement("img");
+        senderLink.classList.add("img-fluid");
+        senderLink.style.width = "75px";
+        senderLink.style.height = "75px";
+        senderLink.style.borderRadius = "50%";
+        senderLink.style.cursor = "pointer";
+        if (data.sender_profile_img) {
+          senderLink.src = data.sender_profile_img;
+        } else {
+          senderLink.src =
+            "https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default_clear.png";
+        }
+        senderLink.alt = "";
         senderCell.appendChild(senderLink);
         tableRow.appendChild(senderCell);
 
@@ -508,6 +529,41 @@ shop -->
         timeLink.textContent = timeText;
         timeCell.appendChild(timeLink);
         tableRow.appendChild(timeCell);
+
+        // 삭제 버튼 셀 생성
+        const deleteCell = document.createElement("td");
+        deleteCell.classList.add("td-quantity", "pt-10", "pb-10");
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "btn btn-danger";
+        deleteButton.textContent = "X";
+
+        /// 삭제 버튼 클릭 이벤트
+        deleteButton.addEventListener("click", () => {
+          if (confirm("이 리뷰를 삭제하시겠습니까?")) {
+            fetch(`${url}/notification/${data.id}/`, {
+              method: "DELETE",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => {
+                if (response.status === 204) {
+                  tableRow.remove();
+                  window.alert("알림을 삭제했습니다.");
+                } else if (response.status === 403) {
+                  window.alert("알림은 본인만 삭제할 수 있습니다.");
+                }
+              })
+              .catch((error) => {
+                console.error("삭제시 문제가 발생했습니다:", error);
+              });
+          }
+        });
+
+        deleteCell.appendChild(deleteButton);
+        tableRow.appendChild(deleteCell);
 
         return tableRow;
       }

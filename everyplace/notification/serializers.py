@@ -3,9 +3,9 @@ from .models import Notification
 
 
 class NotificationSerializer(serializers.ModelSerializer):
-    sender_email = serializers.ReadOnlyField(source='sender.email')
+    sender_profile_img = serializers.ImageField(source='sender.profile_img')
 
     class Meta:
         model = Notification
         fields = ['id', 'message', 'sender', 'receiver',
-                  'is_read', 'created_at', 'sender_email', 'related_url']
+                  'is_read', 'created_at', 'sender_profile_img', 'related_url']

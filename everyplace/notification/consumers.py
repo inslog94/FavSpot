@@ -55,7 +55,7 @@ def send_comment_notification(sender, instance, created, **kwargs):
         # 댓글 단 보드의 주인과 댓글 단 유저가 다를 시 알림 보냄
         if board_owner_id != instance.user_id.id:
             channel_layer = get_channel_layer()
-            message = f"'{instance.board_id.title}' 보드에 새 댓글이 달렸습니다"
+            message = f"'{instance.user_id.email}'님이 '{instance.board_id.title}' 보드에 댓글을 달았습니다"
 
             # WebSocket 연결을 통해 보드 주인에게 알림
             async_to_sync(channel_layer.group_send)(
@@ -72,7 +72,7 @@ def send_comment_notification(sender, instance, created, **kwargs):
                 receiver=instance.board_id.user_id,
                 is_read=False,
                 is_deleted=False,
-                related_url=f"{instance.board_id.id}",
+                related_url=f"{instance.board_id.id},commented",
             )
 
 
@@ -103,7 +103,7 @@ def send_like_notification(sender, instance, created, **kwargs):
                 receiver=instance.board_id.user_id,
                 is_read=False,
                 is_deleted=False,
-                related_url=f"{instance.board_id.id}",
+                related_url=f"{instance.board_id.id},liked",
             )
 
 
@@ -130,7 +130,7 @@ def send_follow_notification(sender, instance, created, **kwargs):
             receiver=instance.followed_user,
             is_read=False,
             is_deleted=False,
-            related_url="",
+            related_url=",followed",
         )
 
 
@@ -162,5 +162,5 @@ def send_likedboard_addpin_notification(sender, instance, action, pk_set, **kwar
                     receiver=like.user_id,
                     is_read=False,
                     is_deleted=False,
-                    related_url=f"{board.id}"
+                    related_url=f"{board.id},updated"
                 )

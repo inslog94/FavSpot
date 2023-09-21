@@ -33,6 +33,7 @@ fetch(`http://127.0.0.1:8000/user/me/`, {
 
       // 새로운 알림이 도착했으므로 붉은 점 표시
       document.querySelector(".notification-dot").style.display = "inline";
+      document.querySelector("#notification-div").style.display = "flex";
 
       // 기존 내용 초기화
       const notificationList = document.getElementById("notification-list");
@@ -40,7 +41,10 @@ fetch(`http://127.0.0.1:8000/user/me/`, {
       // 최신 순으로 반복하여 li 요소 추가
       for (let i = notifications.length - 1; i >= 0; i--) {
         const listItem = document.createElement("li");
-        listItem.textContent = `새 알림: ${notifications[i]}`;
+        listItem.className = "ms-3";
+        listItem.style.listStyleType = "disc";
+        listItem.style.wordBreak = "keep-all";
+        listItem.textContent = `${notifications[i]}`;
         notificationList.appendChild(listItem);
       }
     });
@@ -52,17 +56,6 @@ fetch(`http://127.0.0.1:8000/user/me/`, {
   .catch((error) => {
     console.error("Error:", error);
   });
-
-// 데이터를 websocket 서버로 보내는 함수(채팅 기능)
-// function sendWebSocketData(data) {
-//   if (socket && socket.readyState === WebSocket.OPEN) {
-//     socket.send(JSON.stringify(data));
-//   } else {
-//     console.error("WebSocket connection is not open.");
-//   }
-// }
-
-// export { sendWebSocketData };
 
 // 페이지 로드시 읽지않은 알림이 있는지 확인 후 없다면 붉은 점 표시
 document.addEventListener("DOMContentLoaded", function () {

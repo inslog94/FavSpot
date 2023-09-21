@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 from .models import Notification
 from .serializers import NotificationSerializer
 
@@ -29,7 +30,8 @@ class NotificationReadMark(APIView):
         user = request.user
 
         try:
-            notification = Notification.objects.get(pk=pk, receiver=user)
+            notification = Notification.objects.get(
+                pk=pk, receiver=user, is_deleted=False)
         except Notification.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -37,3 +39,18 @@ class NotificationReadMark(APIView):
         notification.save()
 
         return Response(status=status.HTTP_200_OK)
+
+
+# 알림 삭제
+class NotificationDelete(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        notification = get_object_or_404(Notification, pk=pk)
+
+        if request.user == notification.receiver:
+            notification.is_deleted = True
+            notification.save()
+
+            return Response({"detail": "알림을 삭제 처리하였습니다."}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail": "알림을 삭제할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
