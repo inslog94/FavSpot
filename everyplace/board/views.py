@@ -200,7 +200,12 @@ class BoardView(APIView):
     )
     ## 보드 수정
     def put(self, request, pk):
-        board = get_object_or_404(Board, id=pk)
+        try:
+            board = Board.objects.get(id=pk)
+        except Board.DoesNotExist:
+            return Response({
+                'error': '해당 보드가 존재하지 않습니다.'
+            }, status=status.HTTP_404_NOT_FOUND)
 
         # 현재 유저가 보드 작성자인지 확인
         if board.user_id != request.user:
@@ -208,36 +213,33 @@ class BoardView(APIView):
         
         data = request.data.copy()
 
-        tags_data = None
-        if 'tags' in data:
-            tags_data = data.pop('tags')
-
-
         serializer = BoardSerializer(board, data=data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
 
             # 핀 수정 작업 (추가 / 삭제)
-            new_pins = request.data.get('pins', []) # 새롭게 전달된 핀 목록
-            existing_pins = board.pin_set.all() # 기존에 존재하는 핀
+            new_pins = request.data.get('pins', None) # 새롭게 전달된 핀 목록
+            if new_pins is not None:
+                existing_pins = board.pin_set.all() # 기존에 존재하는 핀
 
-            # 기존에 있는 핀 중에서 전달된 핀 리스트에 없는 것은 삭제
-            for pin in existing_pins:
-                if pin.id not in new_pins:
-                    board.pin_set.remove(pin) # 기존에 있던 핀을 보드에서 제거
+                # 기존에 있는 핀 중에서 전달된 핀 리스트에 없는 것은 삭제
+                for pin in existing_pins:
+                    if pin.id not in new_pins:
+                        board.pin_set.remove(pin) # 기존에 있던 핀을 보드에서 제거
                 
             # 태그 수정 작업 (추가 / 삭제)
-            tags = []
+            tags_data = data.get('tags', None)
+            if tags_data is not None:
+                tags = []
 
-            if tags_data:
                 for tag_data in tags_data:
                     # 기존 태그 테이블에 태그가 있는지 확인
                     # 있다면 기존 유지, 없으면 생성
                     tag, created = BoardTag.objects.get_or_create(content=tag_data.strip())
                     tags.append(tag)
                 
-            board.tags.set(tags)
+                board.tags.set(tags)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
