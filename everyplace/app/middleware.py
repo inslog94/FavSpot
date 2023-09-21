@@ -1,4 +1,6 @@
 from rest_framework.exceptions import PermissionDenied
+from rest_framework import status
+from django.http import JsonResponse
 
 class CookieToAuthorizationMiddleware:
     def __init__(self, get_response):
@@ -29,5 +31,8 @@ class Convert403to401Middleware:
                     response.status_code = 401
             except AttributeError:
                 pass
+
+        if response.status_code == 401:
+            response = JsonResponse({'error': '로그인하지 않은 사용자는 이용할 수 없습니다.'}, status=status.HTTP_401_UNAUTHORIZED)
 
         return response
