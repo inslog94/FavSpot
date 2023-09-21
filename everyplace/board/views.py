@@ -46,16 +46,17 @@ class BoardView(APIView):
         #     OpenApiParameter(name='id', description='특정 보드의 ID (pk)', type=int, location="path", required=False)
         # ],
         responses={
-            200: OpenApiResponse(description="조회 성공", examples={
-                "application/json": {
-                    "board": BoardSerializer().data,
-                    "user_liked": True,
-                    "likes_count": 5,
-                    "pins": PinSerializer(many=True).data,
-                    "comments": BoardCommentSerializer(many=True).data
-                }
-            }),
-            404: {'description': "해당 보드가 존재하지 않습니다."},
+            200: BoardPinSerializer(many=True),
+            # 200: OpenApiResponse(description="조회 성공", examples={
+            #     "application/json": {
+            #         "board": BoardSerializer().data,
+            #         "user_liked": True,
+            #         "likes_count": 5,
+            #         "pins": PinSerializer(many=True).data,
+            #         "comments": BoardCommentSerializer(many=True).data
+            #     }
+            # }),
+            404: OpenApiResponse(description="해당 보드가 존재하지 않습니다.")
         },
     )
     def get(self, request, pk=None):
@@ -120,9 +121,9 @@ class BoardView(APIView):
         examples=[
             OpenApiExample(
                 request_only=True,
+                name = "success_example",
                 summary = "올바른 요청 예시",
                 description = "title: 보드의 이름\n\n is_public: 보드의 공개/비공개 설정 (기본값은 True입니다.)\n\n tags: 보드에 등록될 태그 (선택사항이므로 입력하지 않아도됩니다.)",
-                name = "success_example",
                 value = {
                     "title": "새로운 보드 이름", 
                     "is_public": True,
@@ -164,7 +165,10 @@ class BoardView(APIView):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                'error': '잘못된 입력값 입니다.',
+                'details': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
         
     @extend_schema(
         summary="보드 수정 API",
@@ -182,8 +186,7 @@ class BoardView(APIView):
                 value = {
                     "title": "수정할 보드 이름", 
                     "is_public": False,
-                    "tags": ["태그2", "태그3"],
-                    "pins": []
+                    "tags": ["태그2", "태그3"]
                 }
             )
         ],
@@ -238,7 +241,10 @@ class BoardView(APIView):
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                'error': '잘못된 입력값 입니다.',
+                'details': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
     
     @extend_schema(
         summary="보드 삭제 API",
@@ -255,7 +261,12 @@ class BoardView(APIView):
     )
     ## 보드 삭제
     def delete(self, request, pk):
-        board = get_object_or_404(Board, id=pk)
+        try:
+            board = Board.objects.get(id=pk)
+        except Board.DoesNotExist:
+            return Response({
+                'error': '해당 보드가 존재하지 않습니다.'
+            }, status=status.HTTP_404_NOT_FOUND)
 
         # 현재 유저가 게시물 작성자인지 확인
         if board.user_id != request.user:
@@ -312,7 +323,11 @@ class BoardCommentView(APIView):
             comment_serializer.save()
             return Response(comment_serializer.data, status=status.HTTP_201_CREATED)
         
-        return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({
+                'error': '잘못된 입력값 입니다.',
+                'details': comment_serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
     
     @extend_schema(
         summary="보드 댓글 삭제 API",
@@ -329,7 +344,10 @@ class BoardCommentView(APIView):
     )
     ## 보드 댓글 삭제
     def delete(self, request, pk):
-        comment = get_object_or_404(BoardComment, id=pk)
+        try:
+            comment = BoardComment.objects.get(id=pk)
+        except BoardComment.DoesNotExist:
+            return Response({"error": "해당 댓글이 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
 
         if request.user != comment.user_id:
             return Response({"error": "본인이 작성한 댓글만 삭제할 수 있습니다."}, status=status.HTTP_403_FORBIDDEN)
@@ -370,7 +388,11 @@ class BoardLikeView(APIView):
     )
     ## 보드 좋아요 등록
     def post(self, request, pk):
-        board = get_object_or_404(Board, pk=pk)
+        try:
+            board = Board.objects.get(pk=pk)
+        except Board.DoesNotExist:
+            return Response({"error": "해당 보드가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+        
         user = request.user
 
         # 이미 좋아요한 경우 -> 에러 응답 반환
@@ -383,7 +405,11 @@ class BoardLikeView(APIView):
             serializer.save()
             return Response(serializer.data, status=201)
         
-        return Response(serializer.error, status=400)
+        else:
+            return Response({
+                'error': '잘못된 입력값 입니다.',
+                'details': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
     
     @extend_schema(
         summary="보드 좋아요 해제 API",
@@ -401,11 +427,17 @@ class BoardLikeView(APIView):
     ## 보드 좋아요 해제
     def delete(self, request, pk):
         user = request.user
-        board_like = get_object_or_404(BoardLike, pk=pk,  user_id=user.id)
+        try:
+            board_like = BoardLike.objects.get(pk=pk, user_id=user.id)
+        except BoardLike.DoesNotExist:
+            return Response({"error": "해당 좋아요가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
 
         # 이미 해제된 경우 -> 에러 응답 반환
-        if board_like.is_deleted:
-            return Response({'error': '이미 이 보드에 좋아요가 해제되었습니다.'})
+        # if board_like.is_deleted:
+        #     return Response({'error': '이미 이 보드에 좋아요가 해제되었습니다.'})
+        
+        if request.user != board_like.user_id:
+            return Response({"error": "본인이 등록한 좋아요만 해제할 수 있습니다."}, status=status.HTTP_403_FORBIDDEN)
         
         board_like.is_deleted = True
         board_like.save()
@@ -428,6 +460,9 @@ class BoardLikeView(APIView):
         # 유저가 좋아요한 보드 목록을 필터링하여 BoardLike 모델 객체들 추출
         # 최신순 정렬된 상태로 추출
         board_likes = BoardLike.objects.filter(user_id=user.id, is_deleted=False).order_by('-created_at')
+
+        if not board_likes:
+            return Response({"error": "해당 보드가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
 
         # 추출한 객체들의 id값 리스트로 저장
         boards = [board_like.board_id for board_like in board_likes]
@@ -456,6 +491,11 @@ class BoardSearchView(APIView):
     def get(self, request, format=None):
         search_term = request.query_params.get('search', None)
         search_field = request.query_params.get('search_field', None)
+
+        if not search_term or search_field not in ['all', 'tag']:
+            return Response({
+                'error': '잘못된 입력값 입니다.'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         # 로그인되지 않은 사용자의 경우
         if not request.user.is_authenticated:
@@ -521,7 +561,7 @@ class UserTaggedBoardView(APIView):
         tag = request.query_params.get('tag', None)
         
         if not tag:
-            return Response({"error": "No tag provided."}, status=400)
+            return Response({"error": "태그 값이 제공되지 않았습니다."}, status=400)
 
         # 본인 보드 중에서 특정 태그를 가진 보드 조회
         queryset = Board.objects.filter(user_id=request.user.id, tags__content__icontains=tag)
