@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status, serializers, viewsets
 from .models import Board, BoardTag, BoardComment, BoardLike
 from pin.models import Pin
+from user.models import User
 from .serializers import BoardSerializer, BoardTagSerializer, BoardCommentSerializer, BoardLikeSerializer
 from pin.serializers import SimplePinSerializer, PinSerializer
 from user.serializers import BoardPinSerializer
@@ -14,6 +15,7 @@ from django.db.models import Q
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes, OpenApiResponse, extend_schema_view, OpenApiExample
 from rest_framework.decorators import api_view
 from drf_spectacular.types import OpenApiTypes
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Board View
@@ -452,21 +454,24 @@ class BoardLikeView(APIView):
         responses={
             200: BoardPinSerializer(many=True),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
-            404: OpenApiResponse(description="해당 보드가 존재하지 않습니다.")
+            404: OpenApiResponse(description="해당 유저가 존재하지 않습니다.")
         }
     )
     ## 보드 좋아요 목록 조회
-    def get(self, request):
-        user = request.user
+    def get(self, request, pk=None):
+        if pk:
+            try:
+                user = User.objects.get(id=pk)
+            except ObjectDoesNotExist:
+                return Response({"error": "해당 유저가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            user = request.user
 
-        # 유저가 좋아요한 보드 목록을 필터링하여 BoardLike 모델 객체들 추출
-        # 최신순 정렬된 상태로 추출
         board_likes = BoardLike.objects.filter(user_id=user.id, is_deleted=False).order_by('-created_at')
 
         if not board_likes:
-            return Response({"error": "해당 보드가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "해당 유저가 좋아요한 보드가 없습니다."}, status=status.HTTP_200_OK)
 
-        # 추출한 객체들의 id값 리스트로 저장
         boards = [board_like.board_id for board_like in board_likes]
 
         serializer = BoardPinSerializer(instance=boards, many=True)
