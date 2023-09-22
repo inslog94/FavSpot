@@ -12,7 +12,7 @@ import json
 import urllib3
 import requests
 from bs4 import BeautifulSoup
-from drf_spectacular.utils import extend_schema, OpenApiResponse
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 
 
 class CustomHttpAdapter (requests.adapters.HTTPAdapter):
@@ -92,13 +92,15 @@ class PinView(APIView):
         """,
         responses={
             200: OpenApiResponse(description="조회 성공", response=CombinedCreatePinSerializer),
-            404: OpenApiResponse(description="해당 게시글을 찾을 수 없습니다."),
+            404: OpenApiResponse(description="해당 핀이 존재하지 않습니다."),
         },
     )
     # ## pin 상세정보 조회
     def get(self, request, place_id):
-        pin = get_object_or_404(
-            Pin, place_id=place_id, is_deleted=False)
+        try:
+            pin = Pin.objects.get(place_id=place_id, is_deleted=False)
+        except Pin.DoesNotExist:
+            return Response({'error': '해당 핀이 존재하지 않습니다.'}, status=status.HTTP_404_NOT_FOUND)
 
         # pin에 포함된 pin content 갯수 세기
         pin_content_count = PinContent.objects.filter(
@@ -130,12 +132,31 @@ class PinView(APIView):
 
     @extend_schema(
         summary="핀 생성 API",
-        description="""이 엔드포인트는 인증된 사용자가 새로운 장소에 대한 핀을 생성하도록 합니다. 요청 본문에는 'board_id', 'category', 'place_id', 'title', 'new_address', 'old_address', 'lat_lng' 필드가 반드시 포함되어야 합니다. 또한 동시에 생성되는 핀 콘텐츠(코멘트) 내용인 'text'와 첨부 사진인 'photo' 필드는 각각 포함시키거나 포함시키지 않을 수 있습니다.\n\n 요청이 들어오면 요청 본문의 'place_id' 값과 같은 값을 지닌 핀이 이미 존재하는지 확인한 후, 존재한다면 그 핀에 'board_id'의 보드를 추가하고 핀 콘텐츠를 생성하고 기존의 핀과 생성된 핀 콘텐츠 객체를 반환합니다. 존재하지 않는다면 요청 본문의 값을 토대로 핀과 핀 콘텐츠를 새롭게 생성하고 생성된 핀과 핀 콘텐츠 객체를 반환합니다. 생성 과정에서 문제가 생겼다면 오류 메시지를 반환합니다.""",
+        description="""이 엔드포인트는 인증된 사용자가 새로운 장소에 대한 핀을 생성하도록 합니다. 요청 본문에는 'board_id', 'category', 'place_id', 'title', 'new_address', 'old_address', 'lat_lng' 필드가 반드시 포함되어야 합니다. 또한 동시에 생성되는 핀 콘텐츠(코멘트) 내용인 'text'와 첨부 사진인 'photo' 필드는 각각 포함시키거나 포함시키지 않을 수 있습니다. photo 필드에 이미지 파일 데이터를 제공하려면 multipart/form-data 형식으로 전송해야 합니다.\n\n 요청이 들어오면 요청 본문의 'place_id' 값과 같은 값을 지닌 핀이 이미 존재하는지 확인한 후, 존재한다면 그 핀에 'board_id'의 보드를 추가하고 핀 콘텐츠를 생성하고 기존의 핀과 생성된 핀 콘텐츠 객체를 반환합니다. 존재하지 않는다면 요청 본문의 값을 토대로 핀과 핀 콘텐츠를 새롭게 생성하고 생성된 핀과 핀 콘텐츠 객체를 반환합니다. 생성 과정에서 문제가 생겼다면 오류 메시지를 반환합니다.""",
         request=CombinedCreatePinSerializer,
+        examples=[
+            OpenApiExample(
+                request_only=True,
+                summary="올바른 요청 예시",
+                description="board_id: 핀을 저장할 보드의 id\n\ncategory: 장소의 카테고리 분류(카카오 맵 API 제공)\n\nplace_id: 장소의 고유 id(카카오 맵 API 제공)\n\ntitle: 장소의 이름(카카오 맵 API 제공)\n\nnew_address: 장소의 도로명주소(카카오 맵 API 제공)\n\nold_address: 장소의 지번주소(카카오 맵 API 제공)\n\n lat_lng: 장소의 위도,경도 (카카오 맵 API 제공, 위도와 경도를 붙여놓은 값)\n\ntext: 핀 콘텐츠(코멘트)에 입력할 짧은 글 (선택사항이므로 입력하지 않아도 됩니다)\n\nphoto: 핀 콘텐츠(코멘트)에 넣을 사진 파일(경로) (선택사항이므로 첨부하지 않아도 됩니다)",
+                name="success_example",
+                value={
+                    "board_id": 12,
+                    "category": "카페",
+                    "place_id": "123123",
+                    "title": "카페 이름",
+                    "new_address": "서울 마포구 도로명로 123-4",
+                    "old_address": "서울 마포구 지번동 123-45",
+                    "lat_lng": "37.123123,127.456456",
+                    "text": "그 장소에 대한 감상평 또는 메모",
+                    "photo": "실제 요청에서는 이곳에 이미지 파일 데이터를 첨부합니다"
+                }
+            )
+        ],
         responses={
             200: OpenApiResponse(description="해당 장소의 핀을 사용합니다.", response=CombinedCreatePinSerializer),
             201: OpenApiResponse(description="새로운 핀 및 핀 콘텐츠 생성 성공", response=CombinedCreatePinSerializer),
-            400: OpenApiResponse(description="잘못된 입력값 입니다."),
+            400: OpenApiResponse(description="잘못된 입력값입니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
         }
     )
@@ -210,19 +231,34 @@ class PinContentView(APIView):
 
     @extend_schema(
         summary="핀 콘텐츠(코멘트) 수정 API",
-        description="""이 엔드포인트는 인증된 사용자가 자신이 작성한 핀 콘텐츠(코멘트)를 수정하는 것을 허용합니다. 요청 본문에는 'text', 'photo' 등의 필드가 포함될 수 있습니다. 사용자는 코멘트 내용인 text와 첨부 사진인 photo 중 하나의 값만을 수정하거나 둘 다 수정할 수 있습니다. 성공적으로 핀 콘텐츠가 수정되면 수정된 PinContent 객체를 반환하고, 그렇지 않으면 오류 메시지를 반환합니다.""",
+        description="""이 엔드포인트는 인증된 사용자가 자신이 작성한 핀 콘텐츠(코멘트)를 수정하는 것을 허용합니다. 요청 본문에는 'text', 'photo' 등의 필드가 포함될 수 있습니다. 사용자는 코멘트 내용인 text와 첨부 사진인 photo 중 하나의 값만을 수정하거나 둘 다 수정할 수 있습니다. photo 필드에 이미지 파일 데이터를 제공하려면 multipart/form-data 형식으로 전송해야 합니다. 성공적으로 핀 콘텐츠가 수정되면 수정된 PinContent 객체를 반환하고, 그렇지 않으면 오류 메시지를 반환합니다.""",
         request=PinContentSerializer,
+        examples=[
+            OpenApiExample(
+                request_only=True,
+                summary="올바른 요청 예시",
+                description="text: 핀 콘텐츠(코멘트)에 입력할 짧은 글 (입력하지 않는다면 원래 내용이 유지됩니다)\n\nphoto: 핀 콘텐츠(코멘트)에 넣을 사진 파일(경로) (첨부하지 않는다면 원래 파일이 유지됩니다)",
+                name="success_example",
+                value={
+                    "text": "그 장소에 대한 감상평 또는 메모의 수정사항",
+                    "photo": "실제 요청에서는 이곳에 이미지 파일 데이터를 첨부합니다"
+                }
+            )
+        ],
         responses={
-            200: PinContentSerializer,
-            400: OpenApiResponse(description="잘못된 입력값 입니다."),
+            200: OpenApiResponse(description="수정 성공", response=PinContentSerializer),
+            400: OpenApiResponse(description="잘못된 입력값입니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
-            403: OpenApiResponse(description="핀 컨텐츠를 수정할 권한이 없습니다."),
-            404: OpenApiResponse(description="해당 게시글을 찾을 수 없습니다.")
+            403: OpenApiResponse(description="핀 콘텐츠를 수정할 권한이 없습니다."),
+            404: OpenApiResponse(description="해당 핀 콘텐츠가 존재하지 않습니다.")
         }
     )
     # ## pin content 수정
     def put(self, request, pk):
-        pin_content = get_object_or_404(PinContent, pk=pk)
+        try:
+            pin_content = PinContent.objects.get(pk=pk, is_deleted=False)
+        except PinContent.DoesNotExist:
+            return Response({'error': '해당 핀 콘텐츠가 존재하지 않습니다.'}, status=status.HTTP_404_NOT_FOUND)
 
         if request.user == pin_content.user_id:
             serializer = PinContentSerializer(
@@ -231,7 +267,7 @@ class PinContentView(APIView):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"detail": "핀 컨텐츠를 수정할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"detail": "핀 콘텐츠를 수정할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
 
     @extend_schema(
         summary="핀 콘텐츠(코멘트) 삭제 API",
@@ -240,17 +276,20 @@ class PinContentView(APIView):
         responses={
             204: OpenApiResponse(description="핀 컨텐츠를 삭제 처리하였습니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
-            403: OpenApiResponse(description="핀 컨텐츠를 삭제할 권한이 없습니다."),
-            404: OpenApiResponse(description="해당 게시글을 찾을 수 없습니다.")
+            403: OpenApiResponse(description="핀 콘텐츠를 삭제할 권한이 없습니다."),
+            404: OpenApiResponse(description="해당 핀 콘텐츠가 존재하지 않습니다.")
         }
     )
     # ## pin content 삭제
     def delete(self, request, pk):
-        pin_content = get_object_or_404(PinContent, pk=pk)
+        try:
+            pin_content = PinContent.objects.get(pk=pk, is_deleted=False)
+        except PinContent.DoesNotExist:
+            return Response({'error': '해당 핀 콘텐츠가 존재하지 않습니다.'}, status=status.HTTP_404_NOT_FOUND)
 
         if request.user == pin_content.user_id:
             pin_content.is_deleted = True
             pin_content.save()
 
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response({"detail": "핀 컨텐츠를 삭제할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"detail": "핀 콘텐츠를 삭제할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
