@@ -89,7 +89,7 @@
         color: black;
         border: 2px solid transparent;
         box-shadow: none !important;
-        display: flex !important;
+        display: flex;
         justify-content: center;
         align-items: center;
       }
@@ -633,7 +633,7 @@ header -->
           if (requestUserPk !== pk && pk !== 'me') { // 현재 사용자와 페이지 주인이 다를 경우
             createBoardButton.style.display = 'none'; // 버튼 숨기기
           } else {
-            createBoardButton.style.display = 'block'; // 버튼 표시하기
+            createBoardButton.style.display = 'flex'; // 버튼 표시하기
           }
 
           const tagList = document.getElementById('tagList');
