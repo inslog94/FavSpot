@@ -2,10 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
-from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from .models import Pin, PinContent
-from .serializers import PinSerializer, PinContentSerializer, CombinedCreatePinSerializer
+from .serializers import PinSerializer, PinContentSerializer, CombinedCreatePinSerializer, PaginatedPinResponseSerializer
 from .paginations import CustomPagination
 import ssl
 import json
@@ -83,7 +82,7 @@ def get_menu(place_id):
     return menu
 
 
-class PinView(APIView):
+class PinDetailView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     @extend_schema(
@@ -91,7 +90,7 @@ class PinView(APIView):
         description="""이 엔드포인트는 모든 사용자가 존재하는 핀의 상세정보를 볼 수 있게 해줍니다. 비인증 사용자도 모든 핀을 볼 수 있습니다.\n\n 각 핀은 카카오api에서 제공하는 고유의 place_id를 통해 구분되어, 특정 place_id 값을 제공하면 해당 place_id에 대응하는 핀의 상세정보를 제공합니다. 이 상세정보에는 이 핀이 들어있는 보드들의 리스트, 핀의 장소명, 카테고리, 도로명주소, 지번주소, 좌표값, 썸네일 이미지 등이 포함됩니다. 상세정보를 응답받을 때 place_id에 대응하는 장소의 카카오맵 상세 페이지에 메뉴가 존재한다면 크롤링을 통해 즉석으로 메뉴 정보를 가져와서 표시합니다.\n\n 또한 핀과 함께 보여지는 핀 콘텐츠(코멘트)에는 페이지네이션에 적용되어 있어 한 페이지에 3개의 핀 콘텐츠까지 보여집니다. 이전, 다음 페이지로 이동해서 나머지 핀 콘텐츠를 볼 수 있습니다.
         """,
         responses={
-            200: OpenApiResponse(description="조회 성공", response=CombinedCreatePinSerializer),
+            200: OpenApiResponse(description="조회 성공", response=PaginatedPinResponseSerializer),
             404: OpenApiResponse(description="해당 핀이 존재하지 않습니다."),
         },
     )
@@ -129,6 +128,10 @@ class PinView(APIView):
             'menu': menu,
             'pin_content_count': pin_content_count
         })
+
+
+class PinCreateView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     @extend_schema(
         summary="핀 생성 API",
@@ -228,6 +231,7 @@ class PinView(APIView):
 
 
 class PinContentView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     @extend_schema(
         summary="핀 콘텐츠(코멘트) 수정 API",

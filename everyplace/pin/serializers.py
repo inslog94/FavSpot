@@ -39,7 +39,25 @@ class SimplePinSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'category', 'new_address', 'thumbnail_img']
 
 
-# API 명세 작성용 합성 serializer
+# API 명세 작성용 serializer들
+class CombinedDetailPinSerializer(serializers.Serializer):
+    pin = PinSerializer(help_text="핀 생성 데이터")
+    pin_content = PinContentSerializer(help_text="핀 컨텐츠 생성 데이터", many=True)
+
+
 class CombinedCreatePinSerializer(serializers.Serializer):
     pin = PinSerializer(help_text="핀 생성 데이터")
     pin_content = PinContentSerializer(help_text="핀 컨텐츠 생성 데이터")
+
+
+class PaginationSerializer(serializers.Serializer):
+    next = serializers.URLField(required=False)
+    previous = serializers.URLField(required=False)
+    total_pages = serializers.IntegerField()
+    current_page = serializers.IntegerField()
+    count = serializers.IntegerField()
+
+
+class PaginatedPinResponseSerializer(serializers.Serializer):
+    links = PaginationSerializer(source='*')
+    results = CombinedDetailPinSerializer()
