@@ -74,8 +74,8 @@
       }
 
       /* 좋아요한 보드 목록 버튼 스타일 */
-      .liked-board-btn {
-        background-color: #ffc107;
+      .go-back-btn {
+        background-color: #b18ec4;
         border: none;
       }
     </style>
@@ -226,12 +226,6 @@ header -->
                 </div>
               </div>
 
-              <div class="sidebar-widget">
-                <h6 class="mt-40 mb-20">Tags</h6>
-                <div class="widget-tags">
-                  <ul id="tagList"></ul>
-                </div>
-              </div>
             </div>
             <!-- ================================== -->
             <div id="boardlist" class="col-lg-9">
@@ -432,7 +426,7 @@ header -->
               // 좋아요한 보드 목록 버튼
               const button3 = document.createElement('a');
               button3.type = 'button';
-              button3.classList.add('btn', 'btn-primary', 'mt-1', 'liked-board-btn');
+              button3.classList.add('btn', 'btn-primary', 'mt-1', 'go-back-btn');
 
               // 기존 요소에 버튼 추가
               const changeBtnDiv = document.querySelector('.changeBtn');
@@ -447,13 +441,24 @@ header -->
                 button2.style.display = 'block';
                 button2.setAttribute('href', 'pin_list.html');
 
-                button3.textContent = 'Liked Board';
+                button3.textContent = 'Go Back';
                 button3.style.display = 'block';
-                button3.setAttribute('href', 'user_liked_board.html');
+                button3.addEventListener('click', function(e) {
+                    e.preventDefault();  // 기본 링크 클릭 동작 방지
+                    window.history.back();
+                });
 
                 changeBtnDiv.appendChild(button2);
               } else if (followingList.includes(currentUser)) {
                 button.textContent = 'Unfollow';
+
+                button3.textContent = 'Go Back';
+                button3.style.display = 'block';
+                button3.addEventListener('click', function(e) {
+                    e.preventDefault();  // 기본 링크 클릭 동작 방지
+                    window.history.back();
+                });
+
                 button.addEventListener('click', () => {
                   fetch(`http://127.0.0.1:8000/user/follow/${followerPk}/`, {
                     method: 'DELETE',
@@ -473,6 +478,14 @@ header -->
                 });
               } else {
                 button.textContent = 'Follow';
+
+                button3.textContent = 'Go Back';
+                button3.style.display = 'block';
+                button3.addEventListener('click', function(e) {
+                    e.preventDefault();  // 기본 링크 클릭 동작 방지
+                    window.history.back();
+                });
+
                 button.addEventListener('click', () => {
                   fetch(`http://127.0.0.1:8000/user/follow/`, {
                     method: 'POST',
@@ -495,17 +508,6 @@ header -->
               changeBtnDiv.appendChild(button);
               changeBtnDiv.appendChild(button3);
 
-              const tags = data['results']['User']['tags'];
-              tags.forEach((tag) => {
-                const newLi = document.createElement('li');
-                const newTag = document.createElement('a');
-                newTag.setAttribute('href', 'user_tagged_board.html?tag=' + encodeURIComponent(tag));
-                newTag.textContent = tag;
-
-                newLi.appendChild(newTag);
-                tagList.appendChild(newLi);
-              });
-
               const parentElement =
                 document.querySelector('.masonry.columns-2');
               const previousButton = document.getElementById('previousButton');
@@ -518,7 +520,10 @@ header -->
               let currentPage = 1;
 
               // 유저가 좋아요한 보드 목록 가져오기 위한 통신
-              fetch('http://127.0.0.1:8000/board/like/', {
+              const paramsUserId = new URLSearchParams(window.location.search);
+              let userId = params.get('pk');
+
+              fetch(`http://127.0.0.1:8000/board/like/${userId}`, {
                   credentials: 'include',
                   headers: {
                     'Content-Type': 'application/json',

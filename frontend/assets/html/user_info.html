@@ -89,6 +89,9 @@
         color: black;
         border: 2px solid transparent;
         box-shadow: none !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
       .board-plus-text:hover {
@@ -104,6 +107,9 @@
 
       .fa-plus {
         font-size: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
       /* 보드 생성 모달 스타일 */
@@ -620,6 +626,16 @@ header -->
           if (!pk) {
             pk = 'me';
           }
+
+          // 보드 생성 버튼을 숨기거나 표시하는 부분
+          const createBoardButton = document.querySelector('.btn.btn-primary.board-plus-text');
+
+          if (requestUserPk !== pk && pk !== 'me') { // 현재 사용자와 페이지 주인이 다를 경우
+            createBoardButton.style.display = 'none'; // 버튼 숨기기
+          } else {
+            createBoardButton.style.display = 'flex'; // 버튼 표시하기
+          }
+
           const tagList = document.getElementById('tagList');
           fetch(`http://127.0.0.1:8000/user/${pk}/`, {
             method: 'GET',
@@ -664,6 +680,7 @@ header -->
               button.type = 'button';
               button.classList.add('btn', 'btn-primary', 'mt-1');
               button.style.display = 'block';
+              
               const button2 = document.createElement('a');
               button2.type = 'button';
               button2.classList.add('btn', 'btn-primary', 'mt-1');
@@ -688,11 +705,16 @@ header -->
 
                 button3.textContent = 'Liked Board';
                 button3.style.display = 'block';
-                button3.setAttribute('href', 'user_liked_board.html');
+                button3.setAttribute('href', `user_liked_board.html?pk=${requestUserPk}`);
 
                 changeBtnDiv.appendChild(button2);
               } else if (followingList.includes(currentUser)) {
                 button.textContent = 'Unfollow';
+
+                button3.textContent = 'Liked Board';
+                button3.style.display = 'block';
+                button3.setAttribute('href', `user_liked_board.html?pk=${pk}`);
+
                 button.addEventListener('click', () => {
                   fetch(`http://127.0.0.1:8000/user/follow/${followerPk}/`, {
                     method: 'DELETE',
@@ -712,6 +734,11 @@ header -->
                 });
               } else {
                 button.textContent = 'Follow';
+
+                button3.textContent = 'Liked Board';
+                button3.style.display = 'block';
+                button3.setAttribute('href', `user_liked_board.html?pk=${pk}`);
+
                 button.addEventListener('click', () => {
                   fetch(`http://127.0.0.1:8000/user/follow/`, {
                     method: 'POST',
