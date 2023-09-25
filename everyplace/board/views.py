@@ -11,7 +11,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.decorators import authentication_classes, permission_classes
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Count
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes, OpenApiResponse, extend_schema_view, OpenApiExample
 from rest_framework.decorators import api_view
 from drf_spectacular.types import OpenApiTypes
@@ -68,6 +68,10 @@ class BoardView(APIView):
             # 현재 로그인한 사용자 정보
             user = request.user
 
+            # 정렬 기준
+            # 기본값으로 'created' 설정
+            sort = request.GET.get('sort', 'created')
+
             if user.is_authenticated:
                 # 사용자와 보드 작성자가 같은 경우 공개/비공개에 상관 없이 사용자의 모든 보드 출력
                 # 사용자와 보드 작성자가 다른 경우 공개 보드만 보드만 출력
@@ -76,6 +80,18 @@ class BoardView(APIView):
                 # 로그인하지 않은 사용자는 공개 보드만 출력
                 boards = Board.objects.filter(is_public=True, is_deleted=False)
 
+            # 핀 개수 기준으로 정렬
+            if sort == 'pin':
+                boards = boards.annotate(pin_count=Count('pin')).order_by('-pin_count')
+
+            # 좋아요 개수 기준으로 정렬
+            elif sort == 'like':
+                boards = boards.annotate(like_count=Count('boardlike')).order_by('-like_count')
+
+            # 최신순 기준으로 정렬
+            else:
+                boards = boards.order_by('-created_at')
+    
             serializer = BoardPinSerializer(boards, many=True)
 
             return Response(serializer.data)
