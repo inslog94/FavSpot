@@ -44,12 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    
+
     'corsheaders',
     # my app
     'board',
     'pin',
     'user',
+    'notification',
     # django-storages
     'storages',
     # django rest framework
@@ -65,6 +66,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.kakao',
     'allauth.socialaccount.providers.google',
+    # django-channels
+    'channels',
+    # drf-spectacular
+    'drf_spectacular',
 ]
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -91,6 +96,14 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ),
+    # drf-spectacular
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'FavSpot API Document',  # API 제목 설정
+    'DESCRIPTION': 'drf-spectacular를 이용하여 만든 FavSpot의 API 문서입니다.',
+    "SCHEMA_PATH": os.path.join(BASE_DIR, "schema.json"),
 }
 
 MIDDLEWARE = [
@@ -101,9 +114,11 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'app.middleware.Convert403to401Middleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
@@ -128,6 +143,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
+ASGI_APPLICATION = 'app.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
