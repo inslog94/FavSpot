@@ -88,7 +88,7 @@ class PinView(APIView):
 
     @extend_schema(
         summary="핀 상세정보 조회 API",
-        description="""이 엔드포인트는 모든 사용자가 존재하는 핀의 상세정보를 볼 수 있게 해줍니다. 비인증 사용자도 모든 핀을 볼 수 있습니다.\n\n 각 핀은 카카오api에서 제공하는 고유의 place_id를 통해 구분되어, 특정 place_id 값을 제공하면 해당 place_id에 대응하는 핀의 상세정보를 제공합니다. 이 때 place_id에 대응하는 장소의 카카오맵 상세 페이지에 메뉴가 존재한다면 크롤링을 통해 즉석으로 메뉴 정보를 가져와서 표시합니다.\n\n 또한 핀과 함께 보여지는 핀 콘텐츠(코멘트)에는 페이지네이션에 적용되어 있어 한 페이지에 3개의 핀 콘텐츠까지 보여집니다. 이전, 다음 페이지로 이동해서 나머지 핀 콘텐츠를 볼 수 있습니다.
+        description="""이 엔드포인트는 모든 사용자가 존재하는 핀의 상세정보를 볼 수 있게 해줍니다. 비인증 사용자도 모든 핀을 볼 수 있습니다.\n\n 각 핀은 카카오api에서 제공하는 고유의 place_id를 통해 구분되어, 특정 place_id 값을 제공하면 해당 place_id에 대응하는 핀의 상세정보를 제공합니다. 이 상세정보에는 이 핀이 들어있는 보드들의 리스트, 핀의 장소명, 카테고리, 도로명주소, 지번주소, 좌표값, 썸네일 이미지 등이 포함됩니다. 상세정보를 응답받을 때 place_id에 대응하는 장소의 카카오맵 상세 페이지에 메뉴가 존재한다면 크롤링을 통해 즉석으로 메뉴 정보를 가져와서 표시합니다.\n\n 또한 핀과 함께 보여지는 핀 콘텐츠(코멘트)에는 페이지네이션에 적용되어 있어 한 페이지에 3개의 핀 콘텐츠까지 보여집니다. 이전, 다음 페이지로 이동해서 나머지 핀 콘텐츠를 볼 수 있습니다.
         """,
         responses={
             200: OpenApiResponse(description="조회 성공", response=CombinedCreatePinSerializer),
@@ -132,7 +132,7 @@ class PinView(APIView):
 
     @extend_schema(
         summary="핀 생성 API",
-        description="""이 엔드포인트는 인증된 사용자가 새로운 장소에 대한 핀을 생성하도록 합니다. 요청 본문에는 'board_id', 'category', 'place_id', 'title', 'new_address', 'old_address', 'lat_lng' 필드가 반드시 포함되어야 합니다. 또한 동시에 생성되는 핀 콘텐츠(코멘트) 내용인 'text'와 첨부 사진인 'photo' 필드는 각각 포함시키거나 포함시키지 않을 수 있습니다. photo 필드에 이미지 파일 데이터를 제공하려면 multipart/form-data 형식으로 전송해야 합니다.\n\n 요청이 들어오면 요청 본문의 'place_id' 값과 같은 값을 지닌 핀이 이미 존재하는지 확인한 후, 존재한다면 그 핀에 'board_id'의 보드를 추가하고 핀 콘텐츠를 생성하고 기존의 핀과 생성된 핀 콘텐츠 객체를 반환합니다. 존재하지 않는다면 요청 본문의 값을 토대로 핀과 핀 콘텐츠를 새롭게 생성하고 생성된 핀과 핀 콘텐츠 객체를 반환합니다. 생성 과정에서 문제가 생겼다면 오류 메시지를 반환합니다.""",
+        description="""이 엔드포인트는 인증된 사용자가 새로운 장소에 대한 핀을 생성하도록 합니다. 요청 본문에는 'board_id', 'category', 'place_id', 'title', 'new_address', 'old_address', 'lat_lng' 필드가 반드시 포함되어야 합니다. 또한 동시에 생성되는 핀 콘텐츠(코멘트) 내용인 'text'와 첨부 사진인 'photo' 필드는 각각 포함시키거나 포함시키지 않을 수 있습니다. photo 필드에 이미지 파일 데이터를 제공하려면 multipart/form-data 형식으로 전송해야 합니다.\n\n 요청이 들어오면 요청 본문의 'place_id' 값과 같은 값을 지닌 핀이 이미 존재하는지 확인한 후, 존재한다면 그 핀에 'board_id'의 보드를 추가하고 핀 콘텐츠를 생성하고 기존의 핀과 생성된 핀 콘텐츠 객체를 반환합니다. 존재하지 않는다면 요청 본문의 값을 토대로 핀과 핀 콘텐츠를 새롭게 생성하고 생성된 핀과 핀 콘텐츠 객체를 반환합니다. 새로운 핀을 생성 시 place_id에 대응하는 장소의 카카오맵 상세 페이지에 대표 이미지가 존재한다면 크롤링을 통해 가져와 'thumbnail_img'필드에 저장합니다. 생성 과정에서 문제가 생겼다면 오류 메시지를 반환합니다.""",
         request=CombinedCreatePinSerializer,
         examples=[
             OpenApiExample(
@@ -267,14 +267,13 @@ class PinContentView(APIView):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"detail": "핀 콘텐츠를 수정할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': '핀 콘텐츠를 수정할 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
 
     @extend_schema(
         summary="핀 콘텐츠(코멘트) 삭제 API",
         description="""이 엔드포인트는 인증된 사용자가 자신이 작성한 핀 콘텐츠(코멘트)를 삭제하는 것을 허용합니다. 삭제 작업은 실제로 데이터베이스에서 핀 콘텐츠를 제거하는 것이 아니라 'is_deleted' 필드의 값을 True로 변경하는 방식입니다. 이 방식은 실수로 인한 데이터 손실을 방지하고, 필요한 경우 데이터 복구를 용이하게 합니다.""",
-        request=PinContentSerializer,
         responses={
-            204: OpenApiResponse(description="핀 컨텐츠를 삭제 처리하였습니다."),
+            204: OpenApiResponse(description="핀 콘텐츠를 삭제 처리하였습니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
             403: OpenApiResponse(description="핀 콘텐츠를 삭제할 권한이 없습니다."),
             404: OpenApiResponse(description="해당 핀 콘텐츠가 존재하지 않습니다.")
@@ -292,4 +291,4 @@ class PinContentView(APIView):
             pin_content.save()
 
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response({"detail": "핀 콘텐츠를 삭제할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': '핀 콘텐츠를 삭제할 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
