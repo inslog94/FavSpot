@@ -226,12 +226,6 @@ header -->
                 </div>
               </div>
 
-              <div class="sidebar-widget">
-                <h6 class="mt-40 mb-20">Tags</h6>
-                <div class="widget-tags">
-                  <ul id="tagList"></ul>
-                </div>
-              </div>
             </div>
             <!-- ================================== -->
             <div id="boardlist" class="col-lg-9">
@@ -513,17 +507,6 @@ header -->
               }
               changeBtnDiv.appendChild(button);
               changeBtnDiv.appendChild(button3);
-
-              const tags = data['results']['User']['tags'];
-              tags.forEach((tag) => {
-                const newLi = document.createElement('li');
-                const newTag = document.createElement('a');
-                newTag.setAttribute('href', 'user_tagged_board.html?tag=' + encodeURIComponent(tag));
-                newTag.textContent = tag;
-
-                newLi.appendChild(newTag);
-                tagList.appendChild(newLi);
-              });
 
               const parentElement =
                 document.querySelector('.masonry.columns-2');
