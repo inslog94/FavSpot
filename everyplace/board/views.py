@@ -82,15 +82,15 @@ class BoardView(APIView):
 
             # 핀 개수 기준으로 정렬
             if sort == 'pin':
-                boards = boards.annotate(pin_count=Count('pin')).order_by('-pin_count')
+                boards = boards.annotate(pin_count=Count('pin')).filter(pin_count__gt=0).order_by('-pin_count')
 
             # 좋아요 개수 기준으로 정렬
             elif sort == 'like':
-                boards = boards.annotate(like_count=Count('boardlike')).order_by('-like_count')
+                boards = boards.annotate(like_count=Count('boardlike'), pin_count=Count('pin')).filter(pin_count__gt=0).order_by('-like_count')
 
             # 최신순 기준으로 정렬
             else:
-                boards = boards.order_by('-created_at')
+                boards = boards.annotate(pin_count=Count('pin')).filter(pin_count__gt=0).order_by('-created_at')
     
             serializer = BoardPinSerializer(boards, many=True)
 
@@ -525,8 +525,8 @@ class BoardSearchView(APIView):
             queryset = Board.objects.filter(is_public=True, is_deleted=False)
 
             if search_field == 'all':
-                queryset = queryset.filter(
-                    Q(title__icontains=search_term) | Q(tags__content__icontains=search_term)).distinct()
+                queryset = queryset.annotate(pin_count=Count('pin')).filter(pin_count__gt=0).filter(
+            Q(title__icontains=search_term) | Q(tags__content__icontains=search_term)).distinct()
                 
             # # 보드 제목으로 검색
             # elif search_field == 'title':
@@ -546,10 +546,8 @@ class BoardSearchView(APIView):
 
             # 제목 또는 태그 내용으로 검색
             if search_field == 'all':
-                user_boards_filtered = user_boards.filter(
-                    Q(title__icontains=search_term) | Q(tags__content__icontains=search_term)).distinct()
-                public_boards_filtered_except_user_ones = public_boards_except_user_ones.filter(
-                    Q(title__icontains=search_term) | Q(tags__content__icontains=search_term)).distinct()
+                user_boards_filtered = user_boards.annotate(pin_count=Count('pin')).filter(pin_count__gt=0).filter(Q(title__icontains=search_term) | Q(tags__content__icontains=search_term)).distinct()
+                public_boards_filtered_except_user_ones = public_boards_except_user_ones.annotate(pin_count=Count('pin')).filter(pin_count__gt=0).filter(Q(title__icontains=search_term) | Q(tags__content__icontains=search_term)).distinct()
 
             # 태그 내용으로 검색
             elif search_field == 'tag':
