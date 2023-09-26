@@ -19,4 +19,7 @@ urlpatterns = [
 
     # BoardSearch
     path('search/', views.BoardSearchView.as_view(), name='board_search'),
+
+    # BoardTag
+    path('tag/', views.UserTaggedBoardView.as_view(), name='board_tag'),
 ]

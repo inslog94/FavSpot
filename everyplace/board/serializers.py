@@ -23,7 +23,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
     # 유저 정보 추가
     def get_user(self, obj):
-        return UserSerializer(obj.user_id).data
+        return UserSerializer(obj.user_id).data['email']
     
     # 태그들의 content 값 리스트 형태로 추가
     def get_tags(self, obj):
@@ -37,11 +37,14 @@ class BoardCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BoardComment
-        fields = ('id', 'board_id', 'user_id', 'user', 'content', 'created_at', 'is_deleted')
+        fields = ('id', 'user', 'board_id', 'user', 'content', 'created_at', 'is_deleted')
 
     # 유저 정보 추가
     def get_user(self, obj):
-        return UserSerializer(obj.user_id).data
+        serializer = UserSerializer(obj.user_id).data
+        comment_user = {"id": serializer['id'], 'email': serializer['email'], 'profile_img': serializer['profile_img']}
+
+        return comment_user
 
 
 # BoardLike
