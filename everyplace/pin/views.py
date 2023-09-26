@@ -295,4 +295,13 @@ class PinContentView(APIView):
             pin_content.save()
 
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response({'error': '핀 콘텐츠를 삭제할 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"detail": "핀 콘텐츠를 삭제할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+
+
+class AdditionalInfo(APIView):
+    
+    def get(self, requset, place_id):
+        thumbnail_img = get_thumbnail_img(place_id)
+        menu = get_menu(place_id)
+        
+        return Response({"thumbnail_img": thumbnail_img, "menu": menu})

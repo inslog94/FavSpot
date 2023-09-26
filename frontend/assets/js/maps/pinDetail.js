@@ -1,5 +1,6 @@
 import { PIN_DETAIL, origin } from './data.js';
 import { requestUser } from './data.js';
+import { createPlaceInfo } from '../util/placeInfo.js';
 
 export function pinDetail() {
   let pinData = null;
@@ -55,67 +56,15 @@ export function pinDetail() {
       .then((response) => {
         // 성공 상태가 아니면 에러 메시지 출력 후 함수 종료
         if (!response.ok) {
-          const modalTitleElement = document.getElementById('myModalLabel');
-          modalTitleElement.textContent = '해당 핀이 없습니다.';
-          const modalNewAddressElement =
-            document.getElementById('modalNewAddress');
-          modalNewAddressElement.textContent =
-            '이 장소의 핀을 처음 생성해 보세요!';
-
-          // 핀 저장 버튼, old address, category ul 제거
-          const saveButton = document.getElementById('saveButton');
-          const oldAddress = document.getElementById('modalOldAddress');
-          const categoryUl = document.querySelector('.entry-meta');
-
-          saveButton.remove();
-          oldAddress.remove();
-          categoryUl.remove();
-          throw new Error('Not found');
+          // 가져온 데이터로 상세보기 정보 표시하기
+          createPlaceInfo();
+          throw new Error('NO PIN');
         }
         return response.json();
       })
       .then((data) => {
         pinData = data.results.pin; // 데이터 저장
-        // 가져온 데이터로 상세보기 정보 표시하기
-        const modalTitleElement = document.getElementById('myModalLabel');
-        const modalCategoryElement = document.getElementById('modalCategory');
-        const modalPinCountElement = document.getElementById('modalPinCount');
-        const modalUpdatedAtElement = document.getElementById('modalUpdatedAt');
-        const modalNewAddressElement =
-          document.getElementById('modalNewAddress');
-        const modalOldAddressElement =
-          document.getElementById('modalOldAddress');
-        const modalMenuElement = document.getElementById('modalMenu');
-        const subscribeIconElement = document.querySelector('.subscribe-icon');
-
-        modalTitleElement.textContent = data.results.pin.title;
-        modalCategoryElement.textContent = data.results.pin.category;
-        modalPinCountElement.innerHTML = `이 장소의 핀: <strong>${data.results.pin_content_count}<strong>개`;
-        modalUpdatedAtElement.textContent = `업데이트: ${
-          data.results.pin.updated_at.split('T')[0]
-        }`;
-        modalNewAddressElement.innerHTML = `<i class="fa fa-map-marker"></i> <b>도로명주소:</b> ${data.results.pin.new_address}`;
-        modalOldAddressElement.innerHTML = `<i class="fa fa-map-marker"></i> <b>지번주소:</b> ${data.results.pin.old_address}`;
-
-        // 메뉴가 있을 시 메뉴를 표 형식으로 보여주기
-        if (data.results.menu !== null) {
-          const menuItems = data.results.menu;
-          let menuHtml = '<h5 class="mt-10 mb-20">- 메뉴 -</h5>';
-          menuItems.forEach((menuItem) => {
-            menuHtml += `<li>${menuItem.menu} - ${menuItem.price}</li>`;
-          });
-          modalMenuElement.innerHTML = menuHtml;
-        } else {
-          modalMenuElement.innerHTML = '<p>제공되는 메뉴가 없습니다.</p>';
-        }
-
-        // thumbnail_img를 보여주기
-        if (data.results.pin.thumbnail_img) {
-          subscribeIconElement.src = `${data.results.pin.thumbnail_img}`; // thumbnail_img 사진과 연결
-        } else {
-          subscribeIconElement.src =
-            'https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/default_img.png'; // 기본 사진 지정
-        }
+        createPlaceInfo(data.results);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);

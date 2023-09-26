@@ -12,4 +12,7 @@ urlpatterns = [
     # 핀 상세정보 조회
     path('<str:place_id>/',
          views.PinDetailView.as_view(), name='pin-detail'),
+    # 등록되지 않은 핀에 대한 정보 제공
+    path('no-content/<str:place_id>/',
+         views.AdditionalInfo.as_view(), name='add-info'),
 ]
