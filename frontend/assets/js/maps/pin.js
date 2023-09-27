@@ -413,11 +413,6 @@ export async function displayPinOverlay(markerInfo) {
 
   // 핀 생성 버튼 클릭시 보드 목록 오버레이 표시 이벤트
   showPinSaveOverlayBtn.addEventListener('click', () => {
-    if (!ACCOUNT.login) {
-      alert('로그인이 필요합니다');
-      return;
-    }
-
     let open = PIN_SAVE_OVERLAY.getVisible();
 
     if (open) {
@@ -503,11 +498,6 @@ function displayBoardsOnOverlay(markerInfo) {
   boardAddBtnBox.classList.add('board_add_box');
 
   boardAddBtnBox.addEventListener('click', () => {
-    if (!ACCOUNT.login) {
-      alert('로그인이 필요합니다');
-      return;
-    }
-
     $boardAddModal.style.display = 'flex';
     $boardAddModalContent.style.display = 'flex';
   });

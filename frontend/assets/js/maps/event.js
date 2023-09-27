@@ -441,12 +441,10 @@ window.onload = function init() {
     page === undefined ||
     page === null
   ) {
-    loginProcess();
     displayGeoLocationMap();
     mapSetup();
     placeSearchClickEvent();
     clusterClickEvent();
-    mapSizeEvent();
     boardCreateModalCloseEvent();
     boardCloseModalBtnEvent();
     mainBoardSetup();
@@ -454,9 +452,9 @@ window.onload = function init() {
     displayGeoLocationMap();
     mapSetup();
     clusterClickEvent();
-    loginProcess();
     boardDetailSetUp();
-  } else {
-    loginProcess();
+  } else if (myModal && myModal.style.display === 'block') {
+    displayGeoLocationMap();
+    mapSetup();
   }
 };
