@@ -50,6 +50,7 @@ import {
   displayMarkers,
 } from './map.js';
 import { displayPinOverlay, setMarkersFromServer } from './pin.js';
+import { pinDetail } from './pinDetail.js';
 import { searchPlaceAsKeyword } from './search.js';
 
 // 모든 오버레이 지도에서 제거
@@ -73,7 +74,7 @@ export function removePinSaveOverlay() {
 }
 
 // 지도 초기화
-function mapSetup() {
+export function mapSetup() {
   MAP_OPTIONS.center = CURRENT_POSITION;
   MAP_OPTIONS.level = INIT_MAP_LEVEL;
 
@@ -299,21 +300,10 @@ function clusterClickEvent() {
   });
 }
 
-// 메인 페이지 화면 버튼 이벤트
-function mapSizeEvent() {
-  $screenBtn.addEventListener('click', () => {
-    if (screenMode.fullScreen) {
-      fullScreenEnd();
-    } else {
-      fullScreen();
-    }
-  });
-}
-
 // 메인 페이지 보드 채우기
 async function mainBoardSetup() {
   let boards = await getBoards();
-  displayMainBoards(boards);
+  displayMainBoards(boards['boards']);
 }
 
 // 로그인 여부에 따라 화면 출력
@@ -378,6 +368,7 @@ export async function loginProcess() {
 
       // 로그인 링크 생성
       const loginLink = document.createElement('a');
+      loginLink.className = 'login';
       loginLink.appendChild(document.createTextNode('Login'));
 
       // 가입 링크 생성
@@ -421,8 +412,8 @@ export async function boardDetailSetUp() {
     .then((response) => response.json())
     .then(async (data) => {
       await boardDetail(data);
-  setMarkersFromServer(CURRENT_PINS.value);
-  displayMarkers();
+      setMarkersFromServer(CURRENT_PINS.value);
+      displayMarkers();
     });
 }
 
