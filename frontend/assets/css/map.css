@@ -22,9 +22,7 @@ a:visited {
   position: relative;
   width: 90%;
   height: 90vh;
-  margin-top: 0.5rem;
   border-radius: 15px;
-  margin-left: 10px;
 }
 #map {
   width: 100%;
