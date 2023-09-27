@@ -411,6 +411,10 @@ export async function boardDetailSetUp() {
   })
     .then((response) => response.json())
     .then(async (data) => {
+      // 핀이 존재하지 않는 보드의 경우 지도 미표시
+      if (data.pins.length === 0) {
+        document.querySelector(".entry-image.clearfix.map").style.display = 'none';
+      }
       await boardDetail(data);
       setMarkersFromServer(CURRENT_PINS.value);
       displayMarkers();
