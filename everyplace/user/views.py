@@ -90,7 +90,7 @@ def google_callback(request):
     accept_json = accept.json()
     accept_json.pop('user', None)
     # Cookies에 HTTP Only, Secure 속성으로 토큰을 저장하여 응답
-    response = JsonResponse({'Google_login': 'success'}, status=status.HTTP_201_CREATED)
+    response = HttpResponseRedirect(INDEX_URL)
     response.set_cookie('access_token', accept_json['access_token'], httponly=True)
     response.set_cookie('refresh_token', accept_json['refresh_token'], httponly=True)
     response.set_cookie('login_check', True)
@@ -167,7 +167,7 @@ def kakao_callback(request):
     accept_json = accept.json()
     accept_json.pop('user', None)
     # Cookies에 HTTP Only, Secure 속성으로 토큰을 저장하여 응답
-    response = JsonResponse({'Kakao_login': 'success'}, status=status.HTTP_201_CREATED)
+    response = HttpResponseRedirect(INDEX_URL)
     response.set_cookie('access_token', accept_json['access_token'], httponly=True)
     response.set_cookie('refresh_token', accept_json['refresh_token'], httponly=True)
     response.set_cookie('login_check', True)
