@@ -37,7 +37,7 @@ class BoardCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BoardComment
-        fields = ('id', 'user', 'board_id', 'user', 'content', 'created_at', 'is_deleted')
+        fields = ('id', 'user_id', 'user', 'board_id', 'content', 'created_at', 'is_deleted')
 
     # 유저 정보 추가
     def get_user(self, obj):
