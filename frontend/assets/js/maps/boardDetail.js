@@ -43,6 +43,7 @@ export async function boardDetail(data) {
   // 로그인된 유저 이메일 저장
   loggedInUserEmail = data.request_user.email;
   console.log(loggedInUserEmail);
+  
   // 유저 이름 설정
   const nameInput = document.querySelector('#headerEmail');
   console.log(nameInput);
@@ -69,7 +70,7 @@ export async function boardDetail(data) {
   // 보드 수정 / 삭제 아이콘 표시
   // 로그인된 유저와 보드 작성자가 같은 경우
   const settingsBox = document.querySelector('.settings-box');
-  const boardUserEmail = data.board.user.email;
+  const boardUserEmail = data.board.user;
 
   if (loggedInUserEmail === boardUserEmail) {
     settingsBox.style.display = 'block';
@@ -243,6 +244,16 @@ export async function boardDetail(data) {
     });
   }
 
+  // 댓글 작성란 유저 프로필 이미지 설정
+  const replyprofileImg = document.querySelector('.img-profile');
+  if (data.request_user.profile_img) {
+    replyprofileImg.src = data.request_user.profile_img;
+  }
+
+  // 댓글 작성란 유저 이름 설정
+  const replyNameInput = document.querySelector('.user-email');
+  replyNameInput.textContent = data.request_user.email;
+
   // 댓글 목록
   var commentsSection = document.querySelector('.comments-container');
 
@@ -404,7 +415,9 @@ export async function boardDetail(data) {
       .then((data) => {
         location.reload(); // 페이지 새로고침
       })
-      .catch((error) => console.error('Error:', error));
+      .catch((error) => 
+      console.error('Error:', error
+      ));
   });
 
   // 보드 삭제 기능
