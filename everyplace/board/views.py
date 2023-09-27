@@ -94,7 +94,12 @@ class BoardView(APIView):
     
             serializer = BoardPinSerializer(boards, many=True)
 
-            return Response(serializer.data)
+            if request.user.is_authenticated:
+                request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://everyplacetest.s3.amazonaws.com/" + str(request.user.profile_img)}
+            else:
+                request_user = {}
+            
+            return Response({'request_user': request_user, "boards": serializer.data}, status=status.HTTP_200_OK)
         
         ## 특정 보드 상세 조회
         else:
@@ -121,8 +126,14 @@ class BoardView(APIView):
             pin_serializer = PinSerializer(pins, many=True)
             comment_serializer = BoardCommentSerializer(comments, many=True)
             board_serializer = BoardSerializer(board)
-
+            
+            if request.user.is_authenticated:
+                request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://everyplacetest.s3.amazonaws.com/" + str(request.user.profile_img)}
+            else:
+                request_user = {}
+            
             data = {
+                'request_user': request_user,
                 'board': board_serializer.data,
                 'user_liked': user_liked,
                 'likes_count': likes_count,
@@ -589,4 +600,9 @@ class UserTaggedBoardView(APIView):
 
         serializer = BoardPinSerializer(queryset, many=True)
         
-        return Response(serializer.data)
+        if request.user.is_authenticated:
+                request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://everyplacetest.s3.amazonaws.com/" + str(request.user.profile_img)}
+        else:
+            request_user = {}
+        
+        return Response({'request_user': request_user, "boards": serializer.data}, status=status.HTTP_200_OK)

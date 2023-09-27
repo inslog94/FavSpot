@@ -408,10 +408,26 @@ export async function loginProcess() {
     });
 }
 
-async function boardDetailSetUp() {
-  await boardDetail();
+export async function boardDetailSetUp() {
+  const selectedPk = window.localStorage.getItem('selectedPk');
+  console.log(selectedPk);
+
+  await fetch(`http://127.0.0.1:8000/board/${selectedPk}/`, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then(async (data) => {
+      await boardDetail(data);
   setMarkersFromServer(CURRENT_PINS.value);
   displayMarkers();
+    });
+}
+
+export async function pinDetailSetUp() {
+  await pinDetail();
 }
 
 // 전체 기능 초기화
