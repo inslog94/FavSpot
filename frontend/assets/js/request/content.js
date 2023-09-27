@@ -29,7 +29,22 @@ export async function getBoardRequest(keyword) {
     },
   });
 
-  return response.json();
+  const resJson = await response.json();
+  const requestUser = resJson.request_user.email;
+  const requestUserProfileImg = resJson.request_user.profileImg;
+
+  if (requestUser) {
+    const email = document.querySelector('#headerEmail');
+    email.textContent = requestUser;
+    const profileImg = document.querySelector('.profileImg');
+
+    if (requestUserProfileImg !== 'https://everyplacetest.s3.amazonaws.com/') {
+      profileImg.src = requestUserProfileImg;
+      profileImg.style.borderRadius = '50%';
+    }
+  }
+
+  return resJson;
 }
 
 export async function findBoardRequest(id) {

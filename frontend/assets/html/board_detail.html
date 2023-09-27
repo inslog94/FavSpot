@@ -32,24 +32,36 @@
     />
 
     <!-- Plugins -->
-    <link rel="stylesheet" type="text/css" href="../css/plugins-css.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/template/plugins-css.css"
+    />
 
     <!-- Typography -->
-    <link rel="stylesheet" type="text/css" href="../css/typography.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/template/typography.css"
+    />
 
     <!-- Shortcodes -->
     <link
       rel="stylesheet"
       type="text/css"
-      href="../css/shortcodes/shortcodes.css"
+      href="../css/template/shortcodes/shortcodes.css"
     />
 
     <!-- Style -->
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/template/style.css" />
     <link rel="stylesheet" type="text/css" href="../css/modal.css" />
 
     <!-- Responsive -->
-    <link rel="stylesheet" type="text/css" href="../css/responsive.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/template/responsive.css"
+    />
 
     <!-- map -->
     <script
@@ -360,83 +372,15 @@
         color: gray;
         font-size: 15px;
       }
+
+      #logo-img:hover {
+        cursor: pointer;
+      }
     </style>
   </head>
 
   <body>
-    <div class="wrapper">
-      <!--================================= preloader -->
-
-      <div id="pre-loader">
-        <img
-          class="img-fluid d-block mx-auto"
-          src="../img/pre-loader/loader-03.svg"
-          alt=""
-        />
-      </div>
-
-      <!--================================= preloader -->
-
-      <header
-        id="header"
-        class="header light logo-center"
-        style="background-color: beige"
-      >
-        <nav
-          id="menu"
-          class="mega-menu d-flex align-items-center"
-          style="min-height: 60px"
-        >
-          <!-- menu list items container -->
-          <div class="col-lg-12 col-md-12">
-            <!-- menu logo -->
-            <div
-              id="headerContent"
-              class="position-relative"
-              style="width: 95vw"
-            >
-              <a href="../../index.html">
-                <img
-                  id="logo_img"
-                  src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/big_logo.png"
-                  alt="logo"
-                  style="width: 80px; height: 60px"
-                  class="mx-auto d-block"
-                />
-              </a>
-
-              <div class="shpping-cart position-absolute top-0 end-0 mt-2">
-                <a class="cart-btn" href="#">
-                  <img
-                    class="profileImg"
-                    src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default_clear.png"
-                    alt=""
-                    style="object-fit: cover; width: 45px; height: 45px"
-                  />
-                </a>
-                <div class="cart">
-                  <div class="cart-title">
-                    <h6 id="headerEmail" class="uppercase mb-0"></h6>
-                  </div>
-                  <div class="cart-item">
-                    <div class="cart-name clearfix">
-                      <a href="user_info.html">User Detail</a>
-                    </div>
-                  </div>
-                  <div class="cart-total">
-                    <a class="button" href="profile_edit.html">Profile Edit</a>
-                    <a id="logout" class="button black" href="#">Logout</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-        <!-- menu end -->
-      </header>
-
-      <!--================================= header -->
-
+    <div id="main-container">
       <!--================================= modal-popovers -->
 
       <section class="page-section-ptb">
@@ -446,8 +390,8 @@
               <div class="blog-entry mb-10">
                 <div class="entry-image clearfix map">
                   <!--지도 넣어야함-->
-                  <div style="display: flex; width: 1600px">
-                    <div class="map_wrap" style="width: 70%; height: 700px">
+                  <div style="display: flex">
+                    <div class="map_wrap" style="width: 100%; height: 700px">
                       <div id="map"></div>
                     </div>
                   </div>
@@ -489,12 +433,12 @@
                           >
                         </li>
                         <li>
-                            <i class="fa fa-calendar-o"></i>
-                            <span class="board-createdAt">12 Aug 2021</span>
+                          <i class="fa fa-calendar-o"></i>
+                          <span class="board-createdAt">12 Aug 2021</span>
                         </li>
                         <li>
-                            <i class="fa fa-star"></i>
-                            <span class="board-likedCnt">좋아요개수</span>
+                          <i class="fa fa-star"></i>
+                          <span class="board-likedCnt">좋아요개수</span>
                         </li>
                       </ul>
                     </div>
@@ -597,8 +541,12 @@
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header align-items-start">
-                      <div class="modal-title" id="exampleModalLongTitle" style="width: auto;">
-                          <h2 class="modal-title-text">Board Edit</h2>
+                      <div
+                        class="modal-title"
+                        id="exampleModalLongTitle"
+                        style="width: auto"
+                      >
+                        <h2 class="modal-title-text">Board Edit</h2>
                         <div class="section-title mb-10">
                           <div class="blog-entry mb-10">
                             <div class="board-box-modal" style="width: 830px">
@@ -611,11 +559,11 @@
                                     <i class="fa fa-unlock"></i>
                                   </button>
                                 </div>
-                                <span class="lock-desc">공개 / 비공개 보드 설정</span>
+                                <span class="lock-desc"
+                                  >공개 / 비공개 보드 설정</span
+                                >
                               </div>
-                              <h3 class="theme-color mt-30">
-                                Title
-                              </h3>
+                              <h3 class="theme-color mt-30">Title</h3>
                               <div class="">
                                 <div class="title-box mb-40">
                                   <h1><input class="input-board-title" /></h1>
@@ -661,9 +609,7 @@
                     </div>
 
                     <div class="modal-footer">
-                      <button
-                        id="save-button"
-                        class="btn btn-primary">
+                      <button id="save-button" class="btn btn-primary">
                         Save
                       </button>
 
@@ -689,7 +635,7 @@
               aria-labelledby="myLargeModalLabel"
               aria-hidden="true"
             >
-              <div class="modal-dialog modal-lg">
+              <div class="modal-dialog modal-lg mt-0">
                 <div class="modal-content">
                   <div class="modal-header align-items-start">
                     <div class="modal-title" id="exampleModalLongTitle">
@@ -808,7 +754,11 @@
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-
+                  <div
+                    class="static-container d-flex justify-content-center align-items-center"
+                  >
+                    <!-- <div id="staticMap" style="width: 80%; height: 40vh"></div> -->
+                  </div>
                   <!-- 핀 콘텐츠가 만들어질 컨테이너 -->
                   <div id="pinContentsContainer" class="modal-body">
                     <div class="port-post clearfix">
@@ -861,92 +811,39 @@
       </section>
     </div>
 
-    <div id="back-to-top">
-      <a class="top arrow" href="#top">
-        <i class="fa fa-angle-up"></i>
-        <span>TOP</span></a
-      >
-    </div>
-
-    <footer class="footer footer-topbar fixed-bottom">
-      <div class="copyright pt-10 pb-0" style="background-color: beige">
-        <div class="container m-0">
-          <div class="row d-flex justify-content-between" style="width: 100vw">
-            <div class="col-lg-6" style="width: 550px">
-              <img
-                class="img-fluid mb-10 ml-20"
-                style="height: 50px"
-                src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/horizontal_logo.png"
-                alt=""
-              />
-              <div style="color: #555">
-                <p class="ml-20">
-                  &copy;Copyright
-                  <span id="copyright">
-                    <script>
-                      document
-                        .getElementById('copyright')
-                        .appendChild(
-                          document.createTextNode(new Date().getFullYear())
-                        );
-                    </script>
-                    by
-                    <a href="#" style="color: #ff5757"> FavSpot. </a> </span
-                  >Making Every Destination Yours.
-                </p>
-              </div>
-            </div>
-            <div class="col-lg-6 mt-2" style="width: 550px">
-              <div class="footer-social">
-                <p class="text-start text-lg-end mr-20">
-                  Leave Your Mark with
-                  <a href="#" style="color: #ff5757">FavSpot</a>, Everywhere You
-                  Go
-                </p>
-              </div>
-              <div
-                class="social-icons color-hover text-start text-lg-end mt-20"
-              >
-                <ul class="clearfix">
-                  <li class="social-github">
-                    <a
-                      class="mr-20"
-                      href="https://github.com/inslog94/FavSpot"
-                      target="_blank"
-                    >
-                      <i class="fa fa-github"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
-
     <!--================================= jquery -->
 
     <!-- jquery -->
-    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script src="../js/template/jquery-3.6.0.min.js"></script>
+
+    <script type="module">
+      import { createPreloader } from '../js/util/preloader.js';
+      import { createPinDetail } from '../js/util/pinDetailModal.js';
+      import { createHeader } from '../js/util/header.js';
+      import { createFooter } from '../js/util/footer.js';
+      createPreloader();
+      createPinDetail();
+      createHeader();
+      createFooter();
+    </script>
 
     <!-- plugins-jquery -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+
     <script src="https://cdn.jsdelivr.net/foundation/6.2.4/foundation.min.js"></script>
-    <script src="../js/plugins-jquery.js"></script>
+    <script src="../js/template/plugins-jquery.js"></script>
 
     <!-- Google recaptcha -->
-    <!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = '../js/';
+      var plugin_path = '../js/template/';
     </script>
 
     <!-- custom -->
-    <script src="../js/custom.js"></script>
+    <script src="../js/template/custom.js"></script>
 
-    <script>
+    <script type="module">
+      import { boardDetail } from '../js/maps/boardDetail.js';
       document.addEventListener('DOMContentLoaded', function () {
         // 로컬 스토리지로 보드 id 값 가져오기
         const boardPk = localStorage.getItem('selectedPk');
@@ -1010,84 +907,83 @@
             // 핀 목록 (모달)
             const containerElement = document.querySelector('.pins-container2');
 
-             // 등록된 핀이 없는 경우
+            // 등록된 핀이 없는 경우
             if (data.pins.length === 0) {
               const noPinsMessage = document.createElement('div');
-              noPinsMessage.innerHTML = '보드에 등록된 핀이 없습니다. <br>메인페이지에서 해당 보드에 핀을 추가할 수 있습니다.';
+              noPinsMessage.innerHTML =
+                '보드에 등록된 핀이 없습니다. <br>메인페이지에서 해당 보드에 핀을 추가할 수 있습니다.';
               noPinsMessage.classList.add('no-pins-message');
               containerElement.appendChild(noPinsMessage);
-            }
-            else{
+            } else {
               data.pins.forEach((pin, index) => {
-              const postElement = document.createElement('div');
-              postElement.classList.add('port-post', 'clearfix', 'bg-white');
-              postElement.dataset.id = pin.id; // data-id 속성 설정
+                const postElement = document.createElement('div');
+                postElement.classList.add('port-post', 'clearfix', 'bg-white');
+                postElement.dataset.id = pin.id; // data-id 속성 설정
 
-              if (index === 0) {
-                postElement.classList.add('mt-20');
-              } else {
-                postElement.classList.add('mt-40', 'mb-20');
-              }
-
-              const boxElement = document.createElement('div');
-              boxElement.classList.add('pins-box');
-
-              const photoDivElement = document.createElement('div');
-              photoDivElement.classList.add('port-post-photo');
-
-              const imgElement = document.createElement('img');
-              imgElement.src = pin.thumbnail_img;
-              imgElement.classList.add('pin-thumbnail-img');
-
-              photoDivElement.appendChild(imgElement);
-
-              const infoDivElement = document.createElement('div');
-              infoDivElement.classList.add('port-post-info');
-
-              const h3Element = document.createElement('h3');
-              h3Element.classList.add('theme-color');
-              h3Element.innerHTML = `<span>상호명: </span>${pin.title}`;
-
-              infoDivElement.appendChild(h3Element);
-
-              let pinsInfoDiv = document.createElement('div');
-              pinsInfoDiv.classList.add('pins-info');
-
-              ['category', 'new_address'].forEach((key) => {
-                if (pin[key]) {
-                  let h5Element = document.createElement('h5');
-                  let label = '';
-
-                  if (key === 'category') {
-                    label = '카테고리';
-                  } else if (key === 'new_address') {
-                    label = '주소';
-                  }
-
-                  h5Element.innerHTML = `<span>${label}: </span>${pin[key]}`;
-                  pinsInfoDiv.append(h5Element);
+                if (index === 0) {
+                  postElement.classList.add('mt-20');
+                } else {
+                  postElement.classList.add('mt-40', 'mb-20');
                 }
+
+                const boxElement = document.createElement('div');
+                boxElement.classList.add('pins-box');
+
+                const photoDivElement = document.createElement('div');
+                photoDivElement.classList.add('port-post-photo');
+
+                const imgElement = document.createElement('img');
+                imgElement.src = pin.thumbnail_img;
+                imgElement.classList.add('pin-thumbnail-img');
+
+                photoDivElement.appendChild(imgElement);
+
+                const infoDivElement = document.createElement('div');
+                infoDivElement.classList.add('port-post-info');
+
+                const h3Element = document.createElement('h3');
+                h3Element.classList.add('theme-color');
+                h3Element.innerHTML = `<span>상호명: </span>${pin.title}`;
+
+                infoDivElement.appendChild(h3Element);
+
+                let pinsInfoDiv = document.createElement('div');
+                pinsInfoDiv.classList.add('pins-info');
+
+                ['category', 'new_address'].forEach((key) => {
+                  if (pin[key]) {
+                    let h5Element = document.createElement('h5');
+                    let label = '';
+
+                    if (key === 'category') {
+                      label = '카테고리';
+                    } else if (key === 'new_address') {
+                      label = '주소';
+                    }
+
+                    h5Element.innerHTML = `<span>${label}: </span>${pin[key]}`;
+                    pinsInfoDiv.append(h5Element);
+                  }
+                });
+
+                // 삭제 아이콘을 위한 버튼 요소 생성
+                const deleteButton = document.createElement('button');
+                deleteButton.classList.add('fa', 'fa-times-rectangle');
+
+                infoDivElement.append(pinsInfoDiv);
+                infoDivElement.appendChild(deleteButton);
+                boxElement.append(photoDivElement, infoDivElement);
+                postElement.append(boxElement);
+                containerElement.appendChild(postElement);
+
+                // 삭제 아이콘 클릭 시 핀 삭제
+                deleteButton.addEventListener('click', function () {
+                  postElement.remove();
+                });
+
+                infoDivElement.appendChild(deleteButton);
               });
-
-              // 삭제 아이콘을 위한 버튼 요소 생성
-              const deleteButton = document.createElement('button');
-              deleteButton.classList.add('fa', 'fa-times-rectangle');
-
-              infoDivElement.append(pinsInfoDiv);
-              infoDivElement.appendChild(deleteButton);
-              boxElement.append(photoDivElement, infoDivElement);
-              postElement.append(boxElement);
-              containerElement.appendChild(postElement);
-
-              // 삭제 아이콘 클릭 시 핀 삭제
-              deleteButton.addEventListener('click', function () {
-                postElement.remove();
-              });
-
-              infoDivElement.appendChild(deleteButton);
-            });
             }
-            
           })
           .catch((error) => console.error('Error:', error));
 

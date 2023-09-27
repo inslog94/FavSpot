@@ -28,23 +28,35 @@
     />
 
     <!-- Plugins -->
-    <link rel="stylesheet" type="text/css" href="../css/plugins-css.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/template/plugins-css.css"
+    />
 
     <!-- Typography -->
-    <link rel="stylesheet" type="text/css" href="../css/typography.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/template/typography.css"
+    />
 
     <!-- Shortcodes -->
     <link
       rel="stylesheet"
       type="text/css"
-      href="../css/shortcodes/shortcodes.css"
+      href="../css/template/shortcodes/shortcodes.css"
     />
 
     <!-- Style -->
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/template/style.css" />
 
     <!-- Responsive -->
-    <link rel="stylesheet" type="text/css" href="../css/responsive.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/template/responsive.css"
+    />
     <!-- Swiper 스타일시트를 로드합니다. -->
     <link
       rel="stylesheet"
@@ -93,93 +105,21 @@
   </head>
 
   <body>
-    <div class="wrapper">
-      <!--=================================
- preloader -->
-
-      <div id="pre-loader">
-        <img
-          class="img-fluid d-block mx-auto"
-          src="../img/pre-loader/loader-03.svg"
-          alt=""
-        />
-      </div>
-
-      <!--=================================
- preloader -->
-
-      <!--=================================
- header -->
-
-      <header
-        id="header"
-        class="header light logo-center"
-        style="background-color: beige"
-      >
-        <nav
-          id="menu"
-          class="mega-menu d-flex align-items-center"
-          style="min-height: 60px"
-        >
-          <!-- menu list items container -->
-          <div class="col-lg-12 col-md-12">
-            <!-- menu logo -->
-            <div
-              id="headerContent"
-              class="position-relative"
-              style="width: 95vw"
-            >
-              <a href="../../index.html">
-                <img
-                  id="logo_img"
-                  src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/big_logo.png"
-                  alt="logo"
-                  style="width: 80px; height: 60px"
-                  class="mx-auto d-block"
-                />
-              </a>
-
-              <div class="shpping-cart position-absolute top-0 end-0 mt-2">
-                <a class="cart-btn" href="#">
-                  <img
-                    class="profileImg"
-                    src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default_clear.png"
-                    alt=""
-                    style="object-fit: cover; width: 45px; height: 45px"
-                  />
-                </a>
-                <div class="cart">
-                  <div class="cart-title">
-                    <h6 id="headerEmail" class="uppercase mb-0"></h6>
-                  </div>
-                  <div class="cart-item">
-                    <div class="cart-name clearfix">
-                      <a href="user_info.html">User Detail</a>
-                    </div>
-                  </div>
-                  <div class="cart-total">
-                    <a class="button" href="profile_edit.html">Profile Edit</a>
-                    <a id="logout" class="button black" href="#">Logout</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- menu end -->
-          </div>
-        </nav>
-      </header>
-
-      <!--=================================
-header -->
+    <div id="main-container">
       <!--=================================
  masnary blog-->
 
-      <section class="white-bg blog masonry-main page-section-ptb">
+      <section
+        class="white-bg blog masonry-main page-section-ptb"
+        style="height: 98.75%"
+      >
         <div class="container">
           <div class="row">
             <div class="col-lg-12 col-md-12">
               <div class="section-title text-center">
-                <h6 class="">View Your Boards with Tag - <span class="tag-name"></span></h6>
+                <h6 class="">
+                  View Your Boards with Tag - <span class="tag-name"></span>
+                </h6>
                 <h2 class="title-effect mt-10">Tagged Your Board</h2>
               </div>
             </div>
@@ -253,94 +193,38 @@ header -->
           </div>
         </div>
       </section>
+    </div>
 
-      <!--=================================
+    <!--=================================
  masnary blog-->
-      <footer class="footer footer-topbar fixed-bottom">
-        <div class="copyright pt-10 pb-0" style="background-color: beige">
-          <div class="container m-0">
-            <div
-              class="row d-flex justify-content-between"
-              style="width: 100vw"
-            >
-              <div class="col-lg-6" style="width: 550px">
-                <img
-                  class="img-fluid mb-10 ml-20"
-                  style="height: 50px"
-                  src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/horizontal_logo.png"
-                  alt=""
-                />
-                <div style="color: #555">
-                  <p class="ml-20">
-                    &copy;Copyright
-                    <span id="copyright">
-                      <script>
-                        document
-                          .getElementById('copyright')
-                          .appendChild(
-                            document.createTextNode(new Date().getFullYear())
-                          );
-                      </script>
-                      by
-                      <a href="#" style="color: #ff5757"> FavSpot. </a> </span
-                    >Making Every Destination Yours.
-                  </p>
-                </div>
-              </div>
-              <div class="col-lg-6 mt-2" style="width: 550px">
-                <div class="footer-social">
-                  <p class="text-start text-lg-end mr-20">
-                    Leave Your Mark with
-                    <a href="#" style="color: #ff5757">FavSpot</a>, Everywhere
-                    You Go
-                  </p>
-                </div>
-                <div
-                  class="social-icons color-hover text-start text-lg-end mt-20"
-                >
-                  <ul class="clearfix">
-                    <li class="social-github">
-                      <a
-                        class="mr-20"
-                        href="https://github.com/inslog94/FavSpot"
-                        target="_blank"
-                        ><i class="fa fa-github"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-
-    <div id="back-to-top">
-      <a class="top arrow" href="#top"
-        ><i class="fa fa-angle-up"></i> <span>TOP</span></a
-      >
-    </div>
 
     <!--=================================
  jquery -->
 
     <!-- jquery -->
-    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script src="../js/template/jquery-3.6.0.min.js"></script>
 
     <!-- plugins-jquery -->
-    <script src="../js/plugins-jquery.js"></script>
+    <script src="../js/template/plugins-jquery.js"></script>
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = '../js/';
+      var plugin_path = '../js/template/';
     </script>
 
     <!-- custom -->
-    <script src="../js/custom.js"></script>
+    <script src="../js/template/custom.js"></script>
+    <script type="module">
+      import { createPreloader } from '/frontend/assets/js/util/preloader.js';
+      import { createHeader } from '/frontend/assets/js/util/header.js';
+      import { createFooter } from '/frontend/assets/js/util/footer.js';
+      import { submit } from '/frontend/assets/js/util/signup.js';
+      createPreloader();
+      createHeader();
+      createFooter();
+    </script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
-
       fetch(`http://127.0.0.1:8000/user/me/`, {
         method: 'GET',
         credentials: 'include',
@@ -350,7 +234,6 @@ header -->
       })
         .then((response) => response.json())
         .then((data) => {
-
           const requestUserPk = data.results.User.id;
           const requestUser = data.results.User.email;
           const followingList = data.results.User.following_list;
@@ -443,7 +326,12 @@ header -->
               // 좋아요한 보드 목록 버튼
               const button3 = document.createElement('a');
               button3.type = 'button';
-              button3.classList.add('btn', 'btn-primary', 'mt-1', 'liked-board-btn');
+              button3.classList.add(
+                'btn',
+                'btn-primary',
+                'mt-1',
+                'liked-board-btn'
+              );
 
               // 기존 요소에 버튼 추가
               const changeBtnDiv = document.querySelector('.changeBtn');
@@ -510,7 +398,10 @@ header -->
               tags.forEach((tag) => {
                 const newLi = document.createElement('li');
                 const newTag = document.createElement('a');
-                newTag.setAttribute('href', 'user_tagged_board.html?tag=' + encodeURIComponent(tag));
+                newTag.setAttribute(
+                  'href',
+                  'user_tagged_board.html?tag=' + encodeURIComponent(tag)
+                );
                 newTag.textContent = tag;
 
                 newLi.appendChild(newTag);
@@ -542,17 +433,18 @@ header -->
               document.querySelector('.tag-name').textContent = tag;
 
               fetch(`http://127.0.0.1:8000/board/tag/?tag=${tag}`, {
-                  credentials: 'include',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
+                credentials: 'include',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              })
+                .then((response) => response.json())
+                .then((data2) => {
+                  // 데이터를 보여주는 함수에 가져온 데이터 전달
+                  console.log('보드 목록', data2['boards']);
+                  showBoards(data2['boards']);
                 })
-                  .then((response) => response.json())
-                  .then((data2) => { 
-                    // 데이터를 보여주는 함수에 가져온 데이터 전달
-                    showBoards(data2);
-                  })
-                  .catch((error) => console.error('Error:', error));
+                .catch((error) => console.error('Error:', error));
 
               // 데이터를 보여주는 함수
               function showBoards(boards) {
@@ -703,7 +595,7 @@ header -->
               entryLock.appendChild(lock);
               entryTitle.appendChild(entryLock);
             }
-            
+
             entryTitle.appendChild(titleLink);
             blogDetail.appendChild(entryTitle);
 

@@ -21,89 +21,14 @@
       href="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/fav.png"
     />
 
-    <!-- font -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,500,500i,600,700,800,900|Poppins:200,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900"
-    />
-
-    <!-- Plugins -->
-    <link rel="stylesheet" type="text/css" href="../css/plugins-css.css" />
-
-    <!-- Typography -->
-    <link rel="stylesheet" type="text/css" href="../css/typography.css" />
-
-    <!-- Shortcodes -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../css/shortcodes/shortcodes.css"
-    />
-
-    <!-- Style -->
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />
-
-    <!-- Responsive -->
-    <link rel="stylesheet" type="text/css" href="../css/responsive.css" />
+    <link rel="stylesheet" href="../css/template/bootstrap.css" />
   </head>
 
+  <!--=================================
+Signup-->
   <body>
-    <div class="wrapper">
-      <!--=================================
- preloader -->
-
-      <div id="pre-loader">
-        <img
-          class="img-fluid d-block mx-auto"
-          src="../img/pre-loader/loader-03.svg"
-          alt=""
-        />
-      </div>
-
-      <!--=================================
- preloader -->
-      <!--=================================
- header -->
-
-      <header
-        id="header"
-        class="header light logo-center"
-        style="background-color: beige"
-      >
-        <nav
-          id="menu"
-          class="mega-menu d-flex align-items-center"
-          style="min-height: 60px"
-        >
-          <!-- menu list items container -->
-          <div class="col-lg-12 col-md-12">
-            <!-- menu logo -->
-            <div
-              id="headerContent"
-              class="position-relative"
-              style="width: 95vw"
-            >
-              <a href="../../index.html">
-                <img
-                  id="logo_img"
-                  src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/big_logo.png"
-                  alt="logo"
-                  style="width: 80px; height: 60px"
-                  class="mx-auto d-block"
-                />
-              </a>
-            </div>
-            <!-- menu end -->
-          </div>
-        </nav>
-      </header>
-
-      <!--=================================
-header -->
-      <!--=================================
- Signup-->
-
-      <section class="white-bg page-section-ptb">
+    <div id="main-container">
+      <section class="white-bg page-section-ptb" style="height: 98.75%">
         <div class="container">
           <div class="row">
             <div class="col-lg-12 col-md-12">
@@ -171,92 +96,35 @@ header -->
           </div>
         </div>
       </section>
-
-      <!--=================================
+    </div>
+    <!--=================================
  Signup-->
-      <footer class="footer footer-topbar fixed-bottom">
-        <div class="copyright pt-10 pb-0" style="background-color: beige">
-          <div class="container m-0">
-            <div
-              class="row d-flex justify-content-between"
-              style="width: 100vw"
-            >
-              <div class="col-lg-6" style="width: 550px">
-                <img
-                  class="img-fluid mb-10 ml-20"
-                  style="height: 50px"
-                  src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/horizontal_logo.png"
-                  alt=""
-                />
-                <div style="color: #555">
-                  <p class="ml-20">
-                    &copy;Copyright
-                    <span id="copyright">
-                      <script>
-                        document
-                          .getElementById('copyright')
-                          .appendChild(
-                            document.createTextNode(new Date().getFullYear())
-                          );
-                      </script>
-                      by
-                      <a href="#" style="color: #ff5757"> FavSpot. </a> </span
-                    >Making Every Destination Yours.
-                  </p>
-                </div>
-              </div>
-              <div class="col-lg-6 mt-2" style="width: 550px">
-                <div class="footer-social">
-                  <p class="text-start text-lg-end mr-20">
-                    Leave Your Mark with
-                    <a href="#" style="color: #ff5757">FavSpot</a>, Everywhere
-                    You Go
-                  </p>
-                </div>
-                <div
-                  class="social-icons color-hover text-start text-lg-end mt-20"
-                >
-                  <ul class="clearfix">
-                    <li class="social-github">
-                      <a
-                        class="mr-20"
-                        href="https://github.com/inslog94/FavSpot"
-                        target="_blank"
-                        ><i class="fa fa-github"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-
-    <div id="back-to-top">
-      <a class="top arrow" href="#top"
-        ><i class="fa fa-angle-up"></i> <span>TOP</span></a
-      >
-    </div>
 
     <!--=================================
  jquery -->
 
     <!-- jquery -->
-    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script src="../js/template/jquery-3.6.0.min.js"></script>
 
     <!-- plugins-jquery -->
-    <script src="../js/plugins-jquery.js"></script>
+    <script src="../js/template/plugins-jquery.js"></script>
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = '../js/';
+      var plugin_path = '../js/template/';
     </script>
 
     <!-- custom -->
-    <script src="../js/custom.js"></script>
-
+    <script src="../js/template/custom.js"></script>
+    <script type="module">
+      import { createPreloader } from '/frontend/assets/js/util/preloader.js';
+      import { createHeader } from '/frontend/assets/js/util/header.js';
+      import { createFooter } from '/frontend/assets/js/util/footer.js';
+      import { submit } from '/frontend/assets/js/util/signup.js';
+      createPreloader();
+      createHeader();
+      createFooter();
+    </script>
     <script>
       const $signup = document.querySelector('.signup');
       $signup.addEventListener('submit', (event) => {
@@ -286,7 +154,7 @@ header -->
           })
           .then((data) => {
             // 회원가입 성공 시 처리
-            window.location.href = '/';
+            window.location.href = '/frontend/index.html';
           })
           .catch((error) => {
             console.log(error, error.message);
