@@ -28,113 +28,48 @@
     />
 
     <!-- Plugins -->
-    <link rel="stylesheet" type="text/css" href="../css/plugins-css.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/template/plugins-css.css"
+    />
 
     <!-- Typography -->
-    <link rel="stylesheet" type="text/css" href="../css/typography.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/template/typography.css"
+    />
 
     <!-- Shortcodes -->
     <link
       rel="stylesheet"
       type="text/css"
-      href="../css/shortcodes/shortcodes.css"
+      href="../css/template/shortcodes/shortcodes.css"
     />
 
     <!-- Style -->
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />
-    <link rel="stylesheet" type="text/css" href="../css/pin-list.css" />
+    <link rel="stylesheet" type="text/css" href="../css/template/style.css" />
 
     <!-- shop -->
-    <link href="../css/shop.css" rel="stylesheet" type="text/css" />
+    <link href="../css/template/shop.css" rel="stylesheet" type="text/css" />
 
     <!-- Responsive -->
-    <link rel="stylesheet" type="text/css" href="../css/responsive.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/template/responsive.css"
+    />
   </head>
 
+  <link rel="stylesheet" href="../css/pin-list.css" />
+
   <body>
-    <div class="wrapper">
-      <!--=================================
- preloader -->
-
-      <div id="pre-loader">
-        <img
-          class="img-fluid d-block mx-auto"
-          src="../img/pre-loader/loader-03.svg"
-          alt=""
-        />
-      </div>
-
-      <!--=================================
- preloader -->
-
-      <!--=================================
- header -->
-
-      <header
-        id="header"
-        class="header light logo-center"
-        style="background-color: beige"
-      >
-        <nav
-          id="menu"
-          class="mega-menu d-flex align-items-center"
-          style="min-height: 60px"
-        >
-          <!-- menu list items container -->
-          <div class="col-lg-12 col-md-12">
-            <!-- menu logo -->
-            <div
-              id="headerContent"
-              class="position-relative"
-              style="width: 95vw"
-            >
-              <a href="../../index.html">
-                <img
-                  id="logo_img"
-                  src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/big_logo.png"
-                  alt="logo"
-                  style="width: 80px; height: 60px"
-                  class="mx-auto d-block"
-                />
-              </a>
-
-              <div class="shpping-cart position-absolute top-0 end-0 mt-2">
-                <a class="cart-btn" href="#">
-                  <img
-                    class="profileImg"
-                    src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default_clear.png"
-                    alt=""
-                    style="object-fit: cover; width: 45px; height: 45px"
-                  />
-                </a>
-                <div class="cart">
-                  <div class="cart-title">
-                    <h6 id="headerEmail" class="uppercase mb-0"></h6>
-                  </div>
-                  <div class="cart-item">
-                    <div class="cart-name clearfix">
-                      <a href="user_info.html">User Detail</a>
-                    </div>
-                  </div>
-                  <div class="cart-total">
-                    <a class="button" href="profile_edit.html">Profile Edit</a>
-                    <a id="logout" class="button black" href="#">Logout</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- menu end -->
-          </div>
-        </nav>
-      </header>
-
-      <!--=================================
-header -->
-
+    <div id="main-container">
       <!--=================================
 shop -->
 
-      <section class="wishlist-page page-section-ptb">
+      <section class="wishlist-page page-section-ptb" style="height: 98.75%">
         <div class="container">
           <div class="row">
             <div class="col-lg-12 col-md-12">
@@ -178,13 +113,8 @@ shop -->
                             ></span>
                             <span class="small">following</span>
                           </a>
-                          <a
-                            id="unfollow"
-                            class="button"
-                            href="profile_edit.html"
-                            >Profile Edit</a
-                          >
                         </div>
+                        <div class="changeBtn"></div>
                       </div>
                     </div>
                   </div>
@@ -209,386 +139,325 @@ shop -->
           </div>
         </div>
       </section>
-
-      <!--=================================
+    </div>
+    <!--=================================
 shop -->
-      <footer class="footer footer-topbar fixed-bottom">
-        <div class="copyright pt-10 pb-0" style="background-color: beige">
-          <div class="container m-0">
-            <div
-              class="row d-flex justify-content-between"
-              style="width: 100vw"
-            >
-              <div class="col-lg-6" style="width: 550px">
-                <img
-                  class="img-fluid mb-10 ml-20"
-                  style="height: 50px"
-                  src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/horizontal_logo.png"
-                  alt=""
-                />
-                <div style="color: #555">
-                  <p class="ml-20">
-                    &copy;Copyright
-                    <span id="copyright">
-                      <script>
-                        document
-                          .getElementById('copyright')
-                          .appendChild(
-                            document.createTextNode(new Date().getFullYear())
-                          );
-                      </script>
-                      by
-                      <a href="#" style="color: #ff5757"> FavSpot. </a> </span
-                    >Making Every Destination Yours.
-                  </p>
-                </div>
-              </div>
-              <div class="col-lg-6 mt-2" style="width: 550px">
-                <div class="footer-social">
-                  <p class="text-start text-lg-end mr-20">
-                    Leave Your Mark with
-                    <a href="#" style="color: #ff5757">FavSpot</a>, Everywhere
-                    You Go
-                  </p>
-                </div>
-                <div
-                  class="social-icons color-hover text-start text-lg-end mt-20"
-                >
-                  <ul class="clearfix">
-                    <li class="social-github">
-                      <a
-                        class="mr-20"
-                        href="https://github.com/inslog94/FavSpot"
-                        target="_blank"
-                        ><i class="fa fa-github"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-
-    <div id="back-to-top">
-      <a class="top arrow" href="#top"
-        ><i class="fa fa-angle-up"></i> <span>TOP</span></a
-      >
-    </div>
 
     <!--=================================
  jquery -->
 
     <!-- jquery -->
-    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script src="../js/template/jquery-3.6.0.min.js"></script>
 
     <!-- plugins-jquery -->
-    <script src="../js/plugins-jquery.js"></script>
+    <script src="../js/template/plugins-jquery.js"></script>
 
     <!-- plugin_path -->
     <script>
-      var plugin_path = '../js/';
+      var plugin_path = '../js/template/';
     </script>
 
     <!-- plugins-jquery -->
-    <script type="text/javascript" src="../js/slick/slick.min.js"></script>
+    <script
+      type="text/javascript"
+      src="../js/template/slick/slick.min.js"
+    ></script>
 
     <!-- custom -->
-    <script src="../js/custom.js"></script>
+    <script src="../js/template/custom.js"></script>
+    <script type="module">
+      import { createPreloader } from '/frontend/assets/js/util/preloader.js';
+      import { createHeader } from '/frontend/assets/js/util/header.js';
+      import { createFooter } from '/frontend/assets/js/util/footer.js';
+      import { submit } from '/frontend/assets/js/util/signup.js';
+      createPreloader();
+      createHeader();
+      createFooter();
+    </script>
     <script>
-      const url = 'http://127.0.0.1:8000';
-      const tagList = document.getElementById('tagList');
+      document.addEventListener('DOMContentLoaded', function () {
+        const url = 'http://127.0.0.1:8000';
+        const tagList = document.getElementById('tagList');
 
-      fetch(`${url}/user/me/`, {
-        method: 'GET',
-        credentials: 'include',
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const requestUser = data.results.User.email;
-          const requestUserPk = data.results.User.id;
-          const followingList = data.results.User.following_list;
-          const requestUserProfileImg = data.results.User.profile_img;
+        fetch(`${url}/user/me/`, {
+          method: 'GET',
+          credentials: 'include',
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const requestUser = data.results.User.email;
+            const requestUserPk = data.results.User.id;
+            const followingList = data.results.User.following_list;
+            const requestUserProfileImg = data.results.User.profile_img;
 
-          if (requestUser) {
-            const email = document.querySelector('#headerEmail');
-            email.textContent = requestUser;
-            if (requestUserProfileImg) {
-              const profileImg = document.querySelector('.profileImg');
-              profileImg.src = requestUserProfileImg;
-              profileImg.style.borderRadius = '50%';
+            if (requestUser) {
+              const email = document.querySelector('#headerEmail');
+              email.textContent = requestUser;
+              if (requestUserProfileImg) {
+                const profileImg = document.querySelector('.profileImg');
+                profileImg.src = requestUserProfileImg;
+                profileImg.style.borderRadius = '50%';
+              }
             }
-          }
-          const logout = document.querySelector('#logout');
-          logout.addEventListener('click', (event) => {
-            fetch(`http://127.0.0.1:8000/user/logout/`, {
-              method: 'GET',
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            })
-              .then((response) => {
-                if (response.status === 200) {
-                  console.log('로그아웃 성공');
-                  location.reload(); // 페이지 새로고침
-                }
-              })
-              .catch((error) => {
-                console.error('Error:', error);
-              });
+
+            // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
+            console.log(data);
+            const email = document.querySelector('#email');
+            email.textContent = data['results']['User']['email'];
+            const nickname = document.querySelector('#nickname');
+
+            if (data['results']['User']['nickname']) {
+              nickname.textContent = data['results']['User']['nickname'];
+            } else {
+              nickname.textContent = 'None';
+            }
+            const img = data['results']['User']['profile_img'];
+            console.log(img);
+            const profileImg = document.getElementById('profileImg');
+            if (img) {
+              profileImg.src = img;
+            }
+            console.log('유저', data);
+            let followers = document.querySelector('.followers');
+            followers.textContent = data['results']['User']['followers'];
+            followers = document.querySelector('#followers');
+            followers.addEventListener('click', (event) => {
+              console.log('click');
+              window.location.href = `follower.html`;
+            });
+            let following = document.querySelector('.following');
+            following.textContent = data['results']['User']['following'];
+            following = document.querySelector('#following');
+            following.addEventListener('click', (event) => {
+              window.location.href = `following.html`;
+            });
+
+            const changeBtnDiv = document.querySelector('.changeBtn');
+            const button = document.createElement('a');
+            button.type = 'button';
+            button.classList.add('btn', 'btn-primary', 'mt-1');
+            button.style.display = 'block';
+            button.textContent = 'Profile Edit';
+            button.setAttribute('href', 'profile_edit.html');
+            changeBtnDiv.appendChild(button);
+
+            const tags = data['results']['User']['tags'];
+            tags.forEach((tag) => {
+              const newLi = document.createElement('li');
+              const newTag = document.createElement('a');
+              newTag.setAttribute('href', '#');
+              newTag.textContent = tag;
+
+              newLi.appendChild(newTag);
+              tagList.appendChild(newLi);
+            });
+          })
+          .catch((error) => {
+            console.error('Failed to retrieve user data.', error);
           });
 
-          // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
-          console.log(data);
-          const email = document.querySelector('#email');
-          email.textContent = data['results']['User']['email'];
-          const nickname = document.querySelector('#nickname');
+        // 핀 콘텐츠 목록
+        fetch(`${url}/user/me/`, {
+          method: 'GET',
+          credentials: 'include',
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
+            console.log(data.results.User.pin_contents[0]);
+            const tbody = document.querySelector('#editList');
+            const followers = data.results.User.pin_contents;
+            followers.forEach((data) => {
+              const newTableRow = createTableRow(data);
+              tbody.appendChild(newTableRow);
+            });
+          })
+          .catch((error) => {
+            console.error('Failed to retrieve user data.', error);
+          });
 
-          if (data['results']['User']['nickname']) {
-            nickname.textContent = data['results']['User']['nickname'];
+        function createTableRow(data) {
+          const pin_content = data;
+          const tableRow = document.createElement('tr');
+
+          // 이미지 셀 생성
+          const imageCell = document.createElement('td');
+          imageCell.classList.add('image', 'pt-10', 'pb-10');
+
+          const contentPhoto = document.createElement('img');
+          contentPhoto.classList.add('img-fluid');
+          contentPhoto.style.width = '75px';
+          contentPhoto.style.height = '75px';
+          contentPhoto.style.borderRadius = '20%';
+          if (data.photo) {
+            contentPhoto.src = data.photo;
           } else {
-            nickname.textContent = 'None';
+            contentPhoto.src =
+              'https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/default_img.png';
           }
-          const img = data['results']['User']['profile_img'];
-          console.log(img);
-          const profileImg = document.getElementById('profileImg');
-          if (img) {
-            profileImg.src = img;
-          }
-          console.log('유저', data);
-          let followers = document.querySelector('.followers');
-          followers.textContent = data['results']['User']['followers'];
-          followers = document.querySelector('#followers');
-          followers.addEventListener('click', (event) => {
-            console.log('click');
-            window.location.href = `follower.html`;
-          });
-          let following = document.querySelector('.following');
-          following.textContent = data['results']['User']['following'];
-          following = document.querySelector('#following');
-          following.addEventListener('click', (event) => {
-            window.location.href = `following.html`;
-          });
+          contentPhoto.alt = '';
 
-          const tags = data['results']['User']['tags'];
-          tags.forEach((tag) => {
-            const newLi = document.createElement('li');
-            const newTag = document.createElement('a');
-            newTag.setAttribute('href', '#');
-            newTag.textContent = tag;
+          imageCell.appendChild(contentPhoto);
+          tableRow.appendChild(imageCell);
 
-            newLi.appendChild(newTag);
-            tagList.appendChild(newLi);
-          });
-        })
-        .catch((error) => {
-          console.error('Failed to retrieve user data.', error);
-        });
+          // 텍스트 셀 생성
+          const textCell = document.createElement('td');
+          textCell.classList.add('description', 'pt-10', 'pb-10', 'text-cell');
+          const textLink = document.createElement('a');
+          textLink.href = '#';
+          textLink.textContent = data.text;
+          textCell.appendChild(textLink);
+          tableRow.appendChild(textCell);
 
-      // 핀 콘텐츠 목록
-      fetch(`${url}/user/me/`, {
-        method: 'GET',
-        credentials: 'include',
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
-          console.log(data.results.User.pin_contents[0]);
-          const tbody = document.querySelector('#editList');
-          const followers = data.results.User.pin_contents;
-          followers.forEach((data) => {
-            const newTableRow = createTableRow(data);
-            tbody.appendChild(newTableRow);
-          });
-        })
-        .catch((error) => {
-          console.error('Failed to retrieve user data.', error);
-        });
+          // 핀 이름 셀 생성
+          const pinCell = document.createElement('td');
+          pinCell.classList.add('description', 'pt-10', 'pb-10', 'pin-cell');
+          const pinLink = document.createElement('a');
+          pinLink.href = '#';
+          pinLink.textContent = data.pin_title;
+          pinCell.appendChild(pinLink);
+          tableRow.appendChild(pinCell);
 
-      function createTableRow(data) {
-        const pin_content = data;
-        const tableRow = document.createElement('tr');
+          // 수정 버튼 셀 생성
+          const editCell = document.createElement('td');
+          editCell.classList.add('td-quantity', 'pt-10', 'pb-10');
+          const editLink = document.createElement('a');
+          editLink.classList.add('button');
+          editLink.href = '#';
+          editLink.textContent = '수정';
 
-        // 이미지 셀 생성
-        const imageCell = document.createElement('td');
-        imageCell.classList.add('image', 'pt-10', 'pb-10');
+          // 수정 버튼 클릭 이벤트
+          editLink.addEventListener('click', (e) => {
+            e.preventDefault();
 
-        const contentPhoto = document.createElement('img');
-        contentPhoto.classList.add('img-fluid');
-        contentPhoto.style.width = '75px';
-        contentPhoto.style.height = '75px';
-        contentPhoto.style.borderRadius = '20%';
-        if (data.photo) {
-          contentPhoto.src = data.photo;
-        } else {
-          contentPhoto.src =
-            'https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/default_img.png';
-        }
-        contentPhoto.alt = '';
+            // 기존에 열려있는 폼이 있는 행이 있다면 제거
+            const oldFormRow = document.querySelector('#edit-form-row');
+            if (oldFormRow) {
+              // 폼이 이미 열려 있고, 그 행이 현재 행 바로 아래에 있는 경우, 해당 행을 제거
+              if (oldFormRow === tableRow.nextSibling) {
+                oldFormRow.remove();
+                return;
+              }
 
-        imageCell.appendChild(contentPhoto);
-        tableRow.appendChild(imageCell);
-
-        // 텍스트 셀 생성
-        const textCell = document.createElement('td');
-        textCell.classList.add('description', 'pt-10', 'pb-10', 'text-cell');
-        const textLink = document.createElement('a');
-        textLink.href = '#';
-        textLink.textContent = data.text;
-        textCell.appendChild(textLink);
-        tableRow.appendChild(textCell);
-
-        // 핀 이름 셀 생성
-        const pinCell = document.createElement('td');
-        pinCell.classList.add('description', 'pt-10', 'pb-10', 'pin-cell');
-        const pinLink = document.createElement('a');
-        pinLink.href = '#';
-        pinLink.textContent = data.pin_title;
-        pinCell.appendChild(pinLink);
-        tableRow.appendChild(pinCell);
-
-        // 수정 버튼 셀 생성
-        const editCell = document.createElement('td');
-        editCell.classList.add('td-quantity', 'pt-10', 'pb-10');
-        const editLink = document.createElement('a');
-        editLink.classList.add('button');
-        editLink.href = '#';
-        editLink.textContent = '수정';
-
-        // 수정 버튼 클릭 이벤트
-        editLink.addEventListener('click', (e) => {
-          e.preventDefault();
-
-          // 기존에 열려있는 폼이 있는 행이 있다면 제거
-          const oldFormRow = document.querySelector('#edit-form-row');
-          if (oldFormRow) {
-            // 폼이 이미 열려 있고, 그 행이 현재 행 바로 아래에 있는 경우, 해당 행을 제거
-            if (oldFormRow === tableRow.nextSibling) {
+              // 다른 행의 폼이 열려 있는 경우, 그 행을 제거
               oldFormRow.remove();
+            }
+
+            // 새로운 폼을 포함한 행을 생성하고, 현재 클릭된 줄 바로 아래에 삽입
+            const newFormRow = document.createElement('tr');
+            newFormRow.id = 'edit-form-row';
+            const newFormCell = document.createElement('td');
+            newFormCell.colSpan = tableRow.children.length; // 전체 칸으로 확장
+
+            const formContainer = createEditForm(data);
+            newFormCell.appendChild(formContainer);
+            newFormRow.appendChild(newFormCell);
+
+            tableRow.parentNode.insertBefore(newFormRow, tableRow.nextSibling);
+          });
+
+          editCell.appendChild(editLink);
+          tableRow.appendChild(editCell);
+
+          // 삭제 버튼 셀 생성
+          const deleteCell = document.createElement('td');
+          deleteCell.classList.add('td-quantity', 'pt-10', 'pb-10');
+
+          const deleteButton = document.createElement('button');
+          deleteButton.className = 'btn btn-danger';
+          deleteButton.textContent = 'X';
+
+          /// 삭제 버튼 클릭 이벤트
+          deleteButton.addEventListener('click', () => {
+            if (confirm('이 리뷰를 삭제하시겠습니까?')) {
+              fetch(`${url}/pin/content/${data.id}/`, {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              })
+                .then((response) => {
+                  if (response.status === 204) {
+                    tableRow.remove();
+                    window.alert('리뷰를 삭제했습니다.');
+                  } else if (response.status === 403) {
+                    window.alert('리뷰는 작성자만 삭제할 수 있습니다.');
+                  }
+                })
+                .catch((error) => {
+                  console.error('삭제시 문제가 발생했습니다:', error);
+                });
+            }
+          });
+
+          deleteCell.appendChild(deleteButton);
+          tableRow.appendChild(deleteCell);
+
+          return tableRow;
+        }
+
+        // 핀 콘텐츠 수정 칸 생성
+        function createEditForm(data) {
+          const container = document.createElement('div');
+          container.id = 'edit-form';
+
+          // 이미지 업로드 필드 생성
+          const imageInput = document.createElement('input');
+          imageInput.type = 'file';
+          imageInput.id = 'photoUpload';
+          container.appendChild(imageInput);
+
+          // 텍스트 수정 필드 생성
+          const textInput = document.createElement('textarea');
+          textInput.id = 'textUpload';
+          textInput.className = 'rounded';
+          // 내용 변경 시 자동으로 높이 조절
+          textInput.addEventListener('input', autoResize, false);
+          function autoResize() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+          }
+          textInput.value = data.text;
+          container.appendChild(textInput);
+
+          // 수정 버튼 추가
+          const submitButton = document.createElement('button');
+          submitButton.className = 'rounded submitbtn';
+          submitButton.textContent = '수정';
+          // 수정 버튼 클릭 이벤트
+          submitButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!window.confirm('수정하시겠습니까?')) {
               return;
             }
+            const formData = new FormData();
 
-            // 다른 행의 폼이 열려 있는 경우, 그 행을 제거
-            oldFormRow.remove();
-          }
+            if (textInput.value) {
+              formData.append('text', textInput.value);
+            }
+            if (imageInput.files[0]) {
+              formData.append('photo', imageInput.files[0]);
+            }
 
-          // 새로운 폼을 포함한 행을 생성하고, 현재 클릭된 줄 바로 아래에 삽입
-          const newFormRow = document.createElement('tr');
-          newFormRow.id = 'edit-form-row';
-          const newFormCell = document.createElement('td');
-          newFormCell.colSpan = tableRow.children.length; // 전체 칸으로 확장
-
-          const formContainer = createEditForm(data);
-          newFormCell.appendChild(formContainer);
-          newFormRow.appendChild(newFormCell);
-
-          tableRow.parentNode.insertBefore(newFormRow, tableRow.nextSibling);
-        });
-
-        editCell.appendChild(editLink);
-        tableRow.appendChild(editCell);
-
-        // 삭제 버튼 셀 생성
-        const deleteCell = document.createElement('td');
-        deleteCell.classList.add('td-quantity', 'pt-10', 'pb-10');
-
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'btn btn-danger';
-        deleteButton.textContent = 'X';
-
-        /// 삭제 버튼 클릭 이벤트
-        deleteButton.addEventListener('click', () => {
-          if (confirm('이 리뷰를 삭제하시겠습니까?')) {
             fetch(`${url}/pin/content/${data.id}/`, {
-              method: 'DELETE',
+              method: 'PUT',
+              body: formData,
               credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-              },
             })
-              .then((response) => {
-                if (response.status === 204) {
-                  tableRow.remove();
-                  window.alert('리뷰를 삭제했습니다.');
-                } else if (response.status === 403) {
-                  window.alert('리뷰는 작성자만 삭제할 수 있습니다.');
-                }
+              .then((response) => response.json())
+              .then((data) => {
+                window.alert('수정이 완료되었습니다.');
+                window.location.reload();
               })
-              .catch((error) => {
-                console.error('삭제시 문제가 발생했습니다:', error);
-              });
-          }
-        });
+              .catch((error) => console.error(error));
+          });
 
-        deleteCell.appendChild(deleteButton);
-        tableRow.appendChild(deleteCell);
+          container.appendChild(submitButton);
 
-        return tableRow;
-      }
-
-      // 핀 콘텐츠 수정 칸 생성
-      function createEditForm(data) {
-        const container = document.createElement('div');
-        container.id = 'edit-form';
-
-        // 이미지 업로드 필드 생성
-        const imageInput = document.createElement('input');
-        imageInput.type = 'file';
-        imageInput.id = 'photoUpload';
-        container.appendChild(imageInput);
-
-        // 텍스트 수정 필드 생성
-        const textInput = document.createElement('textarea');
-        textInput.id = 'textUpload';
-        textInput.className = 'rounded';
-        // 내용 변경 시 자동으로 높이 조절
-        textInput.addEventListener('input', autoResize, false);
-        function autoResize() {
-          this.style.height = 'auto';
-          this.style.height = this.scrollHeight + 'px';
+          return container;
         }
-        textInput.value = data.text;
-        container.appendChild(textInput);
-
-        // 수정 버튼 추가
-        const submitButton = document.createElement('button');
-        submitButton.className = 'rounded submitbtn';
-        submitButton.textContent = '수정';
-        // 수정 버튼 클릭 이벤트
-        submitButton.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (!window.confirm('수정하시겠습니까?')) {
-            return;
-          }
-          const formData = new FormData();
-
-          if (textInput.value) {
-            formData.append('text', textInput.value);
-          }
-          if (imageInput.files[0]) {
-            formData.append('photo', imageInput.files[0]);
-          }
-
-          fetch(`${url}/pin/content/${data.id}/`, {
-            method: 'PUT',
-            body: formData,
-            credentials: 'include',
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              window.alert('수정이 완료되었습니다.');
-              window.location.reload();
-            })
-            .catch((error) => console.error(error));
-        });
-
-        container.appendChild(submitButton);
-
-        return container;
-      }
+      });
     </script>
   </body>
 </html>
