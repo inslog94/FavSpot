@@ -48,7 +48,8 @@ class BoardView(APIView):
         #     OpenApiParameter(name='id', description='특정 보드의 ID (pk)', type=int, location="path", required=False)
         # ],
         responses={
-            200: BoardPinSerializer(many=True),
+            200: OpenApiResponse(description="성공적으로 조회하였습니다.", response=BoardPinSerializer(many=True)),
+            
             # 200: OpenApiResponse(description="조회 성공", examples={
             #     "application/json": {
             #         "board": BoardSerializer().data,
@@ -161,7 +162,7 @@ class BoardView(APIView):
             )
         ],
         responses={
-            201: BoardSerializer,
+            201: OpenApiResponse(description="성공적으로 보드가 생성되었습니다.", response=BoardSerializer),
             400: OpenApiResponse(description="잘못된 입력값 입니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다.")
         }
@@ -220,7 +221,7 @@ class BoardView(APIView):
             )
         ],
         responses={
-            200: BoardSerializer,
+            200: OpenApiResponse(description="성공적으로 보드가 수정되었습니다.", response=BoardSerializer),
             400: OpenApiResponse(description="잘못된 입력값 입니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
             403: OpenApiResponse(description="본인이 생성한 보드만 수정할 수 있습니다."),
@@ -284,7 +285,7 @@ class BoardView(APIView):
             OpenApiParameter(name='id', description='특정 보드의 ID (PK)', type=int, location="path", required=False)
         ],
         responses={
-            204: OpenApiResponse(description="성공적으로 삭제되었습니다."),
+            204: OpenApiResponse(description="성공적으로 보드가 삭제되었습니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
             403: OpenApiResponse(description="본인이 생성한 보드만 삭제할 수 있습니다."),
             404: OpenApiResponse(description="해당 보드가 존재하지 않습니다.")
@@ -331,7 +332,7 @@ class BoardCommentView(APIView):
             )
         ],
         responses={
-            201: BoardCommentSerializer,
+            201: OpenApiResponse(description="성공적으로 해당 보드에 댓글이 생성되었습니다.", response=BoardCommentSerializer),
             400: OpenApiResponse(description="잘못된 입력값 입니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
             404: OpenApiResponse(description="해당 보드가 존재하지 않습니다.")
@@ -367,7 +368,7 @@ class BoardCommentView(APIView):
             OpenApiParameter(name='id', description='특정 댓글의 ID (PK)', type=int, location="path", required=False)
         ],
         responses={
-            204: OpenApiResponse(description="성공적으로 삭제되었습니다."),
+            204: OpenApiResponse(description="성공적으로 댓글이 삭제되었습니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
             403: OpenApiResponse(description="본인이 작성한 댓글만 삭제할 수 있습니다."),
             404: OpenApiResponse(description="해당 댓글이 존재하지 않습니다.")
@@ -411,7 +412,7 @@ class BoardLikeView(APIView):
         ],
         request=BoardLikeSerializer,
         responses={
-            201: BoardLikeSerializer,
+            201: OpenApiResponse(description="성공적으로 해당 보드에 좋아요가 등록되었습니다.", response=BoardLikeSerializer),
             400: OpenApiResponse(description="잘못된 입력값 입니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
             404: OpenApiResponse(description="해당 보드가 존재하지 않습니다.")
@@ -449,7 +450,7 @@ class BoardLikeView(APIView):
             OpenApiParameter(name='id', description='특정 좋아요의 ID (pk)', type=int, location="path", required=False)
         ],
         responses={
-            204: OpenApiResponse(description="성공적으로 삭제되었습니다."),
+            204: OpenApiResponse(description="성공적으로 좋아요가 해제되었습니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
             403: OpenApiResponse(description="본인이 등록한 좋아요만 해제할 수 있습니다."),
             404: OpenApiResponse(description="해당 좋아요가 존재하지 않습니다.")
@@ -479,7 +480,7 @@ class BoardLikeView(APIView):
         summary="보드 좋아요 목록 조회 API",
         description="이 엔드포인트는 인증된 사용자가 자신이 누른 보드의 좋아요 목록을 조회하는 것을 허용합니다.",
         responses={
-            200: BoardPinSerializer(many=True),
+            200: OpenApiResponse(description="성공적으로 조회하였습니다.", response=BoardPinSerializer(many=True)),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다."),
             404: OpenApiResponse(description="해당 유저가 존재하지 않습니다.")
         }
@@ -518,7 +519,7 @@ class BoardSearchView(APIView):
             OpenApiParameter(name='search_field', description='검색 필드 (all | tag)', required=False)
         ],
         responses={
-            200: BoardPinSerializer(many=True),
+            200: OpenApiResponse(description="성공적으로 조회하였습니다.", response=BoardPinSerializer(many=True)),
             400: OpenApiResponse(description="잘못된 입력값 입니다.")
         }
     )
@@ -589,7 +590,7 @@ class UserTaggedBoardView(APIView):
         summary="특정 태그가 달린 보드 조회 API",
         description="이 엔드포인트는 인증된 사용자가 특정 태그를 가진 보드 목록을 조회하는 것을 허용합니다. 쿼리 파라미터로 'tag' 값을 받아 해당 태그가 포함된 모든 보드를 반환합니다.",
         responses={
-            200: BoardPinSerializer(many=True),
+            200: OpenApiResponse(description="성공적으로 조회하였습니다.", response=BoardPinSerializer(many=True)),
             400: OpenApiResponse(description="태그 값이 제공되지 않았습니다."),
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다.")
         },
