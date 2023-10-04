@@ -95,7 +95,7 @@ class BoardView(APIView):
             serializer = BoardPinSerializer(boards, many=True)
 
             if request.user.is_authenticated:
-                request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://everyplacetest.s3.amazonaws.com/" + str(request.user.profile_img)}
+                request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://favspot-fin.s3.amazonaws.com/" + str(request.user.profile_img)}
             else:
                 request_user = {}
             
@@ -128,7 +128,7 @@ class BoardView(APIView):
             board_serializer = BoardSerializer(board)
             
             if request.user.is_authenticated:
-                request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://everyplacetest.s3.amazonaws.com/" + str(request.user.profile_img)}
+                request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://favspot-fin.s3.amazonaws.com/" + str(request.user.profile_img)}
             else:
                 request_user = {}
             
@@ -571,7 +571,12 @@ class BoardSearchView(APIView):
             queryset = (user_boards_filtered | public_boards_filtered_except_user_ones).distinct()
 
         serializer = BoardPinSerializer(queryset, many=True)
-        return Response(serializer.data)
+        if request.user.is_authenticated:
+                request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://favspot-fin.s3.amazonaws.com/" + str(request.user.profile_img)}
+        else:
+            request_user = {}
+        
+        return Response({'request_user': request_user, "boards": serializer.data}, status=status.HTTP_200_OK)
 
 
 # BoardTag View
@@ -601,7 +606,7 @@ class UserTaggedBoardView(APIView):
         serializer = BoardPinSerializer(queryset, many=True)
         
         if request.user.is_authenticated:
-                request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://everyplacetest.s3.amazonaws.com/" + str(request.user.profile_img)}
+                request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://favspot-fin.s3.amazonaws.com/" + str(request.user.profile_img)}
         else:
             request_user = {}
         
