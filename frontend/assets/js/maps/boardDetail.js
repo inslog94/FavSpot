@@ -331,22 +331,24 @@ export async function boardDetail(data) {
       // 댓글 삭제 기능
       // 클릭 이벤트 추가
       deleteIconDiv.addEventListener('click', function () {
-        fetch(`http://127.0.0.1:8000/board/comment/${comment.id}`, {
-          method: 'DELETE',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-          .then((response) => {
-            if (response.status === 204) {
-              location.reload(); // 페이지 새로고침
-            } else {
-              return response.json();
-            }
+        // 삭제 확인 메시지
+        if (window.confirm('댓글을 삭제하시겠습니까?')) {
+          fetch(`http://127.0.0.1:8000/board/comment/${comment.id}`, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
           })
-          .then()
-          .catch((error) => console.error('Error:', error));
+            .then((response) => {
+              if (response.status === 204) {
+                location.reload(); // 페이지 새로고침
+              } else {
+                return response.json();
+              }
+            })
+            .catch((error) => console.error('Error:', error));
+        }
       });
     }
   });
@@ -421,9 +423,9 @@ export async function boardDetail(data) {
   });
 
   // 보드 삭제 기능
-  document
-    .getElementById('deleteButton')
-    .addEventListener('click', function () {
+  document.getElementById('deleteButton').addEventListener('click', function () {
+    // 삭제 확인 메시지
+    if (window.confirm('보드를 삭제하시겠습니까?')) {
       fetch(`http://127.0.0.1:8000/board/${selectedPk}/`, {
         method: 'DELETE',
         credentials: 'include',
@@ -433,13 +435,12 @@ export async function boardDetail(data) {
       })
         .then((response) => {
           if (response.status === 204) {
-            alert('보드가 삭제되었습니다.');
             window.location.href = 'user_info.html';
           } else {
             return response.json();
           }
         })
-        .then()
         .catch((error) => console.error('Error:', error));
-    });
+    }
+  });
 }
