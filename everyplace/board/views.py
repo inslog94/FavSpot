@@ -596,7 +596,7 @@ class UserTaggedBoardView(APIView):
             return Response({"error": "태그 값이 제공되지 않았습니다."}, status=400)
 
         # 본인 보드 중에서 특정 태그를 가진 보드 조회
-        queryset = Board.objects.filter(user_id=request.user.id, tags__content__icontains=tag)
+        queryset = Board.objects.filter(user_id=request.user.id, tags__content__icontains=tag, is_deleted=False)
 
         serializer = BoardPinSerializer(queryset, many=True)
         
