@@ -123,12 +123,6 @@ shop -->
                     </div>
                   </div>
 
-                  <div class="sidebar-widget">
-                    <h6 class="mt-40 mb-20">Tags</h6>
-                    <div class="widget-tags">
-                      <ul id="tagList"></ul>
-                    </div>
-                  </div>
                 </div>
                 <!-- 리스트 -->
                 <div class="table-responsive col-lg-9">
@@ -262,16 +256,6 @@ shop -->
             window.location.href = `following.html`;
           });
 
-          const tags = data['results']['User']['tags'];
-          tags.forEach((tag) => {
-            const newLi = document.createElement('li');
-            const newTag = document.createElement('a');
-            newTag.setAttribute('href', '#');
-            newTag.textContent = tag;
-
-            newLi.appendChild(newTag);
-            tagList.appendChild(newLi);
-          });
         })
         .catch((error) => {
           console.error('Failed to retrieve user data.', error);
