@@ -182,7 +182,12 @@ export async function boardDetail(data) {
       photoDivElement.classList.add('port-post-photo');
 
       const imgElement = document.createElement('img');
+      if (pin.thumbnail_img) {
       imgElement.src = pin.thumbnail_img;
+      } else {
+        imgElement.src =
+          'https://favspot-fin.s3.amazonaws.com/images/default/default_place.png';
+      }
       imgElement.classList.add('pin-thumbnail-img');
 
       photoDivElement.appendChild(imgElement);
@@ -274,7 +279,7 @@ export async function boardDetail(data) {
       imgTag.src = comment.user.profile_img; // 실제 이미지 URL
     } else {
       imgTag.src =
-        'https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default.png'; // 기본 이미지 URL
+        'https://favspot-fin.s3.amazonaws.com/images/default/default_user.png'; // 기본 이미지 URL
     }
 
     photoDiv.appendChild(imgTag);
