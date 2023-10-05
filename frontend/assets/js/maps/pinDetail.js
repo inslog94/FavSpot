@@ -4,6 +4,7 @@ import { createPlaceInfo } from '../util/placeInfo.js';
 
 export function pinDetail() {
   let pinData = null;
+  let boardData = {};
 
   fetchUserInfo();
   // 첫 페이지 핀 콘텐츠들을 불러는 함수 호출
@@ -14,8 +15,8 @@ export function pinDetail() {
   displayPinDetail();
 
   // 유저 정보 가져오기
-  function fetchUserInfo() {
-    return fetch(`${origin}/user/me/`, {
+  function fetchUserInfo(url = `${origin}/user/me/`, boards = []) {
+    return fetch(url, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -24,25 +25,28 @@ export function pinDetail() {
     })
       .then((response) => response.json())
       .then((data) => {
-        // 가져온 데이터로 보드 선택 드롭다운 채우기
-        const boardSelectionElement = document.getElementById('boardSelection');
+        const newBoards = boards.concat(data.results.Boards);
+        if (data.links.next) { // 다음 페이지가 있다면
+          return fetchUserInfo(data.links.next, newBoards); // 다음 페이지 데이터를 재귀적으로 요청
+        } else { // 더 이상 다음 페이지가 없다면
+          const boardSelectionElement = document.getElementById('boardSelection');
 
-        // 이전에 있던 옵션들을 모두 제거합니다.
-        while (boardSelectionElement.firstChild) {
-          boardSelectionElement.removeChild(boardSelectionElement.firstChild);
+          while (boardSelectionElement.firstChild) {
+            boardSelectionElement.removeChild(boardSelectionElement.firstChild);
+          }
+
+          newBoards.forEach((board) => {
+            const optionElement = document.createElement('option');
+            optionElement.value = board.id;
+            optionElement.textContent = board.title;
+
+            boardData[board.id] = { title: board.title };
+
+            boardSelectionElement.appendChild(optionElement);
+          });
         }
-
-        data.results.Boards.forEach((board) => {
-          const optionElement = document.createElement('option');
-          optionElement.value = board.id;
-          optionElement.textContent = board.title;
-
-          boardSelectionElement.appendChild(optionElement);
-        });
       })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+      .catch((error) => console.error('Error:', error));
   }
 
   /// 백엔드에서 핀 상세보기 정보 가져오기
@@ -57,8 +61,8 @@ export function pinDetail() {
         // 성공 상태가 아니면 에러 메시지 출력 후 함수 종료
         if (!response.ok) {
           // 가져온 데이터로 상세보기 정보 표시하기
-          createPlaceInfo();
           pinData = PIN_DETAIL; // 데이터 저장
+          createPlaceInfo();
           throw new Error('NO PIN');
         }
         return response.json();
@@ -339,7 +343,7 @@ export function pinDetail() {
         .then((response) => response.json())
         .then((data) => {
           // 성공 메시지 출력
-          alert(`핀을 ${selectedBoard}에 담았습니다.`);
+          alert(`'${pinData.title}' 핀을 '${boardData[selectedBoard].title}' 보드에 담았습니다.`);
           // 페이지 새로 고침
           // window.location.reload();
           displayPinContents(1);
