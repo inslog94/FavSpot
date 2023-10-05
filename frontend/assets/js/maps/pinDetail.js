@@ -58,6 +58,7 @@ export function pinDetail() {
         if (!response.ok) {
           // 가져온 데이터로 상세보기 정보 표시하기
           createPlaceInfo();
+          pinData = PIN_DETAIL; // 데이터 저장
           throw new Error('NO PIN');
         }
         return response.json();
