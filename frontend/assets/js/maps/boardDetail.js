@@ -236,7 +236,7 @@ export async function boardDetail(data) {
         $('#myModal').modal('show');
         let place_id = pin.place_id;
         console.log(place_id);
-        PIN_DETAIL.placeId = place_id;
+        PIN_DETAIL.place_id = place_id;
         pinDetail();
       });
 

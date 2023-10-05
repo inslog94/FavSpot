@@ -83,7 +83,7 @@ export async function pinSimpleSaveRequest(board, place) {
       category: place.categoryGroupName,
       board_id: board.id,
       title: place.title,
-      place_id: place.placeId,
+      place_id: place.place_id,
       new_address: place.roadAddressName,
       old_address: place.addressName,
       lat_lng: place.lat + ',' + place.lng,

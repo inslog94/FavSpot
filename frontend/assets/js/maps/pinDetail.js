@@ -47,7 +47,7 @@ export function pinDetail() {
 
   /// 백엔드에서 핀 상세보기 정보 가져오기
   function displayPinDetail() {
-    fetch(`${origin}/pin/${PIN_DETAIL.placeId}/`, {
+    fetch(`${origin}/pin/${PIN_DETAIL.place_id}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ export function pinDetail() {
   }
 
   function displayPinContents(page) {
-    fetch(`${origin}/pin/${PIN_DETAIL.placeId}/?page=${page}`, {
+    fetch(`${origin}/pin/${PIN_DETAIL.place_id}/?page=${page}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -301,7 +301,7 @@ export function pinDetail() {
       // 선택된 보드 ID 추가
       const selectedBoard = document.getElementById('boardSelection').value;
       formData.append('board_id', selectedBoard);
-
+      
       // 입력된 텍스트 추가
       const textInput = document.getElementById('textInput').value;
       if (textInput) {
