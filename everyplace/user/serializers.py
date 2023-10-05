@@ -31,7 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     # 해당 유저가 작성한 보드들의 태그 목록 추가
     def get_tags(self, obj):
-        board_tags = set(BoardTag.objects.filter(board__user_id=obj))
+        board_tags = set(BoardTag.objects.filter(board__user_id=obj, board__is_deleted=False))
         tag_contents = [tag.content for tag in board_tags if tag.content]
         return tag_contents
     

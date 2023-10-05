@@ -240,17 +240,6 @@ shop -->
             button.textContent = 'Profile Edit';
             button.setAttribute('href', 'profile_edit.html');
             changeBtnDiv.appendChild(button);
-
-            const tags = data['results']['User']['tags'];
-            tags.forEach((tag) => {
-              const newLi = document.createElement('li');
-              const newTag = document.createElement('a');
-              newTag.setAttribute('href', '#');
-              newTag.textContent = tag;
-
-              newLi.appendChild(newTag);
-              tagList.appendChild(newLi);
-            });
           })
           .catch((error) => {
             console.error('Failed to retrieve user data.', error);
