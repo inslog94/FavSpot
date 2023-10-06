@@ -264,17 +264,22 @@ export function pinDetail() {
   let currentStep = 1;
 
   /// "핀 저장" 버튼 클릭 이벤트
-  document.getElementById('saveButton').addEventListener('click', function () {
+  const saveButton = document.getElementById('saveButton');
+  // 기존의 모든 이벤트 핸들러 제거
+  saveButton.replaceWith(saveButton.cloneNode(true));
+  const newSaveButton = document.getElementById('saveButton');
+
+  newSaveButton.addEventListener('click', function () {
     let pinCreationElement = document.getElementById('pinCreationSteps');
     // 만약 핀 생성 스텝들이 이미 보여지고 있다면, 숨기고 함수 종료
     if (pinCreationElement.style.display === 'block') {
       pinCreationElement.style.display = 'none';
-      saveButton.innerText = '핀 저장'; // 텍스트를 원래대로 되돌림
+      newSaveButton.innerText = '핀 저장'; // 텍스트를 원래대로 되돌림
       return;
     }
     // 핀 생성 스텝들 보이기
     pinCreationElement.style.display = 'block';
-    document.getElementById('saveButton').innerText = '취소'; // 텍스트를 '취소'로 변경함
+    newSaveButton.innerText = '취소'; // 텍스트를 '취소'로 변경함
     // 첫 번째 스텝 보이기
     document.getElementById(`step${currentStep}`).style.display = 'block';
   });
