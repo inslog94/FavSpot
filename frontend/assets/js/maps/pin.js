@@ -265,6 +265,8 @@ function removeAllChildNods(el) {
 export async function displayPinOverlay(markerInfo) {
   let titleBox = document.createElement('div');
   let infoBox = document.createElement('div');
+  let placeInfo = document.createElement('div');
+  let imgBox = document.createElement('div');
   let functionBox = document.createElement('div');
 
   let titleEl = document.createElement('span');
@@ -280,12 +282,16 @@ export async function displayPinOverlay(markerInfo) {
   titleEl.classList.add('title');
   categoryEl.classList.add('category');
   contentBody.classList.add('body');
+  contentBody.style.marginTop = '20px';
+  contentBody.style.marginBottom = '20px';
+  contentBody.style.paddingLeft = '20px';
+  contentBody.style.paddingRight = '20px';
   infoBox.classList.add('desc');
   roadAddressNameEl.classList.add('ellipsis');
   addressNameEl.classList.add('jibun', 'ellipsis');
   phoneEl.classList.add('phone');
   functionBox.classList.add('func');
-  showPinDetailBtn.classList.add('btn');
+  showPinDetailBtn.classList.add('btn', 'pin-detail');
   showPinDetailBtn.setAttribute('data-bs-toggle', 'modal');
   showPinDetailBtn.setAttribute('data-bs-target', '.bd-example-modal-lg');
   showPinSaveOverlayBtn.classList.add('btn');
@@ -302,86 +308,58 @@ export async function displayPinOverlay(markerInfo) {
   functionBox.appendChild(showPinSaveOverlayBtn);
   titleBox.appendChild(titleEl);
   titleBox.appendChild(categoryEl);
-  infoBox.appendChild(roadAddressNameEl);
-  infoBox.appendChild(addressNameEl);
-  infoBox.appendChild(phoneEl);
+  placeInfo.appendChild(roadAddressNameEl);
+  placeInfo.appendChild(addressNameEl);
+  placeInfo.appendChild(phoneEl);
+  infoBox.appendChild(placeInfo);
   infoBox.appendChild(functionBox);
 
   // 해당 핀의 썸네일 여부 처리
   let pinThumbnail;
-  let pinContent = await getPinContentsFromServer(markerInfo.placeId);
-  let boxHeight = 170;
-  let contentHeight = 160;
+  // let pinContent = await getPinContentsFromServer(markerInfo.placeId);
 
-  if (pinContent !== null) {
-    pinThumbnail = pinContent.results.pin.thumbnail_img;
-  }
+  // if (pinContent !== null) {
+  //   pinThumbnail = pinContent.results.pin.thumbnail_img;
+  // }
 
-  // 썸네일 있을 경우 처리
-  if (
-    pinThumbnail !== null &&
-    pinThumbnail !== undefined &&
-    pinThumbnail.length > 0
-  ) {
-    let imgBox = document.createElement('div');
-    let img = document.createElement('img');
-    img.src = pinThumbnail;
-    img.alt = '이미지';
+  let img = document.createElement('img');
+    img.alt = '장소 이미지';
     imgBox.classList.add('img');
+    imgBox.style.marginLeft = '20px';
     imgBox.appendChild(img);
-    contentBody.appendChild(imgBox);
+    
+  // 썸네일 있을 경우 처리
+  // if (
+  //   pinThumbnail !== null &&
+  //   pinThumbnail !== undefined &&
+  //   pinThumbnail.length > 0
+  // ) {
+    fetch(`http://127.0.0.1:8000/pin/no-content/${markerInfo.placeId}/`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((pinData) => {
+        if (!pinData.thumbnail_img.includes('http://t1.daumcdn.net/')) {
+          img.src = 'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
+        } else if (pinData.thumbnail_img) {
+          console.error(pinData.thumbnail_img)
+          img.src = pinData.thumbnail_img;
+        } else {
+          img.src = 'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
+        }
+      }).catch((error) => {
+        console.error(error)
+      })
+  // } else {
+  //   // 이미지가 없을 경우 오버레이 크기 수정
 
-    boxHeight += 60;
-    contentHeight += 60;
-    MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
-    MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
-    MARKER_OVERLAY_CONTENT.style.minWidth = '380px';
-    MARKER_OVERLAY_CONTENT_BOX.style.minWidth = '380px';
-    MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = '-145px';
-    MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = '-188px';
-  } else {
-    // 이미지가 없을 경우 오버레이 크기 수정
-    MARKER_OVERLAY_CONTENT_BOX.style.minWidth = '290px';
-    MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
-    MARKER_OVERLAY_CONTENT_BOX.style.marginLeft = '-145px';
-    MARKER_OVERLAY_CONTENT.style.minWidth = '290px';
-    MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
-
-    // 도로명 주소, 지번 주소, 전화번호 값이 있을 경우 오버레이 크기 수정
-    if (
-      markerInfo.phone !== undefined &&
-      markerInfo.phone !== null &&
-      markerInfo.phone.length > 0
-    ) {
-      boxHeight += 15;
-      contentHeight += 15;
-      MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
-      MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
-    }
-
-    if (
-      markerInfo.roadAddressName !== undefined &&
-      markerInfo.roadAddressName !== null &&
-      markerInfo.roadAddressName.length > 0
-    ) {
-      boxHeight += 10;
-      contentHeight += 10;
-      MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
-      MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
-    }
-
-    if (
-      markerInfo.addressName !== undefined &&
-      markerInfo.addressName !== null &&
-      markerInfo.addressName.length > 0
-    ) {
-      boxHeight += 10;
-      contentHeight += 10;
-      MARKER_OVERLAY_CONTENT_BOX.style.minHeight = boxHeight + 'px';
-      MARKER_OVERLAY_CONTENT.style.minHeight = contentHeight + 'px';
-    }
-  }
+  // }
   contentBody.appendChild(infoBox);
+  contentBody.appendChild(imgBox);
 
   MARKER_OVERLAY_CONTENT.appendChild(titleBox);
   MARKER_OVERLAY_CONTENT.appendChild(contentBody);
