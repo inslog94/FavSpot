@@ -98,4 +98,4 @@ class BoardPinSerializer(serializers.ModelSerializer):
         return pin_place_ids
     
     def get_likes(self, obj):
-        return BoardLike.objects.filter(board_id_id=obj.id).count()
+        return BoardLike.objects.filter(board_id_id=obj.id, is_deleted=False).count()

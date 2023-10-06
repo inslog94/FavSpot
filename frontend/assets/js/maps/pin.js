@@ -411,6 +411,36 @@ export async function displayPinOverlay(markerInfo) {
     pinDetail();
   });
 
+  // 유저의 보드 목록 가져오기 위한 함수
+  function fetchAllBoards(url) {
+    return new Promise((resolve, reject) => {
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        let boards = data.results.Boards;
+
+        boards.forEach((board) => {
+          // MY_BOARDS 업데이트
+          MY_BOARDS.push(board);
+        })
+
+        // 다음 페이지가 있다면 재귀 호출
+        if (data.links.next){
+          resolve(fetchAllBoards(data.links.next));
+        } else { 
+          // 다음 페이지가 없다면 현재 Promise 해결
+          resolve();
+        }
+      }).catch(reject);
+    });
+  }
+
   // 핀 생성 버튼 클릭시 보드 목록 오버레이 표시 이벤트
   showPinSaveOverlayBtn.addEventListener('click', () => {
     let open = PIN_SAVE_OVERLAY.getVisible();
@@ -420,11 +450,16 @@ export async function displayPinOverlay(markerInfo) {
       PIN_SAVE_OVERLAY.setContent(null);
       PIN_SAVE_OVERLAY.setMap(null);
       PIN_SAVE_OVERLAY.setVisible(false);
-      return;
-    }
+    return;
+  }
 
+  // 유저의 모든 보드 목록 가져오기 위해 함수 호출
+  fetchAllBoards(`http://127.0.0.1:8000/user/me/`).then(() => {
     displayBoardsOnOverlay(markerInfo);
+  })
+  .catch((error) => console.error('Error:', error));
   });
+
 }
 
 // 핀 생성 버튼 클릭시 보드 목록 오버레이 표시

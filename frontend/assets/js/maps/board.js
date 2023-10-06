@@ -48,9 +48,9 @@ export async function setMyBoard(boards) {
     boards = response.results.Boards;
   }
 
-  boards.forEach((board) => {
-    MY_BOARDS.push(board);
-  });
+  // boards.forEach((board) => {
+  //   MY_BOARDS.push(board);
+  // });
 }
 
 // 카카오 map 검색 결과와 관련된 보드 표시
