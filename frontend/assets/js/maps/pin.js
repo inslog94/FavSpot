@@ -118,7 +118,7 @@ export function setMarkersFromAPI(dataList) {
     pin.categoryGroupCode = data.category_group_code;
     pin.categoryGroupName = data.category_group_name;
     pin.categoryName = data.categoryName;
-    pin.placeId = data.id;
+    pin.place_id = data.id;
     pin.phone = data.phone;
     pin.placeURL = data.place_url;
     pin.roadAddressName = data.road_address_name;
@@ -168,7 +168,7 @@ export function setMarkersFromServer(dataList) {
 
     data.categoryGroupName = data.category;
     data.position = new kakao.maps.LatLng(positions[0], positions[1]);
-    data.placeId = data.place_id;
+    data.place_id = data.place_id;
     data.lat = positions[0];
     data.lng = positions[1];
     data.roadAddressName = data.new_address;
@@ -190,7 +190,7 @@ export function setMarkerFromServer(data) {
 
   data.categoryGroupName = data.category;
   data.position = new kakao.maps.LatLng(positions[0], positions[1]);
-  data.placeId = data.place_id;
+  data.place_id = data.place_id;
   data.lat = positions[0];
   data.lng = positions[1];
   data.roadAddressName = data.new_address;
@@ -309,7 +309,7 @@ export async function displayPinOverlay(markerInfo) {
 
   // 해당 핀의 썸네일 여부 처리
   let pinThumbnail;
-  let pinContent = await getPinContentsFromServer(markerInfo.placeId);
+  let pinContent = await getPinContentsFromServer(markerInfo.place_id);
   let boxHeight = 170;
   let contentHeight = 160;
 
@@ -399,7 +399,7 @@ export async function displayPinOverlay(markerInfo) {
       PIN_DETAIL.old_address,
       PIN_DETAIL.lat_lng;
     PIN_DETAIL.category = markerInfo.categoryGroupName;
-    PIN_DETAIL.placeId = markerInfo.placeId;
+    PIN_DETAIL.place_id = markerInfo.place_id;
     PIN_DETAIL.title = markerInfo.title;
     PIN_DETAIL.thumbnail_img = pinThumbnail;
     PIN_DETAIL.new_address = markerInfo.roadAddressName;
@@ -442,7 +442,7 @@ function displayBoardsOnOverlay(markerInfo) {
 
     // 해당 핀이 보드에 생성된 경우 '생성됨' 처리
     for (let i = 0; i < board.pins.length; i++) {
-      if (board.pins[i] == markerInfo.placeId) {
+      if (board.pins[i] == markerInfo.place_id) {
         pinSaveBtn.innerText = '생성됨';
         pinSaveBtn.classList.remove('pin_save_btn');
         pinSaveBtn.classList.add('pin_saved_btn');
