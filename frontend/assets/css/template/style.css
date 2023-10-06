@@ -2215,3 +2215,7 @@ img.bottom-img { top: 0; }
      .newsletter.fancy button { padding: 14px 20px;  }
     }
 }
+
+#logo-img:hover {
+  cursor: pointer;
+}
