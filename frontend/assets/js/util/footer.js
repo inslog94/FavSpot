@@ -4,7 +4,16 @@ export function createFooter() {
 
   // Footer 요소 생성
   const footer = document.createElement('footer');
-  footer.className = 'footer footer-topbar';
+
+  const currentPathname = window.location.pathname;
+  if (
+    currentPathname == '/frontend/index.html' ||
+    currentPathname == '/frontend/'
+  ) {
+    footer.className = 'footer footer-topbar';
+  } else {
+    footer.className = 'footer footer-topbar fixed-bottom';
+  }
 
   // Copyright 부분 생성
   const copyrightDiv = document.createElement('div');
