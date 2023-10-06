@@ -61,6 +61,7 @@ export function createMainPage() {
 
   // 정렬 드롭다운 생성
   const sortSelect = document.createElement('div');
+  sortSelect.id = "sortSelect";
   sortSelect.style = 'display:flex; justify-content: flex-end; margin: 20px 30px 0 0;';
   sortSelect.style.position = 'relative';
   
