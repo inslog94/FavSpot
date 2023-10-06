@@ -251,8 +251,8 @@ export async function boardDetail(data) {
 
   // 댓글 작성란 유저 프로필 이미지 설정
   const replyprofileImg = document.querySelector('.img-profile');
-  if (data.request_user.profile_img) {
-    replyprofileImg.src = data.request_user.profile_img;
+  if (data.request_user.profileImg) {
+    replyprofileImg.src = data.request_user.profileImg;
   }
 
   // 댓글 작성란 유저 이름 설정
