@@ -302,9 +302,11 @@ export function pinDetail() {
     });
 
   // 저장 버튼 클릭 이벤트
-  document
-    .getElementById('createButton')
-    .addEventListener('click', function () {
+  const createButton = document.getElementById('createButton')
+  // 기존의 모든 이벤트 핸들러 제거
+  createButton.replaceWith(createButton.cloneNode(true));
+  const newCreateButton = document.getElementById('createButton');
+  newCreateButton.addEventListener('click', function () {
       // FormData 객체 생성
       const formData = new FormData();
 
