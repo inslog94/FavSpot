@@ -24,6 +24,22 @@ export function createPinDetail() {
             <div class="blog-detail">
               <div class="title-wrap">
                 <h1 id="myModalLabel">Pin title</h1>
+                <div class="entry-meta mb-30">
+                <ul>
+                  <li>
+                    <i class="fa fa-map"></i>
+                    <a href="#" id="modalCategory">category</a>
+                  </li>
+                  <li class="updated-at">
+                    <i class="fa fa-calendar-o"></i>
+                    <a href="#" id="modalUpdatedAt">12 Aug 2021</a>
+                  </li>
+                  <li class="pin-count">
+                    <i class="fa fa-map-pin"></i>
+                    <a href="#" id="modalPinCount">5</a>
+                  </li>
+                </ul>
+                </div>
                 <button
                   id="saveButton"
                   class="button button-border mt-2 mb-3 form-button"
@@ -80,22 +96,6 @@ export function createPinDetail() {
                     저장
                   </button>
                 </div>
-              </div>
-              <div class="entry-meta mb-30">
-                <ul>
-                  <li>
-                    <i class="fa fa-map"></i>
-                    <a href="#" id="modalCategory">category</a>
-                  </li>
-                  <li class="updated-at">
-                    <i class="fa fa-calendar-o"></i>
-                    <a href="#" id="modalUpdatedAt">12 Aug 2021</a>
-                  </li>
-                  <li class="pin-count">
-                    <i class="fa fa-map-pin"></i>
-                    <a href="#" id="modalPinCount">5</a>
-                  </li>
-                </ul>
               </div>
               <div class="entry-content">
                 <p id="modalNewAddress" class="mt-3 mb-1">New Address</p>
