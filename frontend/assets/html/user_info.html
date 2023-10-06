@@ -23,6 +23,10 @@
     <link rel="stylesheet" href="../css/template/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="../css/modal.css" />
     <style>
+      body {
+        overflow: auto;
+      }
+
       .masonry-item {
         display: inline-block;
         max-width: 375px;
@@ -200,8 +204,8 @@
  masnary blog-->
 
       <section
-        class="white-bg blog masonry-main page-section-ptb"
-        style="height: 98.75%"
+        class="white-bg blog masonry-main"
+        style="height: 98.75%; padding-top: 80px"
       >
         <div class="container">
           <div class="row">
@@ -244,7 +248,7 @@
             </div>
           </div>
 
-          <div id="main" class="row">
+          <div id="main" class="row" style="padding-bottom: 140px">
             <div class="col-lg-3">
               <div class="sidebar-widget">
                 <div class="team team-round full-border">
@@ -287,7 +291,7 @@
               </div>
             </div>
             <!-- ================================== -->
-            <div id="boardlist" class="col-lg-9">
+            <div id="boardlist" class="col-lg-9" style="height: 800px">
               <div class="masonry columns-2">
                 <div class="grid-sizer"></div>
               </div>
@@ -500,7 +504,6 @@
                 }
                 const img = data['results']['User']['profile_img'];
                 const profileImg = document.getElementById('profileImg');
-                console.log('img', img, !!img, profileImg);
                 if (img) {
                   profileImg.src = img;
                 }
