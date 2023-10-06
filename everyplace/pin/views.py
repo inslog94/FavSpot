@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
 from django.db.models import Q
+from django.http import QueryDict
 from .models import Pin, PinContent
 from .serializers import PinSerializer, PinContentSerializer, CombinedCreatePinSerializer, PaginatedPinResponseSerializer
 from .paginations import CustomPagination
@@ -202,7 +203,10 @@ class PinCreateView(APIView):
 
         # pin이 존재하지 않을 시 새로운 pin 생성
         # board_id를 list형태로 변환
-        request_data["board_id"] = [request_data["board_id"]]
+        if isinstance(request_data, QueryDict):
+            request_data["board_id"] = int(request_data.getlist("board_id")[0])
+        else:
+            request_data["board_id"] = [request_data["board_id"]]
         request_data["thumbnail_img"] = thumbnail_img
         pin_serializer = PinSerializer(data=request_data)
         pin_content_serializer = PinContentSerializer(data=request_data)
@@ -295,13 +299,14 @@ class PinContentView(APIView):
             pin_content.save()
 
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response({"detail": "핀 콘텐츠를 삭제할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"error": "핀 콘텐츠를 삭제할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
 
 
 class AdditionalInfo(APIView):
-    
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get(self, requset, place_id):
         thumbnail_img = get_thumbnail_img(place_id)
         menu = get_menu(place_id)
-        
+
         return Response({"thumbnail_img": thumbnail_img, "menu": menu})

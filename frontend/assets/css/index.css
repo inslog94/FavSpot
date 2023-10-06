@@ -198,3 +198,14 @@ footer {
 .swiper-slide {
   width: 100%; /* 슬라이드 너비를 100%로 설정하여 한 번에 하나만 보이도록 함 */
 }
+
+#logo-img:hover {
+  cursor: pointer;
+}
+
+.drop1,
+.drop2,
+.drop3 {
+  color: #000000 !important;
+  padding: 10px 30px;
+}

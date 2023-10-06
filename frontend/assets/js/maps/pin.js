@@ -118,7 +118,7 @@ export function setMarkersFromAPI(dataList) {
     pin.categoryGroupCode = data.category_group_code;
     pin.categoryGroupName = data.category_group_name;
     pin.categoryName = data.categoryName;
-    pin.placeId = data.id;
+    pin.place_id = data.id;
     pin.phone = data.phone;
     pin.placeURL = data.place_url;
     pin.roadAddressName = data.road_address_name;
@@ -168,7 +168,7 @@ export function setMarkersFromServer(dataList) {
 
     data.categoryGroupName = data.category;
     data.position = new kakao.maps.LatLng(positions[0], positions[1]);
-    data.placeId = data.place_id;
+    data.place_id = data.place_id;
     data.lat = positions[0];
     data.lng = positions[1];
     data.roadAddressName = data.new_address;
@@ -190,7 +190,7 @@ export function setMarkerFromServer(data) {
 
   data.categoryGroupName = data.category;
   data.position = new kakao.maps.LatLng(positions[0], positions[1]);
-  data.placeId = data.place_id;
+  data.place_id = data.place_id;
   data.lat = positions[0];
   data.lng = positions[1];
   data.roadAddressName = data.new_address;
@@ -316,48 +316,37 @@ export async function displayPinOverlay(markerInfo) {
 
   // 해당 핀의 썸네일 여부 처리
   let pinThumbnail;
-  // let pinContent = await getPinContentsFromServer(markerInfo.placeId);
-
-  // if (pinContent !== null) {
-  //   pinThumbnail = pinContent.results.pin.thumbnail_img;
-  // }
 
   let img = document.createElement('img');
-    img.alt = '장소 이미지';
-    imgBox.classList.add('img');
-    imgBox.style.marginLeft = '20px';
-    imgBox.appendChild(img);
-    
-  // 썸네일 있을 경우 처리
-  // if (
-  //   pinThumbnail !== null &&
-  //   pinThumbnail !== undefined &&
-  //   pinThumbnail.length > 0
-  // ) {
-    fetch(`http://127.0.0.1:8000/pin/no-content/${markerInfo.placeId}/`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((pinData) => {
-        if (!pinData.thumbnail_img.includes('http://t1.daumcdn.net/')) {
-          img.src = 'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
-        } else if (pinData.thumbnail_img) {
-          console.error(pinData.thumbnail_img)
-          img.src = pinData.thumbnail_img;
-        } else {
-          img.src = 'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
-        }
-      }).catch((error) => {
-        console.error(error)
-      })
-  // } else {
-  //   // 이미지가 없을 경우 오버레이 크기 수정
+  img.alt = '장소 이미지';
+  imgBox.classList.add('img');
+  imgBox.style.marginLeft = '20px';
+  imgBox.appendChild(img);
 
-  // }
+  fetch(`http://127.0.0.1:8000/pin/no-content/${markerInfo.place_id}/`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((pinData) => {
+      if (!pinData.thumbnail_img.includes('http://t1.daumcdn.net/')) {
+        img.src =
+          'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
+      } else if (pinData.thumbnail_img) {
+        console.error(pinData.thumbnail_img);
+        img.src = pinData.thumbnail_img;
+      } else {
+        img.src =
+          'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
   contentBody.appendChild(infoBox);
   contentBody.appendChild(imgBox);
 
@@ -377,7 +366,7 @@ export async function displayPinOverlay(markerInfo) {
       PIN_DETAIL.old_address,
       PIN_DETAIL.lat_lng;
     PIN_DETAIL.category = markerInfo.categoryGroupName;
-    PIN_DETAIL.placeId = markerInfo.placeId;
+    PIN_DETAIL.place_id = markerInfo.place_id;
     PIN_DETAIL.title = markerInfo.title;
     PIN_DETAIL.thumbnail_img = pinThumbnail;
     PIN_DETAIL.new_address = markerInfo.roadAddressName;
@@ -388,6 +377,37 @@ export async function displayPinOverlay(markerInfo) {
 
     pinDetail();
   });
+
+  // 유저의 보드 목록 가져오기 위한 함수
+  function fetchAllBoards(url) {
+    return new Promise((resolve, reject) => {
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          let boards = data.results.Boards;
+
+          boards.forEach((board) => {
+            // MY_BOARDS 업데이트
+            MY_BOARDS.push(board);
+          });
+
+          // 다음 페이지가 있다면 재귀 호출
+          if (data.links.next) {
+            resolve(fetchAllBoards(data.links.next));
+          } else {
+            // 다음 페이지가 없다면 현재 Promise 해결
+            resolve();
+          }
+        })
+        .catch(reject);
+    });
+  }
 
   // 핀 생성 버튼 클릭시 보드 목록 오버레이 표시 이벤트
   showPinSaveOverlayBtn.addEventListener('click', () => {
@@ -401,7 +421,12 @@ export async function displayPinOverlay(markerInfo) {
       return;
     }
 
-    displayBoardsOnOverlay(markerInfo);
+    // 유저의 모든 보드 목록 가져오기 위해 함수 호출
+    fetchAllBoards(`http://127.0.0.1:8000/user/me/`)
+      .then(() => {
+        displayBoardsOnOverlay(markerInfo);
+      })
+      .catch((error) => console.error('Error:', error));
   });
 }
 
@@ -420,7 +445,7 @@ function displayBoardsOnOverlay(markerInfo) {
 
     // 해당 핀이 보드에 생성된 경우 '생성됨' 처리
     for (let i = 0; i < board.pins.length; i++) {
-      if (board.pins[i] == markerInfo.placeId) {
+      if (board.pins[i] == markerInfo.place_id) {
         pinSaveBtn.innerText = '생성됨';
         pinSaveBtn.classList.remove('pin_save_btn');
         pinSaveBtn.classList.add('pin_saved_btn');

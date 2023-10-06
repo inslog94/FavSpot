@@ -238,7 +238,7 @@
                 .then((response) => response.json())
                 .then((data2) => {
                   // 데이터를 보여주는 함수에 가져온 데이터 전달
-                  showBoards(data2);
+                  showBoards(data2['boards']);
                 })
                 .catch((error) => console.error('Error:', error))
                 .finally(() => {
@@ -285,7 +285,7 @@
               }
 
               // 초기 데이터 표시
-              showBoards(data['results']['Boards']);
+              // showBoards(data['results']['Boards']);
 
               // 다음 페이지로 이동하는 함수
               function loadNextPage() {

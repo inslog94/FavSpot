@@ -29,7 +29,7 @@ export function createPlaceInfo(data = PIN_DETAIL) {
     updatedAt.style.display = 'none';
     pinCount.style.display = 'none';
     createAddress(data);
-    fetch(`${origin}/pin/no-content/${PIN_DETAIL.placeId}/`, {
+    fetch(`${origin}/pin/no-content/${PIN_DETAIL.place_id}/`, {
       method: 'GET',
       credentials: 'include',
       headers: {

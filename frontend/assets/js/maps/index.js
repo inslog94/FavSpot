@@ -56,10 +56,76 @@ export function createMainPage() {
   screenButton.className = 'button full_screen_btn';
   screenButton.textContent = '전체화면';
 
+  // 정렬 드롭다운 + 보드 목록
+  const mainBoardContainerDiv = document.createElement('div');
+
+  // 정렬 드롭다운 생성
+  const sortSelect = document.createElement('div');
+  sortSelect.style = 'display:flex; justify-content: flex-end; margin: 20px 30px 0 0;';
+  sortSelect.style.position = 'relative';
+  
+  const dropText = document.createElement('span');
+  dropText.textContent = 'Sort';
+  dropText.style = 'font-size:large';
+
+  const dropIcon = document.createElement('i');
+  dropIcon.className = 'fa fa-caret-down';
+  dropIcon.style = 'margin-left:8px; font-size:x-large';
+  dropIcon.style.cursor = 'pointer';
+
+  // 드롭다운 옵션 박스
+  const dropOptionBox = document.createElement('div');
+  dropOptionBox.style.display = 'none'; 
+  dropOptionBox.style.flexDirection = 'column';
+  dropOptionBox.style.position = 'absolute';
+  dropOptionBox.style.right = '0';
+  // dropOptionBox.style.top ='112px';
+  dropOptionBox.style.zIndex = '2';
+  dropOptionBox.style.backgroundColor = 'rgb(247 224 224)';
+  dropOptionBox.style.marginRight = '5px';
+  dropOptionBox.style.borderRadius = '10px';
+  dropOptionBox.style.overflow = 'hidden';
+  dropOptionBox.style.boxShadow = '5px 5px 10px rgba(0,0,0,.5)';
+  dropOptionBox.style.fontSize = 'medium';
+
+  const dropOption1 = document.createElement('a');
+  dropOption1.className = 'drop1';
+  dropOption1.textContent = '최신순';
+
+  const dropOption2 = document.createElement('a');
+  dropOption2.className = 'drop2';
+  dropOption2.textContent = '좋아요순';
+
+  const dropOption3 = document.createElement('a');
+  dropOption3.className = 'drop3';
+  dropOption3.textContent = '핀개수순';
+
+  dropOptionBox.appendChild(dropOption1);
+  dropOptionBox.appendChild(dropOption2);
+  dropOptionBox.appendChild(dropOption3);
+  
+  sortSelect.appendChild(dropText);
+  sortSelect.appendChild(dropIcon);
+  sortSelect.appendChild(dropOptionBox); 
+
+  // 드롭다운 아이콘에 클릭 이벤트 리스너 추가
+  dropIcon.addEventListener('click', function() {
+    if (getComputedStyle(dropOptionBox).display === 'none') {
+        dropOptionBox.style.display = 'flex';   // 옵션 박스 보이기 
+    } else {
+        dropOptionBox.style.display = 'none';   // 옵션 박스 숨기기 
+    }
+  });
+  
   // Main Board를 담은 div 생성
   const mainBoardDiv = document.createElement('div');
   mainBoardDiv.id = 'main_board';
   mainBoardDiv.className = 'main_board_list';
+
+  // Main Board Container에 정렬 드롭다운과 Main Board 추가
+  mainBoardContainerDiv.appendChild(sortSelect);
+  mainBoardContainerDiv.appendChild(dropOptionBox);
+  mainBoardContainerDiv.appendChild(mainBoardDiv);
 
   // Main Board와 검색 결과 상자를 map_wrap div에 추가
   mapWrapDiv.appendChild(mapDiv);
@@ -73,7 +139,7 @@ export function createMainPage() {
 
   // Main에 map_wrap, Main Board 추가
   main.appendChild(mapWrapDiv);
-  main.appendChild(mainBoardDiv);
+  main.appendChild(mainBoardContainerDiv);
 
   // Main을 main-container에 추가
   mainContainer.appendChild(main);
