@@ -26,7 +26,7 @@ export function createBlogEntry(board) {
     const img = new Image(); // 이미지 엘리먼트 생성
     img.classList.add('img-fluid');
     // img.style.maxWidth = '100%'; // 이미지가 슬라이드를 넘어가지 않도록 설정
-    img.style = 'width: 250px; height: 250px; border: 3px solid #fffafa';
+    img.style = 'width: 100%; height: 100%; border-radius: 2px;';
     img.src =
       'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
     img.alt = '';
@@ -42,8 +42,10 @@ export function createBlogEntry(board) {
       const img = new Image(); // 이미지 엘리먼트 생성
       img.classList.add('img-fluid');
       // img.style.maxWidth = '100%'; // 이미지가 슬라이드를 넘어가지 않도록 설정
+      img.style = 'width: 100%; height: 100%; border-radius: 2px;';
+      img.alt = 'place image';
       if (imageSrc) {
-      img.src = imageSrc;
+        img.src = imageSrc;
       } else {
         img.src =
           'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
