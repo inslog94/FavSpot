@@ -68,6 +68,16 @@ export function pinDetail() {
         return response.json();
       })
       .then((data) => {
+        // 핀 생성 스텝들 숨기고 초기화하기
+        const pinCreationElement = document.getElementById('pinCreationSteps');
+        pinCreationElement.style.display = 'none';
+        const saveButton = document.getElementById('saveButton');
+        saveButton.innerText = '핀 저장';
+        currentStep = 1;
+        document.getElementById('step1').style.display = 'block';
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('saveNextButton').style.display = 'block';
+
         pinData = data.results.pin; // 데이터 저장
         createPlaceInfo(data.results);
       })
