@@ -453,3 +453,44 @@ window.onload = function init() {
     mapSetup();
   }
 };
+
+// 메인페이지 보드 목록 정렬
+document.addEventListener("DOMContentLoaded", () => {
+  const dropOption1 = document.querySelector('.drop1');
+  const dropOption2 = document.querySelector('.drop2');
+  const dropOption3 = document.querySelector('.drop3');
+
+  // 각 드롭다운 메뉴 항목에 대해 이벤트 리스너 추가
+  [dropOption1, dropOption2, dropOption3].forEach((dropOption, index) => {
+    // 마우스 오버 시 배경색 변경
+    dropOption.addEventListener('mouseover', function() {
+      this.style.backgroundColor = '#FFFFFF';
+      this.style.color = '#000000';
+      this.style.cursor = 'pointer';
+    });
+
+    // 마우스가 벗어날 때 배경색 원래대로 복구
+    dropOption.addEventListener('mouseout', function() {
+      this.style.backgroundColor = 'rgb(247 224 224)'; 
+    });
+
+    // 클릭 이벤트 추가
+    dropOption.addEventListener('click', function() {
+      let sort;
+      if (index === 0) { 
+        sort = 'created';
+      } else if (index === 1) { 
+        sort = 'like';
+      } else if (index ===2) { 
+        sort = 'pin';
+      }
+
+      fetch(`http://127.0.0.1:8000/board/?sort=${sort}`)
+        .then(response => response.json())
+        .then(data => {
+          displayMainBoards(data.boards);
+        })
+        .catch(error => console.error('Error:', error));
+    });
+  });
+})

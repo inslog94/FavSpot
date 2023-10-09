@@ -84,6 +84,6 @@ function createThumbnailImg(dataPin) {
     subscribeIconElement.src = `${dataPin.thumbnail_img}`; // thumbnail_img 사진과 연결
   } else {
     subscribeIconElement.src =
-      'https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/default_img.png'; // 기본 사진 지정
+      'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png'; // 기본 사진 지정
   }
 }

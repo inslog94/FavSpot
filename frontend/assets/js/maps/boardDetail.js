@@ -182,7 +182,12 @@ export async function boardDetail(data) {
       photoDivElement.classList.add('port-post-photo');
 
       const imgElement = document.createElement('img');
+      if (pin.thumbnail_img) {
       imgElement.src = pin.thumbnail_img;
+      } else {
+        imgElement.src =
+          'https://favspot-fin.s3.amazonaws.com/images/default/default_place.png';
+      }
       imgElement.classList.add('pin-thumbnail-img');
 
       photoDivElement.appendChild(imgElement);
@@ -274,7 +279,7 @@ export async function boardDetail(data) {
       imgTag.src = comment.user.profile_img; // 실제 이미지 URL
     } else {
       imgTag.src =
-        'https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default.png'; // 기본 이미지 URL
+        'https://favspot-fin.s3.amazonaws.com/images/default/default_user.png'; // 기본 이미지 URL
     }
 
     photoDiv.appendChild(imgTag);
@@ -331,22 +336,24 @@ export async function boardDetail(data) {
       // 댓글 삭제 기능
       // 클릭 이벤트 추가
       deleteIconDiv.addEventListener('click', function () {
-        fetch(`http://127.0.0.1:8000/board/comment/${comment.id}`, {
-          method: 'DELETE',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-          .then((response) => {
-            if (response.status === 204) {
-              location.reload(); // 페이지 새로고침
-            } else {
-              return response.json();
-            }
+        // 삭제 확인 메시지
+        if (window.confirm('댓글을 삭제하시겠습니까?')) {
+          fetch(`http://127.0.0.1:8000/board/comment/${comment.id}`, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
           })
-          .then()
-          .catch((error) => console.error('Error:', error));
+            .then((response) => {
+              if (response.status === 204) {
+                location.reload(); // 페이지 새로고침
+              } else {
+                return response.json();
+              }
+            })
+            .catch((error) => console.error('Error:', error));
+        }
       });
     }
   });
@@ -421,9 +428,9 @@ export async function boardDetail(data) {
   });
 
   // 보드 삭제 기능
-  document
-    .getElementById('deleteButton')
-    .addEventListener('click', function () {
+  document.getElementById('deleteButton').addEventListener('click', function () {
+    // 삭제 확인 메시지
+    if (window.confirm('보드를 삭제하시겠습니까?')) {
       fetch(`http://127.0.0.1:8000/board/${selectedPk}/`, {
         method: 'DELETE',
         credentials: 'include',
@@ -433,13 +440,12 @@ export async function boardDetail(data) {
       })
         .then((response) => {
           if (response.status === 204) {
-            alert('보드가 삭제되었습니다.');
             window.location.href = 'user_info.html';
           } else {
             return response.json();
           }
         })
-        .then()
         .catch((error) => console.error('Error:', error));
-    });
+    }
+  });
 }

@@ -124,7 +124,7 @@ export function pinDetail() {
             photoElement.src = pinContent.photo; // photo 사진과 연결
           } else {
             photoElement.src =
-              'https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/default_img.png'; // 기본 사진 지정
+              'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png'; // 기본 사진 지정
           }
 
           // 이미지를 사진 컨테이너에 추가

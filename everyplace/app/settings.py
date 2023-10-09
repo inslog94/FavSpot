@@ -104,6 +104,7 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'FavSpot API Document',  # API 제목 설정
     'DESCRIPTION': 'drf-spectacular를 이용하여 만든 FavSpot의 API 문서입니다.',
     "SCHEMA_PATH": os.path.join(BASE_DIR, "schema.json"),
+    'PREPROCESSING_HOOKS': ["board.excluded_path.custom_preprocessing_hook"]
 }
 
 MIDDLEWARE = [
