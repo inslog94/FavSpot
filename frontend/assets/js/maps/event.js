@@ -203,14 +203,16 @@ function boardCloseModalBtnEvent() {
   // 보드 생성 모달 '생성' 클릭 이벤트
   $boardModalSaveBtn.addEventListener('click', async () => {
     let title = $boardModalTitleInput.value;
-    let tags = $boardModalTagsInput.value.split(',');
+    let tagsInput  = $boardModalTagsInput.value
+
+    // 태그 입력값이 비어 있지 않은 경우에만 split 실행
+    let tags = tagsInput ? tagsInput.split(',') : [];
+
     let created = await boardSimpleSave(title, tags);
 
     if (created) {
       setMyBoard();
-      // console.log(markerInfo)
       // displayBoardsOnOverlay(markerInfo);
-      // console.log('생성새ㅔㅇ성');
     } else {
       $boardAddResult.innerText =
         '보드를 생성하는데 문제가 발생했습니다 다시 시도해주세요';
