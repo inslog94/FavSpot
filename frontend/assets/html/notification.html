@@ -132,6 +132,15 @@ shop -->
                 </div>
                 <!-- 리스트 -->
                 <div class="table-responsive col-lg-9">
+                  <div class="d-flex align-items-end mb-3">
+                    <div id="checkedCountContainer" class="flex-grow-1">
+                        <span id="checkedCount" class="h6"></span>
+                    </div>
+                    <div id="buttonContainer" class="d-flex justify-content-end flex-grow-1">
+                        <button class="readAllButton btn btn-primary" style="visibility: hidden">읽음</button>
+                        <button class="deleteAllButton btn btn-danger ml-10" style="visibility: hidden">삭제</button>
+                    </div>
+                </div>
                   <table class="table">
                     <thead>
                       <tr>
@@ -140,7 +149,7 @@ shop -->
                         <th>Type</th>
                         <th>Sender</th>
                         <th>Time</th>
-                        <th>Delete</th>
+                        <th><input type="checkbox" id="checkAll"></th>
                       </tr>
                     </thead>
                     <tbody id="notificationList"></tbody>
@@ -278,6 +287,8 @@ shop -->
         });
 
       // 알림 목록
+      const checkedCountElement = document.querySelector('#checkedCount');
+
       fetch(`${url}/notification/`, {
         method: 'GET',
         credentials: 'include',
@@ -411,43 +422,148 @@ shop -->
         timeCell.appendChild(timeLink);
         tableRow.appendChild(timeCell);
 
-        // 삭제 버튼 셀 생성
-        const deleteCell = document.createElement('td');
-        deleteCell.classList.add('td-quantity', 'pt-10', 'pb-10');
+        // 체크박스 셀 생성
+        const checkboxCell = document.createElement('td');
+        checkboxCell.classList.add('td-quantity', 'pt-10', 'pb-10');
 
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'btn btn-danger';
-        deleteButton.textContent = 'X';
+        const checkbox = document.createElement('input');
+        checkbox.type =  "checkbox";
+        checkbox.value = data.id;
 
-        /// 삭제 버튼 클릭 이벤트
-        deleteButton.addEventListener('click', () => {
-          if (confirm('이 리뷰를 삭제하시겠습니까?')) {
-            fetch(`${url}/notification/${data.id}/`, {
-              method: 'DELETE',
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            })
-              .then((response) => {
-                if (response.status === 204) {
-                  tableRow.remove();
-                  window.alert('알림을 삭제했습니다.');
-                } else if (response.status === 403) {
-                  window.alert('알림은 본인만 삭제할 수 있습니다.');
-                }
-              })
-              .catch((error) => {
-                console.error('삭제시 문제가 발생했습니다:', error);
-              });
+        checkbox.addEventListener('change', () => {
+          // 모든 일반 체크박스 찾기
+          const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#checkAll)');
+
+          // 현재 체크된 박스 수 계산
+          const checkedCount = Array.from(checkboxes).filter(box => box.checked).length;
+
+          // 화면에 표시
+          if (checkedCount === 0) {
+            // 선택된 항목이 없으면 요소를 숨김
+            checkedCountElement.style.display = 'none';
+            readAllButton.style.visibility = 'hidden';
+            deleteAllButton.style.visibility = 'hidden';
+          } else {
+            // 선택된 항목이 있으면 개수를 표시하고 요소를 보임
+            checkedCountElement.textContent = `선택된 알림 ${checkedCount}개`;
+            checkedCountElement.style.display = '';
+            readAllButton.style.visibility = '';
+            deleteAllButton.style.visibility = '';
           }
         });
 
-        deleteCell.appendChild(deleteButton);
-        tableRow.appendChild(deleteCell);
+        checkboxCell.appendChild(checkbox);
+        tableRow.appendChild(checkboxCell);
 
         return tableRow;
       }
+
+      // 모두 삭제 버튼 클릭 이벤트
+      const deleteAllButton = document.querySelector('.deleteAllButton');
+      deleteAllButton.addEventListener('click', () => {
+        const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]:not(#checkAll)'));
+        const checkedBoxes = checkboxes.filter(box => box.checked); // 선택된 체크박스만 필터링
+
+        // 체크된 박스가 없으면 함수 종료
+        if (checkedBoxes.length === 0) {
+          return;
+        }
+
+        const deletePromises = []; // 삭제 요청 프로미스들을 저장할 배열
+
+        checkedBoxes.forEach((box) => {
+          const deletePromise = fetch(`${url}/notification/${box.value}/`, { 
+              method: "DELETE",
+              credentials: "include",
+              headers: { 
+                  'Content-Type': 'application/json' 
+              }
+          });
+
+          deletePromises.push(deletePromise); // 배열에 추가
+        });
+
+        const confirmDelete = window.confirm('선택한 알림들을 모두 삭제하시겠습니까?');
+        if (confirmDelete) {
+          Promise.all(deletePromises)
+            .then((responses) => {
+              responses.forEach((response, index) => {
+                if (response.status === 204) {
+                  checkedBoxes[index].parentElement.parentElement.remove();
+                  checkedCountElement.style.display = 'none';
+                  readAllButton.style.visibility = 'hidden';
+                  deleteAllButton.style.visibility = 'hidden';
+                } else if (response.status === 403) {
+                  window.alert('알림은 본인만 삭제할 수 있습니다.');
+                }
+              });
+            })
+            .catch((error) => {
+              console.error('삭제 중 문제가 발생했습니다:', error);
+            });
+          }
+      });
+
+      // 모두 읽음 버튼 클릭 이벤트
+      const readAllButton = document.querySelector('.readAllButton');
+      readAllButton.addEventListener('click', () => {
+        const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]:not(#checkAll)'));
+        const checkedBoxes = checkboxes.filter(box => box.checked); // 선택된 체크박스만 필터링
+
+        // 체크된 박스가 없으면 함수 종료
+        if (checkedBoxes.length === 0) {
+          return;
+        }
+
+        const readPromises = []; // 읽음 요청 프로미스들을 저장할 배열
+
+        checkedBoxes.forEach((box) => {
+          const readPromise = fetch(`${url}/notification/${box.value}/read/`, { 
+              method: "POST",
+              credentials: "include",
+              headers: { 
+                  'Content-Type': 'application/json' 
+              }
+          });
+
+          readPromises.push(readPromise); // 배열에 추가
+        });
+
+        Promise.all(readPromises)
+          .then((responses) => {
+            window.alert('선택한 알림들을 모두 읽음 처리했습니다.');
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.error('읽음 처리 중 문제가 발생했습니다:', error);
+          });
+      });
+
+      // 모두 선택/해제 체크박스 클릭 이벤트
+      const checkAllBox = document.querySelector('#checkAll');
+
+      checkAllBox.addEventListener('change', () => {
+        // 모든 일반 체크박스 찾기
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#checkAll)');
+        // 각 일반 체크박스의 상태를 '모두 선택/해제' 상태로 설정
+        checkboxes.forEach(box => box.checked = checkAllBox.checked);
+        // 현재 체크된 박스 수 계산
+        const checkedCount = Array.from(checkboxes).filter(box => box.checked).length;
+
+          // 화면에 표시
+          if (checkedCount === 0) {
+            // 선택된 항목이 없으면 요소를 숨김
+            checkedCountElement.style.display = 'none';
+            readAllButton.style.visibility = 'hidden';
+            deleteAllButton.style.visibility = 'hidden';
+          } else {
+            // 선택된 항목이 있으면 개수를 표시하고 요소를 보임
+            checkedCountElement.textContent = `선택된 알림 ${checkedCount}개`;
+            checkedCountElement.style.display = '';
+            readAllButton.style.visibility = '';
+            deleteAllButton.style.visibility = '';
+          }
+      });
     </script>
   </body>
 </html>
