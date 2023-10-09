@@ -16,6 +16,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes,
 from rest_framework.decorators import api_view
 from drf_spectacular.types import OpenApiTypes
 from django.core.exceptions import ObjectDoesNotExist
+from pin.paginations import CustomPagination
 
 
 # Board View
@@ -503,9 +504,17 @@ class BoardLikeView(APIView):
 
         boards = [board_like.board_id for board_like in board_likes]
 
-        serializer = BoardPinSerializer(instance=boards, many=True)
+        # 페이지네이션 적용
+        paginator = CustomPagination()
+        paginator.page_size = 4
 
-        return Response(serializer.data)
+        # 쿼리셋 페이지네이트
+        boards_page = paginator.paginate_queryset(boards, request)
+        
+        serializer = BoardPinSerializer(instance=boards_page, many=True)
+
+        # 페이지네이션 응답 반환
+        return paginator.get_paginated_response(serializer.data)
 
 
 ## BoardSearch View
