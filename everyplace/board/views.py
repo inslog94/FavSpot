@@ -81,6 +81,7 @@ class BoardView(APIView):
                 # 로그인하지 않은 사용자는 공개 보드만 출력
                 boards = Board.objects.filter(is_public=True, is_deleted=False)
 
+            # 정렬 기능
             # 핀 개수 기준으로 정렬
             if sort == 'pin':
                 boards = boards.annotate(pin_count=Count('pin')).filter(pin_count__gt=0).order_by('-pin_count')
@@ -527,6 +528,10 @@ class BoardSearchView(APIView):
         search_term = request.query_params.get('search', None)
         search_field = request.query_params.get('search_field', None)
 
+        # 정렬 기준
+        # 기본값으로 'created' 설정
+        sort = request.GET.get('sort', 'created')
+
         if not search_term or search_field not in ['all', 'tag']:
             return Response({
                 'error': '잘못된 입력값 입니다.'
@@ -570,6 +575,19 @@ class BoardSearchView(APIView):
 
             # 결합
             queryset = (user_boards_filtered | public_boards_filtered_except_user_ones).distinct()
+
+        # 정렬 기능
+        # 핀 개수 기준으로 정렬
+        if sort == 'pin':
+            queryset = queryset.annotate(pin_count=Count('pin')).order_by('-pin_count')
+        
+        # 좋아요 개수 기준으로 정렬
+        elif sort == 'like':
+            queryset = queryset.annotate(like_count=Count('boardlike'), pin_count=Count('pin')).order_by('-like_count')
+
+        # 최신순 기준으로 정렬
+        else:
+            queryset = queryset.annotate(pin_count=Count('pin')).order_by('-created_at')
 
         serializer = BoardPinSerializer(queryset, many=True)
 
