@@ -632,11 +632,18 @@ class UserTaggedBoardView(APIView):
         # 본인 보드 중에서 특정 태그를 가진 보드 조회
         queryset = Board.objects.filter(user_id=request.user.id, tags__content__icontains=tag, is_deleted=False)
 
-        serializer = BoardPinSerializer(queryset, many=True)
+        # 페이지네이션 적용
+        paginator = CustomPagination()
+        paginator.page_size = 4 
+
+        # 쿼리셋 페이지네이트
+        boards_page = paginator.paginate_queryset(queryset, request)
+
+        serializer = BoardPinSerializer(boards_page, many=True)
         
         if request.user.is_authenticated:
                 request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://favspot-fin.s3.amazonaws.com/" + str(request.user.profile_img)}
         else:
             request_user = {}
         
-        return Response({'request_user': request_user, "boards": serializer.data}, status=status.HTTP_200_OK)
+        return paginator.get_paginated_response({'request_user': request_user, "boards": serializer.data})
