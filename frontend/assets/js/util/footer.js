@@ -4,7 +4,16 @@ export function createFooter() {
 
   // Footer 요소 생성
   const footer = document.createElement('footer');
-  footer.className = 'footer footer-topbar';
+
+  const currentPathname = window.location.pathname;
+  if (
+    currentPathname == '/frontend/index.html' ||
+    currentPathname == '/frontend/'
+  ) {
+    footer.className = 'footer footer-topbar';
+  } else {
+    footer.className = 'footer footer-topbar fixed-bottom';
+  }
 
   // Copyright 부분 생성
   const copyrightDiv = document.createElement('div');
@@ -27,7 +36,7 @@ export function createFooter() {
   logoImg.className = 'img-fluid mb-10 ml-20';
   logoImg.style.height = '50px';
   logoImg.src =
-    'https://lh3.googleusercontent.com/fife/AK0iWDx4iKNlowgdmDPw0RWQTNWrW7iYhUnZEbbSU0WaVtIBuDsQNsUM8hbbOffGldXgv6yu2DiJ2bajGY557K8ARgFNCpRI7bv1is3aC-6k-wdF-Uh-WekoU_9lNieYsS5cAb5c4GXPxvZqYkT7H80PWSWXlmhAq1VJNmZtut71KXHbqUMCyM1m_I_6bxkieq3W2EcyeyMA0Evc0Sszcuir2DGTkq51EuCFRQil9f6KFRYZB4_wEdQO3lIlks-B0cr2nsnYoTUAo0Cw7Iz55Rtxz3-FFS2trSmZly7TYgCS_4Vb4rd96nQ2iRj1vszHq5amZConK3184IXEXlAypvOjcC7M93AEA_Vy_zXmnBgvJZevck5iA8O1QKNpTVUvqT8m4II815h9v7dPL_4yjFlLSySZAxe4MRiB5WtPB6h2VFi_k0phgC2OzLphrIhIT-KcFRYFV2TBAmsQFEc5xMBD_48UVhSAUIKeB3OSMqMw1A01D7Vbf3kqeZsC6Idu6nRRka8Gly5Vx37KzmOs0SwxHNfEUNVu-MxyzuVrxkNbzJ3DmBs8AyXRLP0AzheUg3NAjp2Bg1FnhqKd8ajiGMlz3L_ERVgJUKnh-SHmv3RfUjxmCqSve9HXlp2V-boJTvn8-PXpNiiIoM12QqSqJlVJExoRvmpxaWZvlUwtvmnlH_zEAzNTlvYGwaBs6SqJkhKL9STQlD7T3H-tBo0qJRj0HgbCosBV1Z3AOdNuD2U6YNGdkRLqCvBbUgb6ImEyoYJAuJ9bS7I2uGHtOUBjuZTf5dLwCACaeA9s__VucnnMN_UXR006nQBNBoEd39rApGFVXHzWGDcr8Ua1ufcDSX27mEAH_zkD0J937fflX6v2x9X3qUfRFNkR07jdF5hs6o_6TQ3CyTDDSq139ewhlc6ep54PJlguqw7pxuSvkTMJDhg_OZTkOi8pjDFwJZqOsAG7LDY7MqSjIy_bYYIs5RUYL6TvtrqHeZhIRikjE2YUZc0uwJeJyNQJ1gRtoPhIyoinhqBsDJcs5hox4W16P-rvnJHuNMM_F3q0DkcFrQCxn7Th97jSeVV2cNjbYxLu9nk7li-0R4wHwur1v9d-3v3cmHfZkiSshUKIcSe-SnLshVM5c0E8e62ygd2S2Aq6bRrBwJ47LGsG6abqjd5wKjQk5bBdZDc6PA3uhtv9ZiVWEqraMQ8ETfZWBqnhaI9ufGDg6h-aSXx2-jzhBGi8SQPCbfR1Znm1Fa2Dox-vKIpn_59ZFx9W12h1sKc2YBIbcBjv-Wp-m7DyH7NsvoG8bf_ab1VWRDmhmBwmrJqaAqY5QHIsRobwuQCi7X95NLzjnCAhBaJMz4vbKFTMHMw9_HhGTuOM_fQbeAvI1reTYUvkwivyPO60aOCsHvM_O6kPNviM4lEwpqQotHeMxoG6ZpY9aduRpv4e3ZU7B2kpFSKdwas2Qsz65S4pEulXJWVfDrTuKHMe7e2ocRcU8Hk_65tMp8X3tJPCTUaD7AsyJWFRQSkri5b3Wk8rtqhK8bZD1k7-hamcHMvYHBQapuAFPLaE=w1704-h1313';
+    'https://favspot-fin.s3.amazonaws.com/images/default/footer_logo.png';
   logoImg.alt = '';
 
   const copyrightTextDiv = document.createElement('div');

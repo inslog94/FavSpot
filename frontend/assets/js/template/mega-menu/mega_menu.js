@@ -50,8 +50,8 @@
                 activeTrigger = 'activeTrigger',
                 activeTriggerMobile = 'activeTriggerMobile',
                 dropDown = '.drop-down-multilevel, .drop-down, .drop-down-tab-bar',
-                desktopTopFixed = 'desktopTopFixed',
-                mobileTopFixed = 'mobileTopFixed',
+                desktopTopFixed = '',
+                mobileTopFixed = '',
                 fullWidth = 'menuFullWidth',
                 Canvas;
 

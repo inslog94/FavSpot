@@ -38,7 +38,7 @@ export async function getBoardRequest(keyword) {
     email.textContent = requestUser;
     const profileImg = document.querySelector('.profileImg');
 
-    if (requestUserProfileImg !== 'https://everyplacetest.s3.amazonaws.com/') {
+    if (requestUserProfileImg !== 'https://favspot-fin.s3.amazonaws.com/') {
       profileImg.src = requestUserProfileImg;
       profileImg.style.borderRadius = '50%';
     }

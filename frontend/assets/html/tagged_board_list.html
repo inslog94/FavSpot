@@ -18,51 +18,13 @@
     <!-- Favicon -->
     <link
       rel="shortcut icon"
-      href="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/fav.png"
+      href="https://favspot-fin.s3.amazonaws.com/images/default/favicon.png"
     />
-
-    <!-- font -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,500,500i,600,700,800,900|Poppins:200,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900"
-    />
-
-    <!-- Plugins -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../css/template/plugins-css.css"
-    />
-
-    <!-- Typography -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../css/template/typography.css"
-    />
-
-    <!-- Shortcodes -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../css/template/shortcodes/shortcodes.css"
-    />
-
-    <!-- Style -->
-    <link rel="stylesheet" type="text/css" href="../css/template/style.css" />
-
-    <!-- Responsive -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../css/template/responsive.css"
-    />
-    <!-- Swiper 스타일시트를 로드합니다. -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/swiper/swiper-bundle.min.css"
-    />
+    <link rel="stylesheet" href="../css/template/bootstrap.css" />
     <style>
+      body {
+        overflow: auto;
+      }
       .masonry-item {
         display: inline-block;
         max-width: 375px;
@@ -108,10 +70,10 @@
     <div id="main-container">
       <!--=================================
  masnary blog-->
-      
+
       <section
-        class="white-bg blog masonry-main page-section-ptb"
-        style="height: 98.75%"
+        class="white-bg blog masonry-main"
+        style="height: 98.75%; padding-top: 80px"
       >
         <div class="container">
           <div class="row">
@@ -126,7 +88,7 @@
           </div>
           <!-- 페이지 버튼 -->
           <div class="col-lg-12">
-            <nav aria-label="Page navigation example">
+            <nav aria-label="Page navigation example" style="display: none">
               <ul id="pagination" class="pagination justify-content-center">
                 <li id="previousButton" class="page-item">
                   <a class="page-link" href="#"
@@ -142,7 +104,7 @@
               </ul>
             </nav>
           </div>
-          <div id="main" class="row">
+          <div id="main" class="row" style="padding-bottom: 140px">
             <!-- ================================== -->
             <div id="boardlist" class="col-lg-12">
               <div class="masonry columns-2">
@@ -176,7 +138,7 @@
       import { createPreloader } from '/frontend/assets/js/util/preloader.js';
       import { createHeader } from '/frontend/assets/js/util/header.js';
       import { createFooter } from '/frontend/assets/js/util/footer.js';
-      
+
       createPreloader();
       createHeader();
       createFooter();
@@ -276,9 +238,18 @@
                 .then((response) => response.json())
                 .then((data2) => {
                   // 데이터를 보여주는 함수에 가져온 데이터 전달
-                  showBoards(data2);
+                  showBoards(data2['boards']);
                 })
-                .catch((error) => console.error('Error:', error));
+                .catch((error) => console.error('Error:', error))
+                .finally(() => {
+                  const boards =
+                    document.getElementsByClassName('masonry-item');
+                  const dividend = boards.length;
+                  const divisor = 3;
+                  const quotient = Math.ceil(dividend / divisor);
+                  const boardList = document.querySelector('#boardlist');
+                  boardList.style.height = `${410 * quotient}px`;
+                });
 
               // 데이터를 보여주는 함수
               function showBoards(boards) {
@@ -314,7 +285,7 @@
               }
 
               // 초기 데이터 표시
-              showBoards(data['results']['Boards']);
+              // showBoards(data['results']['Boards']);
 
               // 다음 페이지로 이동하는 함수
               function loadNextPage() {
@@ -379,7 +350,7 @@
               img.style =
                 'width: 425px; height: 350px; border: 3px solid #fffafa';
               img.src =
-                'https://everyplacetest.s3.ap-northeast-2.amazonaws.com/images/19/profile/d1f9219a-ba25-474c-86b8-886bc612c91e';
+                'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
               img.alt = '';
 
               swiperSlide.appendChild(img);

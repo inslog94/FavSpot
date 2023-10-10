@@ -18,7 +18,7 @@
     <!-- Favicon -->
     <link
       rel="shortcut icon"
-      href="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/fav.png"
+      href="https://favspot-fin.s3.amazonaws.com/images/default/favicon.png"
     />
 
     <!-- font -->
@@ -87,7 +87,7 @@ shop -->
                           id="profileImg"
                           class="img-fluid mx-auto"
                           style="object-fit: cover; width: 215px; height: 215px"
-                          src="https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/user_default_clear.png"
+                          src="https://favspot-fin.s3.amazonaws.com/images/default/default_user_clear.png"
                           alt=""
                         />
                       </div>
@@ -120,7 +120,7 @@ shop -->
                   </div>
                 </div>
                 <!-- 리스트 -->
-                <div class="table-responsive col-lg-9">
+                <div class="table-responsive col-lg-9" style="padding-bottom: 140px;">
                   <table class="table">
                     <thead>
                       <tr>
@@ -169,7 +169,7 @@ shop -->
       import { createPreloader } from '/frontend/assets/js/util/preloader.js';
       import { createHeader } from '/frontend/assets/js/util/header.js';
       import { createFooter } from '/frontend/assets/js/util/footer.js';
-      
+
       createPreloader();
       createHeader();
       createFooter();
@@ -240,17 +240,6 @@ shop -->
             button.textContent = 'Profile Edit';
             button.setAttribute('href', 'profile_edit.html');
             changeBtnDiv.appendChild(button);
-
-            const tags = data['results']['User']['tags'];
-            tags.forEach((tag) => {
-              const newLi = document.createElement('li');
-              const newTag = document.createElement('a');
-              newTag.setAttribute('href', '#');
-              newTag.textContent = tag;
-
-              newLi.appendChild(newTag);
-              tagList.appendChild(newLi);
-            });
           })
           .catch((error) => {
             console.error('Failed to retrieve user data.', error);
@@ -293,7 +282,7 @@ shop -->
             contentPhoto.src = data.photo;
           } else {
             contentPhoto.src =
-              'https://everyplacetest.s3.ap-northeast-2.amazonaws.com/dev/default_img.png';
+              'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
           }
           contentPhoto.alt = '';
 

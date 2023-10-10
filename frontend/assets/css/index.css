@@ -202,3 +202,10 @@ footer {
 #logo-img:hover {
   cursor: pointer;
 }
+
+.drop1,
+.drop2,
+.drop3 {
+  color: #000000 !important;
+  padding: 10px 30px;
+}

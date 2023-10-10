@@ -254,11 +254,13 @@ a:visited {
 .marker_overlay_content .body {
   position: relative;
   display: flex;
+  justify-content: space-between;
 }
 .marker_overlay_content .desc {
-  position: relative;
-  margin: 25px 0 0 25px;
-  height: 75px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 130px;
 }
 .desc .ellipsis {
   overflow: hidden;
@@ -299,7 +301,6 @@ a:visited {
   margin-left: 7px;
 }
 .marker_overlay_content .img {
-  margin: 20px 0 0 20px;
   width: 140px;
   height: 130px;
   border: 1px solid #ddd;
