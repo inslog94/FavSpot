@@ -1,5 +1,7 @@
 import { origin } from '../maps/data.js';
 import { sortMouseEvent, sortClickEvent } from '../maps/event.js';
+import { notification } from '../maps/websocket.js';
+
 
 export async function getPinContentsRequest(id) {
   let url = origin + '/pin/' + id + '/';
@@ -58,11 +60,13 @@ export async function getBoardRequest(keyword) {
 
   const resJson = await response.json();
   const requestUser = resJson.request_user.email;
+  const requestUserPk = resJson.request_user.requestUserPk;
   const requestUserProfileImg = resJson.request_user.profileImg;
 
   if (requestUser) {
     const email = document.querySelector('#headerEmail');
     email.textContent = requestUser;
+    notification(requestUserPk);
     const profileImg = document.querySelector('.profileImg');
 
     if (requestUserProfileImg !== 'https://favspot-fin.s3.amazonaws.com/') {
