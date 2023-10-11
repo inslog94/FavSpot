@@ -107,7 +107,6 @@ export function createHeader() {
 
   cartName3.appendChild(ul);
   cartItem3.appendChild(cartName3);
-  notification();
 
   const cartTotal = document.createElement('div');
   cartTotal.className = 'cart-total';
@@ -261,6 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (requestUser) {
           const email = document.querySelector('#headerEmail');
           email.textContent = requestUser;
+          notification(requestUserPk);
           const profileImg = document.querySelector('.profileImg');
           if (requestUserProfileImg) {
             profileImg.src = requestUserProfileImg;
