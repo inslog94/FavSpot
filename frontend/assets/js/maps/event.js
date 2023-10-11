@@ -203,11 +203,16 @@ function boardCloseModalBtnEvent() {
   // 보드 생성 모달 '생성' 클릭 이벤트
   $boardModalSaveBtn.addEventListener('click', async () => {
     let title = $boardModalTitleInput.value;
-    let tags = $boardModalTagsInput.value.split(',');
+    let tagsInput  = $boardModalTagsInput.value
+
+    // 태그 입력값이 비어 있지 않은 경우에만 split 실행
+    let tags = tagsInput ? tagsInput.split(',') : [];
+
     let created = await boardSimpleSave(title, tags);
 
     if (created) {
       setMyBoard();
+      // displayBoardsOnOverlay(markerInfo);
     } else {
       $boardAddResult.innerText =
         '보드를 생성하는데 문제가 발생했습니다 다시 시도해주세요';
@@ -455,42 +460,57 @@ window.onload = function init() {
 };
 
 // 메인페이지 보드 목록 정렬
+// 마우스 오버/아웃 이벤트 핸들러
+export function sortMouseEvent(dropOption) {
+  dropOption.addEventListener('mouseover', function() {
+    this.style.backgroundColor = '#FFFFFF';
+    this.style.color = '#000000';
+    this.style.cursor = 'pointer';
+  });
+
+  dropOption.addEventListener('mouseout', function() {
+    this.style.backgroundColor = 'rgb(247 224 224)';
+  });
+}
+
+// 클릭 이벤트 핸들러
+export function sortClickEvent(dropOption, index, base_url, keyword = null) {
+  dropOption.addEventListener('click', function() {
+    let sort;
+    let url;
+
+    if (index === 0) { 
+      sort = 'created';
+    } else if (index === 1) { 
+      sort = 'like';
+    } else if (index ===2) { 
+      sort = 'pin';
+    }
+
+    // 검색어가 있는 경우와 없는 경우에 따라 다른 URL 생성
+    if (keyword !== null && keyword.length > 0) {
+      url = `${base_url}/search?search_field=all&search=${keyword}&sort=${sort}`;
+    } else {
+      url = `${base_url}?sort=${sort}`;
+    }
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => displayMainBoards(data.boards))
+      .catch(error => console.error('Error:', error));
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  const dropOption1 = document.querySelector('.drop1');
-  const dropOption2 = document.querySelector('.drop2');
-  const dropOption3 = document.querySelector('.drop3');
+  const dropOptions = [
+    document.querySelector('.drop1'),
+    document.querySelector('.drop2'),
+    document.querySelector('.drop3')
+  ];
 
   // 각 드롭다운 메뉴 항목에 대해 이벤트 리스너 추가
-  [dropOption1, dropOption2, dropOption3].forEach((dropOption, index) => {
-    // 마우스 오버 시 배경색 변경
-    dropOption.addEventListener('mouseover', function() {
-      this.style.backgroundColor = '#FFFFFF';
-      this.style.color = '#000000';
-      this.style.cursor = 'pointer';
-    });
-
-    // 마우스가 벗어날 때 배경색 원래대로 복구
-    dropOption.addEventListener('mouseout', function() {
-      this.style.backgroundColor = 'rgb(247 224 224)'; 
-    });
-
-    // 클릭 이벤트 추가
-    dropOption.addEventListener('click', function() {
-      let sort;
-      if (index === 0) { 
-        sort = 'created';
-      } else if (index === 1) { 
-        sort = 'like';
-      } else if (index ===2) { 
-        sort = 'pin';
-      }
-
-      fetch(`http://127.0.0.1:8000/board/?sort=${sort}`)
-        .then(response => response.json())
-        .then(data => {
-          displayMainBoards(data.boards);
-        })
-        .catch(error => console.error('Error:', error));
-    });
+  dropOptions.forEach((dropOption, index) => {
+    sortMouseEvent(dropOption);
+    sortClickEvent(dropOption, index, "http://127.0.0.1:8000/board");
   });
-})
+});

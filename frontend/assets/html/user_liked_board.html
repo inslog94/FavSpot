@@ -290,7 +290,7 @@
                 button3.style.display = 'block';
                 button3.addEventListener('click', function (e) {
                   e.preventDefault(); // 기본 링크 클릭 동작 방지
-                  window.history.back();
+                  location.href='user_info.html';
                 });
 
                 changeBtnDiv.appendChild(button2);
@@ -301,7 +301,7 @@
                 button3.style.display = 'block';
                 button3.addEventListener('click', function (e) {
                   e.preventDefault(); // 기본 링크 클릭 동작 방지
-                  window.history.back();
+                  location.href='user_info.html';
                 });
 
                 button.addEventListener('click', () => {
@@ -328,7 +328,7 @@
                 button3.style.display = 'block';
                 button3.addEventListener('click', function (e) {
                   e.preventDefault(); // 기본 링크 클릭 동작 방지
-                  window.history.back();
+                  location.href='user_info.html';
                 });
 
                 button.addEventListener('click', () => {
@@ -364,6 +364,7 @@
               // 초기 페이지 번호
               let currentPage = 1;
 
+              let fetchdata;
               // 유저가 좋아요한 보드 목록 가져오기 위한 통신
               const paramsUserId = new URLSearchParams(window.location.search);
               let userId = params.get('pk');
@@ -377,7 +378,8 @@
                 .then((response) => response.json())
                 .then((data2) => {
                   // 데이터를 보여주는 함수에 가져온 데이터 전달
-                  showBoards(data2);
+                  fetchdata = data2;
+                  showBoards(data2.results);
                 })
                 .catch((error) => console.error('Error:', error));
 
@@ -394,7 +396,7 @@
                   parentElement.appendChild(dynamicBlogEntry);
                 });
 
-                if (data['links']['total_pages'] == 1) {
+                if (fetchdata['links']['total_pages'] == 1) {
                   previousButton.style.display = 'none';
                   nextButton.style.display = 'none';
                 }
@@ -407,7 +409,7 @@
                 }
 
                 // 다음 페이지로 이동하는 버튼을 다시 보이게 함
-                if (currentPage < data['links']['total_pages']) {
+                if (currentPage < fetchdata['links']['total_pages']) {
                   nextButton.classList.remove('disabled');
                 } else {
                   nextButton.classList.add('disabled');
@@ -415,11 +417,11 @@
               }
 
               // 초기 데이터 표시
-              showBoards(data['results']['Boards']);
+              // showBoards(data.results);
 
               // 다음 페이지로 이동하는 함수
               function loadNextPage() {
-                if (currentPage < data['links']['total_pages']) {
+                if (currentPage < fetchdata['links']['total_pages']) {
                   currentPage++;
                   fetchDataAndShow();
                 }
@@ -435,12 +437,22 @@
 
               // 데이터를 가져와서 화면에 표시하는 함수
               function fetchDataAndShow() {
-                fetch(`http://127.0.0.1:8000/user/${pk}/?page=${currentPage}`, {
+                fetch(`http://127.0.0.1:8000/board/like/${pk}/?page=${currentPage}`, {
                   credentials: 'include',
                 })
-                  .then((response) => response.json())
+                  .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                   .then((data) => {
-                    showBoards(data['results']['Boards']);
+                    if (!Array.isArray(data.results)) {
+                        console.error('Invalid data:', data);
+                        return;
+                    }
+
+                    showBoards(data.results);
                   })
                   .catch((error) => {
                     console.error('Failed to load data.', error);

@@ -16,6 +16,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes,
 from rest_framework.decorators import api_view
 from drf_spectacular.types import OpenApiTypes
 from django.core.exceptions import ObjectDoesNotExist
+from pin.paginations import CustomPagination
 
 
 # Board View
@@ -81,6 +82,7 @@ class BoardView(APIView):
                 # 로그인하지 않은 사용자는 공개 보드만 출력
                 boards = Board.objects.filter(is_public=True, is_deleted=False)
 
+            # 정렬 기능
             # 핀 개수 기준으로 정렬
             if sort == 'pin':
                 boards = boards.annotate(pin_count=Count('pin')).filter(pin_count__gt=0).order_by('-pin_count')
@@ -502,9 +504,17 @@ class BoardLikeView(APIView):
 
         boards = [board_like.board_id for board_like in board_likes]
 
-        serializer = BoardPinSerializer(instance=boards, many=True)
+        # 페이지네이션 적용
+        paginator = CustomPagination()
+        paginator.page_size = 4
 
-        return Response(serializer.data)
+        # 쿼리셋 페이지네이트
+        boards_page = paginator.paginate_queryset(boards, request)
+        
+        serializer = BoardPinSerializer(instance=boards_page, many=True)
+
+        # 페이지네이션 응답 반환
+        return paginator.get_paginated_response(serializer.data)
 
 
 ## BoardSearch View
@@ -526,6 +536,10 @@ class BoardSearchView(APIView):
     def get(self, request, format=None):
         search_term = request.query_params.get('search', None)
         search_field = request.query_params.get('search_field', None)
+
+        # 정렬 기준
+        # 기본값으로 'created' 설정
+        sort = request.GET.get('sort', 'created')
 
         if not search_term or search_field not in ['all', 'tag']:
             return Response({
@@ -571,6 +585,19 @@ class BoardSearchView(APIView):
             # 결합
             queryset = (user_boards_filtered | public_boards_filtered_except_user_ones).distinct()
 
+        # 정렬 기능
+        # 핀 개수 기준으로 정렬
+        if sort == 'pin':
+            queryset = queryset.annotate(pin_count=Count('pin')).order_by('-pin_count')
+        
+        # 좋아요 개수 기준으로 정렬
+        elif sort == 'like':
+            queryset = queryset.annotate(like_count=Count('boardlike'), pin_count=Count('pin')).order_by('-like_count')
+
+        # 최신순 기준으로 정렬
+        else:
+            queryset = queryset.annotate(pin_count=Count('pin')).order_by('-created_at')
+
         serializer = BoardPinSerializer(queryset, many=True)
 
         if request.user.is_authenticated:
@@ -605,11 +632,18 @@ class UserTaggedBoardView(APIView):
         # 본인 보드 중에서 특정 태그를 가진 보드 조회
         queryset = Board.objects.filter(user_id=request.user.id, tags__content__icontains=tag, is_deleted=False)
 
-        serializer = BoardPinSerializer(queryset, many=True)
+        # 페이지네이션 적용
+        paginator = CustomPagination()
+        paginator.page_size = 4 
+
+        # 쿼리셋 페이지네이트
+        boards_page = paginator.paginate_queryset(queryset, request)
+
+        serializer = BoardPinSerializer(boards_page, many=True)
         
         if request.user.is_authenticated:
                 request_user = {"email": str(request.user), "requestUserPk": request.user.id, "profileImg": "https://favspot-fin.s3.amazonaws.com/" + str(request.user.profile_img)}
         else:
             request_user = {}
         
-        return Response({'request_user': request_user, "boards": serializer.data}, status=status.HTTP_200_OK)
+        return paginator.get_paginated_response({'request_user': request_user, "boards": serializer.data})
