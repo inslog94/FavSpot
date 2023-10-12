@@ -117,6 +117,16 @@ export function createMainPage() {
         dropOptionBox.style.display = 'none';   // 옵션 박스 숨기기 
     }
   });
+
+  // 드롭다운 이외의 영역 클릭 시 드롭다운 숨김 처리
+  document.addEventListener('click', function(event) {
+    const target = event.target;
+    
+    // 클릭된 요소가 드롭다운 영역인지 확인
+    if (!dropOptionBox.contains(target) && target !== dropIcon) {
+      dropOptionBox.style.display = 'none';
+    }
+  });
   
   // Main Board를 담은 div 생성
   const mainBoardDiv = document.createElement('div');

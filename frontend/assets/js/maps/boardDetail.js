@@ -359,6 +359,11 @@ export async function boardDetail(data) {
   });
 
   // 좋아요 등록과 해제 기능
+  // 로그인하지 않은 유저는 이용할 수 없도록 좋아요 버튼 숨김 처리
+  if (!loggedInUserEmail){
+    likeButton.style.display = 'none';
+  }
+
   likeButton.addEventListener('click', function () {
     if (boardLikePk) {
       // 좋아요 해제
@@ -407,6 +412,11 @@ export async function boardDetail(data) {
   });
 
   // 댓글 등록 기능
+  // 로그인하지 않은 유저는 이용할 수 없도록 댓글 작성란 숨김 처리
+  if (!loggedInUserEmail){
+    document.getElementById('commentWriteBox').style.display = 'none';
+  }
+  
   document.getElementById('submit').addEventListener('click', function () {
     var commentText = document.getElementById('commentText').value;
 

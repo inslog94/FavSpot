@@ -63,6 +63,11 @@
         font-size: 16px;
         margin-right: 2px;
       }
+
+      .user-info-btn {
+        background-color: #f57979;
+        border: none;
+      }
     </style>
   </head>
 
@@ -300,19 +305,20 @@
               let followerPk = params.get('pk');
 
               if ((requestUser === currentUser) | (requestUserPk === pk)) {
-                button.textContent = 'Profile Edit';
-                button.setAttribute('href', 'profile_edit.html');
-
+                
                 button2.textContent = 'Pin List';
                 button2.style.display = 'block';
                 button2.setAttribute('href', 'pin_list.html');
-
+                
                 button3.textContent = 'Liked Board';
                 button3.style.display = 'block';
                 button3.setAttribute(
                   'href', `user_liked_board.html?pk=${requestUserPk}`
-                );
-
+                  );
+                  
+                button.textContent = 'User Info';
+                button.classList.add('user-info-btn');
+                button.setAttribute('href', 'user_info.html');
                 changeBtnDiv.appendChild(button2);
               } else if (followingList.includes(currentUser)) {
                 button.textContent = 'Unfollow';
@@ -362,8 +368,8 @@
                     .catch((error) => console.error('Error:', error));
                 });
               }
-              changeBtnDiv.appendChild(button);
               changeBtnDiv.appendChild(button3);
+              changeBtnDiv.appendChild(button);
 
               const tags = data['results']['User']['tags'];
               tags.forEach((tag) => {
@@ -371,7 +377,7 @@
                 const newTag = document.createElement('a');
                 newTag.setAttribute(
                   'href',
-                  'user_tagged_board.html?tag=' + encodeURIComponent(tag)
+                  'user_tagged_board.html?pk=' + encodeURIComponent(pk) + '&tag=' + encodeURIComponent(tag)
                 );
                 newTag.textContent = tag;
 
@@ -402,10 +408,16 @@
               // 'tag' 파라미터 값 얻기
               let tag = urlParams.get('tag');
 
+              // 'pk' 파라미터 값 얻기
+              let pagePk = urlParams.get('pk');
+              if (pagePk === 'me'){
+                pagePk = requestUserPk;
+              }
+
               // 페이지 상단 안내 문구에 선택된 태그 값 표기
               document.querySelector('.tag-name').textContent = tag;
 
-              fetch(`http://127.0.0.1:8000/board/tag/?tag=${tag}`, {
+              fetch(`http://127.0.0.1:8000/board/${pagePk}/tag/?tag=${tag}`, {
                 credentials: 'include',
                 headers: {
                   'Content-Type': 'application/json',
@@ -473,7 +485,7 @@
 
               // 데이터를 가져와서 화면에 표시하는 함수
               function fetchDataAndShow() {
-                fetch(`http://127.0.0.1:8000/board/tag/?tag=${tag}&page=${currentPage}`, {
+                fetch(`http://127.0.0.1:8000/board/${pagePk}/tag/?tag=${tag}&page=${currentPage}`, {
                   credentials: 'include',
                 })
                   .then((response) => response.json())
