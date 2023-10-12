@@ -43,6 +43,8 @@ export function pinDetail() {
             boardData[board.id] = { title: board.title };
 
             boardSelectionElement.appendChild(optionElement);
+
+            document.getElementById('saveButton').style.display = 'block';
           });
         }
       })
@@ -362,7 +364,7 @@ export function pinDetail() {
           // 성공 메시지 출력
           alert(`'${pinData.title}' 핀을 '${boardData[selectedBoard].title}' 보드에 담았습니다.`);
           // 페이지 새로 고침
-          // window.location.reload();
+          displayPinDetail();
           displayPinContents(1);
         })
         .catch((error) => {
