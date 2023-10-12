@@ -63,6 +63,11 @@
         font-size: 16px;
         margin-right: 2px;
       }
+
+      .user-info-btn {
+        background-color: #f57979;
+        border: none;
+      }
     </style>
   </head>
 
@@ -278,7 +283,7 @@
 
               const button = document.createElement('a');
               button.type = 'button';
-              button.classList.add('btn', 'btn-primary', 'mt-1');
+              button.classList.add('btn', 'btn-primary', 'mt-1', 'user-info-btn');
               button.style.display = 'block';
               const button2 = document.createElement('a');
               button2.type = 'button';
@@ -300,19 +305,19 @@
               let followerPk = params.get('pk');
 
               if ((requestUser === currentUser) | (requestUserPk === pk)) {
-                button.textContent = 'Profile Edit';
-                button.setAttribute('href', 'profile_edit.html');
-
+                
                 button2.textContent = 'Pin List';
                 button2.style.display = 'block';
                 button2.setAttribute('href', 'pin_list.html');
-
+                
                 button3.textContent = 'Liked Board';
                 button3.style.display = 'block';
                 button3.setAttribute(
                   'href', `user_liked_board.html?pk=${requestUserPk}`
-                );
-
+                  );
+                  
+                button.textContent = 'User Info';
+                button.setAttribute('href', 'user_info.html');
                 changeBtnDiv.appendChild(button2);
               } else if (followingList.includes(currentUser)) {
                 button.textContent = 'Unfollow';
@@ -362,8 +367,8 @@
                     .catch((error) => console.error('Error:', error));
                 });
               }
-              changeBtnDiv.appendChild(button);
               changeBtnDiv.appendChild(button3);
+              changeBtnDiv.appendChild(button);
 
               const tags = data['results']['User']['tags'];
               tags.forEach((tag) => {

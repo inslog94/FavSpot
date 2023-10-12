@@ -60,6 +60,14 @@
       type="text/css"
       href="../css/template/responsive.css"
     />
+
+    <style>
+      .user-info-btn {
+        background-color: #f57979;
+        border: none;
+      }
+    </style>
+
   </head>
 
   <body>
@@ -234,18 +242,20 @@ shop -->
 
                 const button = document.createElement('a');
                 button.type = 'button';
-                button.classList.add('btn', 'btn-primary');
+                button.classList.add('btn', 'mt-1');
                 button.style.display = 'block';
 
                 // 기존 요소에 버튼 추가
                 const changeBtnDiv = document.querySelector('.changeBtn');
                 if ((requestUserPk === parseInt(pk)) | (pk == 'me')) {
-                  button.textContent = 'Profile Edit';
-                  button.setAttribute('href', 'profile_edit.html');
+                  button.textContent = 'User Info';
+                  button.classList.add('user-info-btn'); 
+                  button.setAttribute('href', 'user_info.html');
                 } else if (
                   followingList.includes(data['results']['User']['email'])
                 ) {
                   button.textContent = 'Unfollow';
+                  button.classList.add('btn-primary');
                   button.addEventListener('click', () => {
                     fetch(`http://127.0.0.1:8000/user/follow/${pk}/`, {
                       method: 'DELETE',
@@ -285,17 +295,6 @@ shop -->
                   });
                 }
                 changeBtnDiv.appendChild(button);
-
-                const tags = data['results']['User']['tags'];
-                tags.forEach((tag) => {
-                  const newLi = document.createElement('li');
-                  const newTag = document.createElement('a');
-                  newTag.setAttribute('href', '#');
-                  newTag.textContent = tag;
-
-                  newLi.appendChild(newTag);
-                  tagList.appendChild(newLi);
-                });
               })
               .catch((error) => {
                 console.error('Failed to retrieve user data.', error);
