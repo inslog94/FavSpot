@@ -622,15 +622,15 @@ class UserTaggedBoardView(APIView):
             401: OpenApiResponse(description="로그인하지 않은 사용자는 이용할 수 없습니다.")
         },
     )
-    def get(self, request, format=None):
+    def get(self, request, pk=None):
         # 쿼리 파라미터로부터 'tag' 값 가져오기
         tag = request.query_params.get('tag', None)
         
         if not tag:
             return Response({"error": "태그 값이 제공되지 않았습니다."}, status=400)
 
-        # 본인 보드 중에서 특정 태그를 가진 보드 조회
-        queryset = Board.objects.filter(user_id=request.user.id, tags__content__icontains=tag, is_deleted=False)
+        # 특정 유저의 보드 중에서 특정 태그를 가진 보드 조회
+        queryset = Board.objects.filter(user_id=pk, tags__content__icontains=tag, is_deleted=False)
 
         # 페이지네이션 적용
         paginator = CustomPagination()

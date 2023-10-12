@@ -283,7 +283,7 @@
 
               const button = document.createElement('a');
               button.type = 'button';
-              button.classList.add('btn', 'btn-primary', 'mt-1', 'user-info-btn');
+              button.classList.add('btn', 'btn-primary', 'mt-1');
               button.style.display = 'block';
               const button2 = document.createElement('a');
               button2.type = 'button';
@@ -317,6 +317,7 @@
                   );
                   
                 button.textContent = 'User Info';
+                button.classList.add('user-info-btn');
                 button.setAttribute('href', 'user_info.html');
                 changeBtnDiv.appendChild(button2);
               } else if (followingList.includes(currentUser)) {
@@ -376,7 +377,7 @@
                 const newTag = document.createElement('a');
                 newTag.setAttribute(
                   'href',
-                  'user_tagged_board.html?tag=' + encodeURIComponent(tag)
+                  'user_tagged_board.html?pk=' + encodeURIComponent(pk) + '&tag=' + encodeURIComponent(tag)
                 );
                 newTag.textContent = tag;
 
@@ -407,10 +408,16 @@
               // 'tag' 파라미터 값 얻기
               let tag = urlParams.get('tag');
 
+              // 'pk' 파라미터 값 얻기
+              let pagePk = urlParams.get('pk');
+              if (pagePk === 'me'){
+                pagePk = requestUserPk;
+              }
+
               // 페이지 상단 안내 문구에 선택된 태그 값 표기
               document.querySelector('.tag-name').textContent = tag;
 
-              fetch(`http://127.0.0.1:8000/board/tag/?tag=${tag}`, {
+              fetch(`http://127.0.0.1:8000/board/${pagePk}/tag/?tag=${tag}`, {
                 credentials: 'include',
                 headers: {
                   'Content-Type': 'application/json',
@@ -478,7 +485,7 @@
 
               // 데이터를 가져와서 화면에 표시하는 함수
               function fetchDataAndShow() {
-                fetch(`http://127.0.0.1:8000/board/tag/?tag=${tag}&page=${currentPage}`, {
+                fetch(`http://127.0.0.1:8000/board/${pagePk}/tag/?tag=${tag}&page=${currentPage}`, {
                   credentials: 'include',
                 })
                   .then((response) => response.json())

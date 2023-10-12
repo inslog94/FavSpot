@@ -21,5 +21,5 @@ urlpatterns = [
     path('search/', views.BoardSearchView.as_view(), name='board_search'),
 
     # BoardTag
-    path('tag/', views.UserTaggedBoardView.as_view(), name='board_tag'),
+    path('<int:pk>/tag/', views.UserTaggedBoardView.as_view(), name='board_tag'),
 ]
