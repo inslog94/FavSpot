@@ -19,7 +19,8 @@ class PinContentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PinContent
-        fields = ['id', 'email', 'user_id', 'text', 'photo', 'pin_title']
+        fields = ['id', 'email', 'user_id', 'text',
+                  'photo', 'pin_title', 'is_deleted']
 
     # 유저 email 정보 추가
     def get_email(self, obj):

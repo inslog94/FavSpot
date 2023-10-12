@@ -104,7 +104,7 @@ class PinDetailView(APIView):
 
         # pin에 포함된 pin content 갯수 세기
         pin_content_count = PinContent.objects.filter(
-            pin_id=pin, is_deleted=False).count()
+            pin_id=pin).count()
 
         # 페이지네이션 적용
         paginator = CustomPagination()
@@ -189,7 +189,12 @@ class PinCreateView(APIView):
             # 존재하는 pin과 연결된 pin content 생성
             pin_content_serializer = PinContentSerializer(data=request_data)
             if pin_content_serializer.is_valid():
-                pin_content = pin_content_serializer.save(pin_id=existing_pin)
+                if request_data.get('photo') is None and request_data.get('text') is None:
+                    pin_content = pin_content_serializer.save(
+                        pin_id=existing_pin, is_deleted=True)
+                else:
+                    pin_content = pin_content_serializer.save(
+                        pin_id=existing_pin)
 
                 return Response({
                     'pin': pin_serializer.data,
@@ -217,8 +222,12 @@ class PinCreateView(APIView):
             # 생성된 pin과 연결된 pin content 생성
             if pin_content_serializer.is_valid():
                 pin_content_data = pin_content_serializer.validated_data
-                pin_content_data['pin_id'] = pin
-                pin_content = pin_content_serializer.create(pin_content_data)
+                # 텍스트와 사진이 둘 다 없는 경우 is_deleted 값을 True로 설정
+                if request_data.get('photo') is None and request_data.get('text') is None:
+                    pin_content = pin_content_serializer.save(
+                        pin_id=pin, is_deleted=True)
+                else:
+                    pin_content = pin_content_serializer.save(pin_id=pin)
 
                 return Response({
                     'pin': PinSerializer(pin).data,
@@ -264,7 +273,7 @@ class PinContentView(APIView):
     # ## pin content 수정
     def put(self, request, pk):
         try:
-            pin_content = PinContent.objects.get(pk=pk, is_deleted=False)
+            pin_content = PinContent.objects.get(pk=pk)
         except PinContent.DoesNotExist:
             return Response({'error': '해당 핀 콘텐츠가 존재하지 않습니다.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -272,7 +281,7 @@ class PinContentView(APIView):
             serializer = PinContentSerializer(
                 pin_content, data=request.data, partial=True)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(is_deleted=False)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({'error': '핀 콘텐츠를 수정할 권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
@@ -296,12 +305,28 @@ class PinContentView(APIView):
 
         if request.user == pin_content.user_id:
             pin_content.is_deleted = True
+            pin_content.photo = ''
+            pin_content.text = None
             pin_content.save()
 
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response({"error": "핀 콘텐츠를 삭제할 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
 
 
+# ## pin comment 목록 조회
+class PinCommentView(APIView):
+    def get(self, request):
+        user = request.user
+
+        # 나의 모든 핀 코멘트 목록
+        all_pincomments = PinContent.objects.filter(
+            user_id=user).order_by('-updated_at')
+        serializer = PinContentSerializer(all_pincomments, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# ## 핀이 저장되지 않은 장소에서의 추가 정보 제공
 class AdditionalInfo(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
