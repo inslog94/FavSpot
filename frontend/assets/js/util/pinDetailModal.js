@@ -10,7 +10,7 @@ export function createPinDetail() {
   modal.innerHTML = `
 <div class="modal-dialog modal-lg mt-0">
   <div class="modal-content">
-    <div class="modal-header align-items-start">
+    <div class="modal-header align-items-start" style="justify-content: center">
       <div class="modal-title" id="exampleModalLongTitle">
         <div class="section-title mb-10">
           <div class="blog-entry mb-10">
@@ -109,14 +109,6 @@ export function createPinDetail() {
           </div>
         </div>
       </div>
-      <button
-      type="button"
-      class="close btn btn-lg p-0"
-      data-bs-dismiss="modal"
-      aria-label="Close"
-    >
-      <span aria-hidden="true">&times;</span>
-    </button>
     </div>
     <div
       class="static-container d-flex justify-content-center align-items-center"
