@@ -43,6 +43,7 @@ export function createPinDetail() {
                 <button
                   id="saveButton"
                   class="button button-border mt-2 mb-3 form-button"
+                  style="display: none"
                 >
                   핀 저장
                 </button>
@@ -109,13 +110,13 @@ export function createPinDetail() {
         </div>
       </div>
       <button
-        type="button"
-        class="close btn btn-lg p-0"
-        data-bs-dismiss="modal"
-        aria-label="Close"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
+      type="button"
+      class="close btn btn-lg p-0"
+      data-bs-dismiss="modal"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
     </div>
     <div
       class="static-container d-flex justify-content-center align-items-center"
