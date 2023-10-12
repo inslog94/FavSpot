@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
-  if (page === 'login.html' || page === 'board_detail.html' || page === 'signup.html') {
+  if (page === 'login.html' || (loginCheckCookieValue === 'False' && page === 'board_detail.html') || page === 'signup.html') {
     return;
   }
 
