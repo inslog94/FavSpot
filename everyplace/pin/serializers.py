@@ -16,10 +16,12 @@ class PinSerializer(serializers.ModelSerializer):
 class PinContentSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     pin_title = serializers.SerializerMethodField()
+    place_id = serializers.SerializerMethodField()
 
     class Meta:
         model = PinContent
-        fields = ['id', 'email', 'user_id', 'text', 'photo', 'pin_title']
+        fields = ['id', 'email', 'user_id', 'text', 'photo',
+                  'pin_title', 'place_id', 'is_deleted']
 
     # 유저 email 정보 추가
     def get_email(self, obj):
@@ -28,6 +30,10 @@ class PinContentSerializer(serializers.ModelSerializer):
     # 해당 핀의 Title 추가
     def get_pin_title(self, obj):
         return Pin.objects.get(id=obj.pin_id_id).title
+
+    # 해당 핀의 piace_id 추가
+    def get_place_id(self, obj):
+        return Pin.objects.get(id=obj.pin_id_id).place_id
 
 
 # 보드 상세보기 시 표기 될 내용을 담은 serializer
