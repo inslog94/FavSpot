@@ -60,9 +60,17 @@
       type="text/css"
       href="../css/template/responsive.css"
     />
+    <link rel="stylesheet" href="../css/pin-list.css" />
+    <link rel="stylesheet" href="../css/modal.css" />
+
+    <style>
+      .user-info-btn {
+        background-color: #f57979;
+        border: none;
+      }
+    </style>
   </head>
 
-  <link rel="stylesheet" href="../css/pin-list.css" />
 
   <body>
     <div id="main-container">
@@ -121,17 +129,31 @@ shop -->
                 </div>
                 <!-- 리스트 -->
                 <div class="table-responsive col-lg-9" style="padding-bottom: 140px;">
-                  <table class="table">
+                  <h3 class="mb-10" style="font-size: x-large;">🩹 핀 코멘트 수정</h3>
+                  <p style="font-size: large;">저장한 핀에 대해 작성한 코멘트를 수정하거나 삭제할 수 있습니다.<br>핀 제목을 클릭하면 핀 상세정보를 확인할 수 있습니다.</p>
+                  <table class="table" style="margin-bottom: 80px;">
                     <thead>
                       <tr>
+                        <th>Pin</th>
                         <th>Image</th>
                         <th>Text</th>
-                        <th>Pin</th>
                         <th>Edit</th>
                         <th>Delete</th>
                       </tr>
                     </thead>
                     <tbody id="editList"></tbody>
+                  </table>
+                  <h3 class="mb-10" style="font-size: x-large;">📝 핀 코멘트 작성</h3>
+                  <p style="font-size: large;">핀을 저장할 때 코멘트를 작성하지 않았다면 여기서 작성할 수 있습니다.<br>마음에 들지 않아 삭제한 코멘트도 복구시킬 수 있습니다.</p>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Pin</th>
+                        <th>Text</th>
+                        <th>Write</th>
+                      </tr>
+                    </thead>
+                    <tbody id="deleteList"></tbody>
                   </table>
                 </div>
               </div>
@@ -167,14 +189,18 @@ shop -->
     <script src="../js/template/custom.js"></script>
     <script type="module">
       import { createPreloader } from '/frontend/assets/js/util/preloader.js';
+      import { createPinDetail } from '/frontend/assets/js/util/pinDetailModal.js';
       import { createHeader } from '/frontend/assets/js/util/header.js';
       import { createFooter } from '/frontend/assets/js/util/footer.js';
 
       createPreloader();
       createHeader();
       createFooter();
+      createPinDetail();
+      
     </script>
-    <script>
+    <script type="module">
+      import { createAddress, createMenu, createPinData, createThumbnailImg } from '/frontend/assets/js/util/getPlaceInfo.js';
       document.addEventListener('DOMContentLoaded', function () {
         const url = 'http://127.0.0.1:8000';
         const tagList = document.getElementById('tagList');
@@ -235,10 +261,10 @@ shop -->
             const changeBtnDiv = document.querySelector('.changeBtn');
             const button = document.createElement('a');
             button.type = 'button';
-            button.classList.add('btn', 'btn-primary', 'mt-1');
+            button.classList.add('btn', 'btn-primary', 'mt-1', 'user-info-btn');
             button.style.display = 'block';
-            button.textContent = 'Profile Edit';
-            button.setAttribute('href', 'profile_edit.html');
+            button.textContent = 'User Info';
+            button.setAttribute('href', 'user_info.html');
             changeBtnDiv.appendChild(button);
           })
           .catch((error) => {
@@ -246,19 +272,26 @@ shop -->
           });
 
         // 핀 콘텐츠 목록
-        fetch(`${url}/user/me/`, {
+        fetch(`${url}/pin/comment/`, {
           method: 'GET',
           credentials: 'include',
         })
           .then((response) => response.json())
           .then((data) => {
             // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
-            console.log(data.results.User.pin_contents[0]);
+            console.log(data[0]);
             const tbody = document.querySelector('#editList');
-            const followers = data.results.User.pin_contents;
-            followers.forEach((data) => {
+            const deleteTbody = document.querySelector('#deleteList');
+
+            const pinContents = data;
+            pinContents.forEach((data) => {
               const newTableRow = createTableRow(data);
-              tbody.appendChild(newTableRow);
+
+              if (data.is_deleted) {
+                deleteTbody.appendChild(newTableRow);
+              } else {
+                tbody.appendChild(newTableRow);
+              }
             });
           })
           .catch((error) => {
@@ -269,51 +302,75 @@ shop -->
           const pin_content = data;
           const tableRow = document.createElement('tr');
 
-          // 이미지 셀 생성
-          const imageCell = document.createElement('td');
-          imageCell.classList.add('image', 'pt-10', 'pb-10');
-
-          const contentPhoto = document.createElement('img');
-          contentPhoto.classList.add('img-fluid');
-          contentPhoto.style.width = '75px';
-          contentPhoto.style.height = '75px';
-          contentPhoto.style.borderRadius = '20%';
-          if (data.photo) {
-            contentPhoto.src = data.photo;
-          } else {
-            contentPhoto.src =
-              'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
-          }
-          contentPhoto.alt = '';
-
-          imageCell.appendChild(contentPhoto);
-          tableRow.appendChild(imageCell);
-
-          // 텍스트 셀 생성
-          const textCell = document.createElement('td');
-          textCell.classList.add('description', 'pt-10', 'pb-10', 'text-cell');
-          const textLink = document.createElement('a');
-          textLink.href = '#';
-          textLink.textContent = data.text;
-          textCell.appendChild(textLink);
-          tableRow.appendChild(textCell);
-
           // 핀 이름 셀 생성
           const pinCell = document.createElement('td');
           pinCell.classList.add('description', 'pt-10', 'pb-10', 'pin-cell');
           const pinLink = document.createElement('a');
           pinLink.href = '#';
           pinLink.textContent = data.pin_title;
+          pinLink.setAttribute('data-bs-toggle', 'modal');
+          pinLink.setAttribute('data-bs-target', '.bd-example-modal-lg');
+          pinLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            displayPinDetail(data.place_id);
+          })
           pinCell.appendChild(pinLink);
           tableRow.appendChild(pinCell);
+
+          // 이미지 셀 생성
+          if (data.is_deleted) {} else {
+            const imageCell = document.createElement('td');
+            imageCell.classList.add('image', 'pt-10', 'pb-10');
+
+            const contentPhoto = document.createElement('img');
+            contentPhoto.classList.add('img-fluid');
+            contentPhoto.style.width = '75px';
+            contentPhoto.style.height = '75px';
+            contentPhoto.style.borderRadius = '10%';
+            if (data.photo) {
+              contentPhoto.src = data.photo;
+            } else {
+              contentPhoto.src =
+                'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
+            }
+            contentPhoto.alt = '';
+
+            imageCell.appendChild(contentPhoto);
+            tableRow.appendChild(imageCell);
+          }
+
+          // 텍스트 셀 생성
+          const textCell = document.createElement('td');
+          textCell.classList.add('description', 'pt-10', 'pb-10', 'text-cell');
+          const textLink = document.createElement('a');
+          textLink.href = '#';
+          if (data.is_deleted) {
+            textLink.textContent = "코멘트를 작성해주세요";
+            textLink.style.color = "grey";
+          } else if (data.text) {
+            textLink.textContent = data.text;
+          } else {
+            textLink.textContent = "입력된 코멘트가 없습니다";
+            textLink.style.color = "grey";
+          }
+
+          textCell.appendChild(textLink);
+          tableRow.appendChild(textCell);
 
           // 수정 버튼 셀 생성
           const editCell = document.createElement('td');
           editCell.classList.add('td-quantity', 'pt-10', 'pb-10');
+          if (data.is_deleted) {
+          editCell.style.width = '170px';
+          }
           const editLink = document.createElement('a');
           editLink.classList.add('button');
           editLink.href = '#';
-          editLink.textContent = '수정';
+          if (data.is_deleted) {
+            editLink.textContent = '작성';
+          } else {
+            editLink.textContent = '수정';
+          }
 
           // 수정 버튼 클릭 이벤트
           editLink.addEventListener('click', (e) => {
@@ -349,39 +406,40 @@ shop -->
           tableRow.appendChild(editCell);
 
           // 삭제 버튼 셀 생성
-          const deleteCell = document.createElement('td');
-          deleteCell.classList.add('td-quantity', 'pt-10', 'pb-10');
+          if (data.is_deleted) {} else {
+            const deleteCell = document.createElement('td');
+            deleteCell.classList.add('td-quantity', 'pt-10', 'pb-10');
 
-          const deleteButton = document.createElement('button');
-          deleteButton.className = 'btn btn-danger';
-          deleteButton.textContent = 'X';
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn btn-danger';
+            deleteButton.textContent = 'X';
 
-          /// 삭제 버튼 클릭 이벤트
-          deleteButton.addEventListener('click', () => {
-            if (confirm('이 리뷰를 삭제하시겠습니까?')) {
-              fetch(`${url}/pin/content/${data.id}/`, {
-                method: 'DELETE',
-                credentials: 'include',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              })
-                .then((response) => {
-                  if (response.status === 204) {
-                    tableRow.remove();
-                    window.alert('리뷰를 삭제했습니다.');
-                  } else if (response.status === 403) {
-                    window.alert('리뷰는 작성자만 삭제할 수 있습니다.');
-                  }
+            /// 삭제 버튼 클릭 이벤트
+            deleteButton.addEventListener('click', () => {
+              if (confirm('이 코멘트를 삭제하시겠습니까?')) {
+                fetch(`${url}/pin/content/${data.id}/`, {
+                  method: 'DELETE',
+                  credentials: 'include',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
                 })
-                .catch((error) => {
-                  console.error('삭제시 문제가 발생했습니다:', error);
-                });
-            }
-          });
+                  .then((response) => {
+                    if (response.status === 204) {
+                      location.reload();
+                    } else if (response.status === 403) {
+                      window.alert('코멘트는 작성자만 삭제할 수 있습니다.');
+                    }
+                  })
+                  .catch((error) => {
+                    console.error('삭제시 문제가 발생했습니다:', error);
+                  });
+              }
+            });
 
-          deleteCell.appendChild(deleteButton);
-          tableRow.appendChild(deleteCell);
+            deleteCell.appendChild(deleteButton);
+            tableRow.appendChild(deleteCell);
+          }
 
           return tableRow;
         }
@@ -391,11 +449,40 @@ shop -->
           const container = document.createElement('div');
           container.id = 'edit-form';
 
+          // 이미지 프리뷰 생성
+          const imagePreview = document.createElement('img');
+          imagePreview.id = 'imagePreview';
+          imagePreview.className = 'img-fluid ml-3';
+          imagePreview.style.objectFit = 'cover';
+          imagePreview.style.width = '100px';
+          imagePreview.style.height = '100px';
+          imagePreview.style.borderRadius = '3px';
+          if (data.photo) {
+            imagePreview.src = data.photo;
+          } else {
+            imagePreview.src = 'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
+          }
+          
+          // 이미지 프리뷰를 컨테이너에 추가
+          container.appendChild(imagePreview);
+
           // 이미지 업로드 필드 생성
           const imageInput = document.createElement('input');
           imageInput.type = 'file';
           imageInput.id = 'photoUpload';
           container.appendChild(imageInput);
+
+          imageInput.addEventListener('change', function () {
+          const selectedImage = imageInput.files[0];
+
+          if (selectedImage) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              imagePreview.src = event.target.result;
+            };
+            reader.readAsDataURL(selectedImage);
+          }
+        });
 
           // 텍스트 수정 필드 생성
           const textInput = document.createElement('textarea');
@@ -410,14 +497,19 @@ shop -->
           textInput.value = data.text;
           container.appendChild(textInput);
 
-          // 수정 버튼 추가
+          // 등록 버튼 추가
           const submitButton = document.createElement('button');
           submitButton.className = 'rounded submitbtn';
-          submitButton.textContent = '수정';
-          // 수정 버튼 클릭 이벤트
+          submitButton.textContent = '등록';
+          // 등록 버튼 클릭 이벤트
           submitButton.addEventListener('click', (e) => {
             e.preventDefault();
-            if (!window.confirm('수정하시겠습니까?')) {
+            // 텍스트 필드, 이미지 업로드가 비어있는지 확인
+            if (!textInput.value.trim() && !imageInput.files.length) {
+              window.alert('빈 코멘트를 등록할 수 없습니다. 내용이나 이미지를 업로드해주세요.');
+              return;
+            }
+            if (!window.confirm('등록하시겠습니까?')) {
               return;
             }
             const formData = new FormData();
@@ -436,7 +528,6 @@ shop -->
             })
               .then((response) => response.json())
               .then((data) => {
-                window.alert('수정이 완료되었습니다.');
                 window.location.reload();
               })
               .catch((error) => console.error(error));
@@ -447,6 +538,55 @@ shop -->
           return container;
         }
       });
+
+      /// 백엔드에서 핀 상세보기 정보 가져오기
+      function displayPinDetail(place_id) {
+        fetch(`http://127.0.0.1:8000/pin/${place_id}/`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((response) => {
+            // 성공 상태가 아니면 에러 메시지 출력 후 함수 종료
+            return response.json();
+          })
+          .then((data) => {
+            // 핀 생성 스텝들 숨기고 초기화하기
+            const pinCreationElement = document.getElementById('pinCreationSteps');
+            pinCreationElement.style.display = 'none';
+            const saveButton = document.getElementById('saveButton');
+            saveButton.innerText = '핀 저장';
+
+            createPlaceInfo(data.results);
+          })
+          .catch((error) => {
+            console.error('Error fetching data:', error);
+          });
+      }
+
+      function createPlaceInfo(data) {
+        // 가져온 데이터로 상세보기 정보 표시하기
+        const modalTitleElement = document.getElementById('myModalLabel');
+        const modalCategoryElement = document.getElementById('modalCategory');
+        const updatedAt = document.querySelector('.updated-at');
+        const pinCount = document.querySelector('.pin-count');
+        const pagination = document.getElementById('pagination');
+        const pinContentsContainer = document.querySelector('#pinContentsContainer');
+        pagination.style.display = 'none';
+        pinContentsContainer.style.display = 'none';
+
+        const dataPin = data.pin;
+        modalTitleElement.textContent = dataPin.title;
+        modalCategoryElement.textContent = dataPin.category;
+        updatedAt.style.display = 'inline-block';
+        pinCount.style.display = 'inline-block';
+
+        createPinData(data, dataPin);
+        createAddress(dataPin);
+        createMenu(data);
+        createThumbnailImg(dataPin);
+      }
     </script>
   </body>
 </html>

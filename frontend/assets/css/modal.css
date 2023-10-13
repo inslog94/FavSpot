@@ -64,3 +64,27 @@
   width: 740px;
 }
 
+.modal-content {
+  width: 900px;
+  position: absolute;
+  top: 50%;
+  right: -3%;
+}
+
+.modal-title {
+  width: 800px;
+}
+
+.blog-entry .entry-image img {
+  width: 800px;
+  height: 400px;
+}
+
+.blog-detail {
+  padding: 10px 30px 10px 30px !important;
+}
+
+.entry-title a {
+  font-size: 16px !important;
+  font-weight: bold !important;
+}

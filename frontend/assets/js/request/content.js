@@ -1,4 +1,7 @@
 import { origin } from '../maps/data.js';
+import { sortMouseEvent, sortClickEvent } from '../maps/event.js';
+import { notification } from '../maps/websocket.js';
+
 
 export async function getPinContentsRequest(id) {
   let url = origin + '/pin/' + id + '/';
@@ -21,6 +24,32 @@ export async function getBoardRequest(keyword) {
     url = origin + '/board/';
   }
 
+  // 정렬 드롭다운
+  const dropOptions = [
+    document.querySelector('.drop1'),
+    document.querySelector('.drop2'),
+    document.querySelector('.drop3')
+  ];
+
+  // 기존의 모든 클릭 이벤트 리스너 제거
+  dropOptions.forEach((dropOption) => {
+    const newDropOption = dropOption.cloneNode(true);
+    dropOption.parentNode.replaceChild(newDropOption, dropOption);
+  });
+
+  // 새로운 드롭다운 옵션들에 대한 참조 업데이트
+  const newDropOptions = [
+    document.querySelector('.drop1'),
+    document.querySelector('.drop2'),
+    document.querySelector('.drop3')
+  ];
+
+  // 각 드롭다운 메뉴 항목에 대해 새로운 마우스 오버/아웃 및 클릭 이벤트 리스너 추가
+  newDropOptions.forEach((newDropOption, index) => {
+    sortMouseEvent(newDropOption);
+    sortClickEvent(newDropOption, index, "http://127.0.0.1:8000/board", keyword);
+  });
+
   const response = await fetch(url, {
     method: 'GET',
     credentials: 'include',
@@ -31,11 +60,13 @@ export async function getBoardRequest(keyword) {
 
   const resJson = await response.json();
   const requestUser = resJson.request_user.email;
+  const requestUserPk = resJson.request_user.requestUserPk;
   const requestUserProfileImg = resJson.request_user.profileImg;
 
   if (requestUser) {
     const email = document.querySelector('#headerEmail');
     email.textContent = requestUser;
+    notification(requestUserPk);
     const profileImg = document.querySelector('.profileImg');
 
     if (requestUserProfileImg !== 'https://favspot-fin.s3.amazonaws.com/') {

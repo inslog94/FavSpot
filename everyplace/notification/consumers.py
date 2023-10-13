@@ -1,5 +1,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
 
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
@@ -33,7 +34,17 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         )
 
     async def receive(self, text_data=None, bytes_data=None):
-        pass
+        data = json.loads(text_data)
+        action = data.get('type')
+
+        if action == "check_unread_notifications":
+            user_id = data.get('user_id')
+            if user_id is not None:
+                has_unread_notifications = await check_unread_notifications(user_id)
+                await self.send(text_data=json.dumps({
+                    'type': 'unread_status',
+                    'status': has_unread_notifications,
+                }))
 
     # 채널 방에서 알림 메세지 수령
     async def send_notification(self, event):
@@ -43,6 +54,11 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': message,
         }))
+
+
+@database_sync_to_async
+def check_unread_notifications(user_id):
+    return Notification.objects.filter(receiver_id=user_id, is_read=False, is_deleted=False).exists()
 
 
 # BoardComment가 생성되었을때 실행되는 데코레이터
@@ -142,7 +158,7 @@ def send_likedboard_addpin_notification(sender, instance, action, pk_set, **kwar
         board_id = list(pk_set)[0]
         board = Board.objects.get(pk=board_id)  # 핀이 추가된 보드
         # 보드에 좋아요를 한 사용자들
-        for like in board.boardlike_set.all():
+        for like in board.boardlike_set.filter(is_deleted=False):
             if like.user_id.id != board.user_id.id:
                 channel_layer = get_channel_layer()
                 message = f"'{board.user_id.email}'님이 '{board.title}' 보드에 '{instance.title}' 핀을 추가했습니다"

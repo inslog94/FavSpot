@@ -95,6 +95,14 @@ export function displayMainBoards(boards) {
     currentPage = Math.min(currentPage, maxPage);
 
     pageSetting(currentPage);
+
+    // 보드 목록 존재에 따른 정렬 기능 표시 여부
+    const sortSelectElement= document.getElementById("sortSelect");
+    if (boards.length === 0) {
+      sortSelectElement.style.display = 'none';
+    } else {
+      sortSelectElement.style.display = 'flex';
+    }
   }
 
   function pageSetting(page) {
