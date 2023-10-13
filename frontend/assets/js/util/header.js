@@ -1,4 +1,7 @@
 import { notification } from '../maps/websocket.js';
+import { customFetch } from './customFetch.js';
+
+let loginCheckCookieValue;
 
 export function createHeader() {
   // 기존 main-container 요소 가져오기
@@ -215,7 +218,7 @@ export function createHeader() {
   });
 
   // login_check 쿠키 값 가져오기
-  const loginCheckCookieValue = cookies['login_check'];
+  loginCheckCookieValue = cookies['login_check'];
 
   // login_check 쿠키 값이 'True'인지 'False'인지 확인
   if (loginCheckCookieValue === 'True') {
@@ -234,6 +237,17 @@ export function createHeader() {
 document.addEventListener('DOMContentLoaded', function () {
   let path = window.location.pathname;
   let page = path.split('/').pop();
+
+  if (page === 'login.html' && loginCheckCookieValue === 'True' || page === 'signup.html' && loginCheckCookieValue === 'True') {
+    // 이미 로그인된 유저가 로그인 또는 회원가입 페이지에 접근하려 할 경우 메인 페이지로 리다이렉트
+    window.location.href = '/frontend/index.html';
+    return;
+  }
+
+  if (page === 'login.html' || (loginCheckCookieValue === 'False' && page === 'board_detail.html') || page === 'signup.html') {
+    return;
+  }
+
   if (
     !(
       page === '' ||
@@ -243,14 +257,14 @@ document.addEventListener('DOMContentLoaded', function () {
       page === null
     )
   ) {
-    fetch(`http://127.0.0.1:8000/user/me/`, {
+    customFetch(`http://127.0.0.1:8000/user/me/`, {
       method: 'GET',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
     })
-      .then((response) => response.json())
+      // .then((response) => response.json())
       .then((data) => {
         const requestUser = data.results.User.email;
         const requestUserPk = data.results.User.id;

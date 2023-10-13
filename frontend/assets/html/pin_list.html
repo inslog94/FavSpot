@@ -62,6 +62,13 @@
     />
     <link rel="stylesheet" href="../css/pin-list.css" />
     <link rel="stylesheet" href="../css/modal.css" />
+
+    <style>
+      .user-info-btn {
+        background-color: #f57979;
+        border: none;
+      }
+    </style>
   </head>
 
 
@@ -254,10 +261,10 @@ shop -->
             const changeBtnDiv = document.querySelector('.changeBtn');
             const button = document.createElement('a');
             button.type = 'button';
-            button.classList.add('btn', 'btn-primary', 'mt-1');
+            button.classList.add('btn', 'btn-primary', 'mt-1', 'user-info-btn');
             button.style.display = 'block';
-            button.textContent = 'Profile Edit';
-            button.setAttribute('href', 'profile_edit.html');
+            button.textContent = 'User Info';
+            button.setAttribute('href', 'user_info.html');
             changeBtnDiv.appendChild(button);
           })
           .catch((error) => {

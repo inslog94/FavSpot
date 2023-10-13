@@ -236,7 +236,7 @@
               </ul>
             </nav>
             <!-- 보드 생성 버튼 -->
-            <div class="board-plus-box mr-120 mb-20">
+            <div class="board-plus-box mr-130 mb-20">
               <a
                 type="button"
                 href="#"
@@ -629,7 +629,7 @@
                   const newTag = document.createElement('a');
                   newTag.setAttribute(
                     'href',
-                    'user_tagged_board.html?tag=' + encodeURIComponent(tag)
+                    'user_tagged_board.html?pk=' + encodeURIComponent(pk) + '&tag=' + encodeURIComponent(tag)
                   );
                   newTag.textContent = tag;
 

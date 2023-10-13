@@ -1,9 +1,9 @@
 a {
   text-decoration: none;
 }
-a:visited {
+/* a:visited {
   color: black;
-}
+} */
 .map_wrap,
 .map_wrap * {
   margin: 0;

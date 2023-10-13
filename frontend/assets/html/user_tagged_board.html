@@ -63,6 +63,11 @@
         font-size: 16px;
         margin-right: 2px;
       }
+
+      .user-info-btn {
+        background-color: #f57979;
+        border: none;
+      }
     </style>
   </head>
 
@@ -300,20 +305,31 @@
               let followerPk = params.get('pk');
 
               if ((requestUser === currentUser) | (requestUserPk === pk)) {
-                button.textContent = 'Profile Edit';
-                button.setAttribute('href', 'profile_edit.html');
-
+                
                 button2.textContent = 'Pin List';
                 button2.style.display = 'block';
                 button2.setAttribute('href', 'pin_list.html');
-
+                
                 button3.textContent = 'Liked Board';
                 button3.style.display = 'block';
-                button3.setAttribute('href', 'user_liked_board.html');
-
+                button3.setAttribute(
+                  'href', `user_liked_board.html?pk=${requestUserPk}`
+                  );
+                  
+                button.textContent = 'User Info';
+                button.classList.add('user-info-btn');
+                button.setAttribute('href', 'user_info.html');
                 changeBtnDiv.appendChild(button2);
               } else if (followingList.includes(currentUser)) {
                 button.textContent = 'Unfollow';
+
+                button3.textContent = 'Liked Board';
+                button3.style.display = 'block';
+                button3.setAttribute(
+                  'href',
+                  `user_liked_board.html?pk=${pk}`
+                );
+
                 button.addEventListener('click', () => {
                   fetch(`http://127.0.0.1:8000/user/follow/${followerPk}/`, {
                     method: 'DELETE',
@@ -352,8 +368,8 @@
                     .catch((error) => console.error('Error:', error));
                 });
               }
-              changeBtnDiv.appendChild(button);
               changeBtnDiv.appendChild(button3);
+              changeBtnDiv.appendChild(button);
 
               const tags = data['results']['User']['tags'];
               tags.forEach((tag) => {
@@ -361,7 +377,7 @@
                 const newTag = document.createElement('a');
                 newTag.setAttribute(
                   'href',
-                  'user_tagged_board.html?tag=' + encodeURIComponent(tag)
+                  'user_tagged_board.html?pk=' + encodeURIComponent(pk) + '&tag=' + encodeURIComponent(tag)
                 );
                 newTag.textContent = tag;
 
@@ -380,6 +396,8 @@
               // 초기 페이지 번호
               let currentPage = 1;
 
+              let fetchdata;
+
               // 특정 태그가 등록된 유저의 보드 목록 가져오기위한 통신
               // URL의 쿼리 스트링 가져오기
               let queryString = window.location.search;
@@ -390,10 +408,16 @@
               // 'tag' 파라미터 값 얻기
               let tag = urlParams.get('tag');
 
+              // 'pk' 파라미터 값 얻기
+              let pagePk = urlParams.get('pk');
+              if (pagePk === 'me'){
+                pagePk = requestUserPk;
+              }
+
               // 페이지 상단 안내 문구에 선택된 태그 값 표기
               document.querySelector('.tag-name').textContent = tag;
 
-              fetch(`http://127.0.0.1:8000/board/tag/?tag=${tag}`, {
+              fetch(`http://127.0.0.1:8000/board/${pagePk}/tag/?tag=${tag}`, {
                 credentials: 'include',
                 headers: {
                   'Content-Type': 'application/json',
@@ -402,8 +426,8 @@
                 .then((response) => response.json())
                 .then((data2) => {
                   // 데이터를 보여주는 함수에 가져온 데이터 전달
-                  console.log('보드 목록', data2['boards']);
-                  showBoards(data2['boards']);
+                  fetchdata = data2;
+                  showBoards(data2.results.boards);
                 })
                 .catch((error) => console.error('Error:', error));
 
@@ -420,7 +444,7 @@
                   parentElement.appendChild(dynamicBlogEntry);
                 });
 
-                if (data['links']['total_pages'] == 1) {
+                if (fetchdata['links']['total_pages'] == 1) {
                   previousButton.style.display = 'none';
                   nextButton.style.display = 'none';
                 }
@@ -433,7 +457,7 @@
                 }
 
                 // 다음 페이지로 이동하는 버튼을 다시 보이게 함
-                if (currentPage < data['links']['total_pages']) {
+                if (currentPage < fetchdata['links']['total_pages']) {
                   nextButton.classList.remove('disabled');
                 } else {
                   nextButton.classList.add('disabled');
@@ -441,11 +465,11 @@
               }
 
               // 초기 데이터 표시
-              showBoards(data['results']['Boards']);
+              // showBoards(data['results']['Boards']);
 
               // 다음 페이지로 이동하는 함수
               function loadNextPage() {
-                if (currentPage < data['links']['total_pages']) {
+                if (currentPage < fetchdata['links']['total_pages']) {
                   currentPage++;
                   fetchDataAndShow();
                 }
@@ -461,12 +485,12 @@
 
               // 데이터를 가져와서 화면에 표시하는 함수
               function fetchDataAndShow() {
-                fetch(`http://127.0.0.1:8000/user/${pk}/?page=${currentPage}`, {
+                fetch(`http://127.0.0.1:8000/board/${pagePk}/tag/?tag=${tag}&page=${currentPage}`, {
                   credentials: 'include',
                 })
                   .then((response) => response.json())
                   .then((data) => {
-                    showBoards(data['results']['Boards']);
+                    showBoards(data.results.boards);
                   })
                   .catch((error) => {
                     console.error('Failed to load data.', error);

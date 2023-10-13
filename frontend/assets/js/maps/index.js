@@ -61,6 +61,7 @@ export function createMainPage() {
 
   // 정렬 드롭다운 생성
   const sortSelect = document.createElement('div');
+  sortSelect.id = "sortSelect";
   sortSelect.style = 'display:flex; justify-content: flex-end; margin: 20px 30px 0 0;';
   sortSelect.style.position = 'relative';
   
@@ -114,6 +115,16 @@ export function createMainPage() {
         dropOptionBox.style.display = 'flex';   // 옵션 박스 보이기 
     } else {
         dropOptionBox.style.display = 'none';   // 옵션 박스 숨기기 
+    }
+  });
+
+  // 드롭다운 이외의 영역 클릭 시 드롭다운 숨김 처리
+  document.addEventListener('click', function(event) {
+    const target = event.target;
+    
+    // 클릭된 요소가 드롭다운 영역인지 확인
+    if (!dropOptionBox.contains(target) && target !== dropIcon) {
+      dropOptionBox.style.display = 'none';
     }
   });
   
