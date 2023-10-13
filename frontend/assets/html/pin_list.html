@@ -431,11 +431,40 @@ shop -->
           const container = document.createElement('div');
           container.id = 'edit-form';
 
+          // 이미지 프리뷰 생성
+          const imagePreview = document.createElement('img');
+          imagePreview.id = 'imagePreview';
+          imagePreview.className = 'img-fluid ml-3';
+          imagePreview.style.objectFit = 'cover';
+          imagePreview.style.width = '100px';
+          imagePreview.style.height = '100px';
+          imagePreview.style.borderRadius = '3px';
+          if (data.photo) {
+            imagePreview.src = data.photo;
+          } else {
+            imagePreview.src = 'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
+          }
+          
+          // 이미지 프리뷰를 컨테이너에 추가
+          container.appendChild(imagePreview);
+
           // 이미지 업로드 필드 생성
           const imageInput = document.createElement('input');
           imageInput.type = 'file';
           imageInput.id = 'photoUpload';
           container.appendChild(imageInput);
+
+          imageInput.addEventListener('change', function () {
+          const selectedImage = imageInput.files[0];
+
+          if (selectedImage) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              imagePreview.src = event.target.result;
+            };
+            reader.readAsDataURL(selectedImage);
+          }
+        });
 
           // 텍스트 수정 필드 생성
           const textInput = document.createElement('textarea');
@@ -457,7 +486,12 @@ shop -->
           // 등록 버튼 클릭 이벤트
           submitButton.addEventListener('click', (e) => {
             e.preventDefault();
-            if (!window.confirm('수정하시겠습니까?')) {
+            // 텍스트 필드, 이미지 업로드가 비어있는지 확인
+            if (!textInput.value.trim() && !imageInput.files.length) {
+              window.alert('빈 코멘트를 등록할 수 없습니다. 내용이나 이미지를 업로드해주세요.');
+              return;
+            }
+            if (!window.confirm('등록하시겠습니까?')) {
               return;
             }
             const formData = new FormData();
