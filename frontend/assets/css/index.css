@@ -100,57 +100,57 @@ footer {
   }
 }
 
-/* 가로폭과 세로폭(1240px)이 함께 작아질 때 */
-@media (max-height: 1240px) and (max-width: 1835px) {
+/* 가로폭과 세로폭(1310px)이 함께 작아질 때 */
+@media (max-height: 1310px) and (max-width: 1835px) {
   #main_board {
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(2, 1fr);
   }
 }
 
-@media (max-height: 1240px) and (min-width: 1835px) and (max-width: 2850px) {
+@media (max-height: 1310px) and (min-width: 1835px) and (max-width: 2850px) {
   #main_board {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
   }
 }
 
-@media (max-height: 1240px) and (min-width: 2850px) and (max-width: 3150px) {
+@media (max-height: 1310px) and (min-width: 2850px) and (max-width: 3150px) {
   #main_board {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
   }
 }
 
-@media (max-height: 1240px) and (min-width: 3150px) {
+@media (max-height: 1310px) and (min-width: 3150px) {
   #main_board {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 1fr);
   }
 }
 
-/* 가로폭과 세로폭(920px)이 함께 작아질 때 */
-@media (max-height: 920px) and (max-width: 1835px) {
+/* 가로폭과 세로폭(935px)이 함께 작아질 때 */
+@media (max-height: 935px) and (max-width: 1835px) {
   #main_board {
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(1, 1fr);
   }
 }
 
-@media (max-height: 920px) and (min-width: 1835px) and (max-width: 2850px) {
+@media (max-height: 935px) and (min-width: 1835px) and (max-width: 2850px) {
   #main_board {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(1, 1fr);
   }
 }
-@media (max-height: 920px) and (min-width: 2850px) and (max-width: 3150px) {
+@media (max-height: 935px) and (min-width: 2850px) and (max-width: 3150px) {
   #main_board {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(1, 1fr);
   }
 }
 
-@media (max-height: 920px) and (min-width: 3150px) {
+@media (max-height: 935px) and (min-width: 3150px) {
   #main_board {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(1, 1fr);
@@ -169,7 +169,7 @@ footer {
   }
 }
 
-@media (max-height: 540px) {
+@media (max-height: 569px) {
   body {
     display: none;
   }

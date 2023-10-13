@@ -16,7 +16,7 @@ export function setItemsPerPage(browserWidth, browserHeight, itemsPerPage) {
     itemsPerPage = 12;
   }
 
-  if (browserHeight < 920) {
+  if (browserHeight < 935) {
     if (browserWidth < 1835) {
       itemsPerPage = 1;
     } else if (browserWidth < 2850) {
@@ -26,7 +26,7 @@ export function setItemsPerPage(browserWidth, browserHeight, itemsPerPage) {
     } else {
       itemsPerPage = 4;
     }
-  } else if (browserHeight < 1240) {
+  } else if (browserHeight < 1310) {
     if (browserWidth < 1835) {
       itemsPerPage = 2;
     } else if (browserWidth < 2850) {
