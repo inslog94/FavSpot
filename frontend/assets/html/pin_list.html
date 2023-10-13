@@ -60,9 +60,10 @@
       type="text/css"
       href="../css/template/responsive.css"
     />
-      </head>
+    <link rel="stylesheet" href="../css/pin-list.css" />
+    <link rel="stylesheet" href="../css/modal.css" />
+  </head>
 
-<link rel="stylesheet" href="../css/pin-list.css" />
 
   <body>
     <div id="main-container">
@@ -181,14 +182,18 @@ shop -->
     <script src="../js/template/custom.js"></script>
     <script type="module">
       import { createPreloader } from '/frontend/assets/js/util/preloader.js';
-            import { createHeader } from '/frontend/assets/js/util/header.js';
+      import { createPinDetail } from '/frontend/assets/js/util/pinDetailModal.js';
+      import { createHeader } from '/frontend/assets/js/util/header.js';
       import { createFooter } from '/frontend/assets/js/util/footer.js';
 
       createPreloader();
       createHeader();
       createFooter();
-          </script>
-    <script>
+      createPinDetail();
+      
+    </script>
+    <script type="module">
+      import { createAddress, createMenu, createPinData, createThumbnailImg } from '/frontend/assets/js/util/getPlaceInfo.js';
       document.addEventListener('DOMContentLoaded', function () {
         const url = 'http://127.0.0.1:8000';
         const tagList = document.getElementById('tagList');
@@ -296,6 +301,12 @@ shop -->
           const pinLink = document.createElement('a');
           pinLink.href = '#';
           pinLink.textContent = data.pin_title;
+          pinLink.setAttribute('data-bs-toggle', 'modal');
+          pinLink.setAttribute('data-bs-target', '.bd-example-modal-lg');
+          pinLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            displayPinDetail(data.place_id);
+          })
           pinCell.appendChild(pinLink);
           tableRow.appendChild(pinCell);
 
@@ -520,6 +531,55 @@ shop -->
           return container;
         }
       });
+
+      /// 백엔드에서 핀 상세보기 정보 가져오기
+      function displayPinDetail(place_id) {
+        fetch(`http://127.0.0.1:8000/pin/${place_id}/`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((response) => {
+            // 성공 상태가 아니면 에러 메시지 출력 후 함수 종료
+            return response.json();
+          })
+          .then((data) => {
+            // 핀 생성 스텝들 숨기고 초기화하기
+            const pinCreationElement = document.getElementById('pinCreationSteps');
+            pinCreationElement.style.display = 'none';
+            const saveButton = document.getElementById('saveButton');
+            saveButton.innerText = '핀 저장';
+
+            createPlaceInfo(data.results);
+          })
+          .catch((error) => {
+            console.error('Error fetching data:', error);
+          });
+      }
+
+      function createPlaceInfo(data) {
+        // 가져온 데이터로 상세보기 정보 표시하기
+        const modalTitleElement = document.getElementById('myModalLabel');
+        const modalCategoryElement = document.getElementById('modalCategory');
+        const updatedAt = document.querySelector('.updated-at');
+        const pinCount = document.querySelector('.pin-count');
+        const pagination = document.getElementById('pagination');
+        const pinContentsContainer = document.querySelector('#pinContentsContainer');
+        pagination.style.display = 'none';
+        pinContentsContainer.style.display = 'none';
+
+        const dataPin = data.pin;
+        modalTitleElement.textContent = dataPin.title;
+        modalCategoryElement.textContent = dataPin.category;
+        updatedAt.style.display = 'inline-block';
+        pinCount.style.display = 'inline-block';
+
+        createPinData(data, dataPin);
+        createAddress(dataPin);
+        createMenu(data);
+        createThumbnailImg(dataPin);
+      }
     </script>
   </body>
 </html>

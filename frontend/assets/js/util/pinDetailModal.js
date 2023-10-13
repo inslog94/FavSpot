@@ -8,7 +8,7 @@ export function createPinDetail() {
   modal.setAttribute('aria-hidden', 'true');
 
   modal.innerHTML = `
-<div class="modal-dialog modal-lg mt-0">
+<div class="modal-dialog modal-lg mt-0" style="height: 0px;">
   <div class="modal-content">
     <div class="modal-header align-items-start" style="justify-content: center">
       <div class="modal-title" id="exampleModalLongTitle">
