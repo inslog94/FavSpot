@@ -49,9 +49,15 @@ import {
   move,
   displayMarkers,
 } from './map.js';
-import { displayPinOverlay, setMarkersFromServer } from './pin.js';
+import {
+  displayPinOverlay,
+  setMarkersFromServer,
+  pinSimpleSave,
+} from './pin.js';
 import { pinDetail } from './pinDetail.js';
 import { searchPlaceAsKeyword } from './search.js';
+
+let currentMarker = null;
 
 // 모든 오버레이 지도에서 제거
 export function removeAllOverlay() {
@@ -170,6 +176,7 @@ export async function displayMarkerDetailInfo(markerInfo) {
   PIN_INFO_WINDOW.close();
 
   move(markerInfo.position);
+  currentMarker = markerInfo;
 
   displayPinOverlay(markerInfo);
 }
@@ -208,9 +215,13 @@ function boardCloseModalBtnEvent() {
     // 태그 입력값이 비어 있지 않은 경우에만 split 실행
     let tags = tagsInput ? tagsInput.split(',') : [];
 
-    let created = await boardSimpleSave(title, tags);
+    let board = await boardSimpleSave(title, tags);
 
-    if (created) {
+    if (board) {
+      if (window.confirm('생성한 보드에 핀을 바로 등록하시겠습니까?')) {
+        // 여기에 "예"를 처리하는 코드를 추가하세요.
+        pinSimpleSave(board.id, currentMarker);
+      }
       setMyBoard();
       // displayBoardsOnOverlay(markerInfo);
     } else {

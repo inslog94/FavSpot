@@ -28,7 +28,7 @@ export async function boardSimpleSave(title, tags) {
     return false;
   }
 
-  return true;
+  return response;
 }
 
 // 해당 계정의 보드 세팅
