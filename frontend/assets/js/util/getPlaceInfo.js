@@ -33,7 +33,16 @@ export function createMenu(data) {
 export function createThumbnailImg(dataPin) {
   const subscribeIconElement = document.querySelector('.subscribe-icon');
   // thumbnail_img를 보여주기
-  if (dataPin.thumbnail_img) {
+  if (
+    !(
+      dataPin.thumbnail_img.includes('daumcdn') ||
+      dataPin.thumbnail_img.includes('kakaocdn')
+    )
+  ) {
+    subscribeIconElement.src =
+      'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
+    subscribeIconElement.style = 'width: 100%;';
+  } else if (dataPin.thumbnail_img) {
     subscribeIconElement.src = `${dataPin.thumbnail_img}`; // thumbnail_img 사진과 연결
   } else {
     subscribeIconElement.src =

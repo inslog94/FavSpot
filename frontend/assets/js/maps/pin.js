@@ -332,7 +332,12 @@ export async function displayPinOverlay(markerInfo) {
   })
     .then((response) => response.json())
     .then((pinData) => {
-      if (!pinData.thumbnail_img.includes('http://t1.daumcdn.net/')) {
+      if (
+        !(
+          pinData.thumbnail_img.includes('daumcdn') ||
+          pinData.thumbnail_img.includes('kakaocdn')
+        )
+      ) {
         img.src =
           'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
       } else if (pinData.thumbnail_img) {
