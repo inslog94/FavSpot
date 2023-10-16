@@ -61,10 +61,11 @@ export function createMainPage() {
 
   // 정렬 드롭다운 생성
   const sortSelect = document.createElement('div');
-  sortSelect.id = "sortSelect";
-  sortSelect.style = 'display:flex; justify-content: flex-end; margin: 20px 30px 0 0;';
+  sortSelect.id = 'sortSelect';
+  sortSelect.style =
+    'display:flex; justify-content: flex-end; margin-right: 10px';
   sortSelect.style.position = 'relative';
-  
+
   const dropText = document.createElement('span');
   dropText.textContent = 'Sort';
   dropText.style = 'font-size:large';
@@ -76,7 +77,7 @@ export function createMainPage() {
 
   // 드롭다운 옵션 박스
   const dropOptionBox = document.createElement('div');
-  dropOptionBox.style.display = 'none'; 
+  dropOptionBox.style.display = 'none';
   dropOptionBox.style.flexDirection = 'column';
   dropOptionBox.style.position = 'absolute';
   dropOptionBox.style.right = '0';
@@ -104,30 +105,30 @@ export function createMainPage() {
   dropOptionBox.appendChild(dropOption1);
   dropOptionBox.appendChild(dropOption2);
   dropOptionBox.appendChild(dropOption3);
-  
+
   sortSelect.appendChild(dropText);
   sortSelect.appendChild(dropIcon);
-  sortSelect.appendChild(dropOptionBox); 
+  sortSelect.appendChild(dropOptionBox);
 
   // 드롭다운 아이콘에 클릭 이벤트 리스너 추가
-  dropIcon.addEventListener('click', function() {
+  dropIcon.addEventListener('click', function () {
     if (getComputedStyle(dropOptionBox).display === 'none') {
-        dropOptionBox.style.display = 'flex';   // 옵션 박스 보이기 
+      dropOptionBox.style.display = 'flex'; // 옵션 박스 보이기
     } else {
-        dropOptionBox.style.display = 'none';   // 옵션 박스 숨기기 
+      dropOptionBox.style.display = 'none'; // 옵션 박스 숨기기
     }
   });
 
   // 드롭다운 이외의 영역 클릭 시 드롭다운 숨김 처리
-  document.addEventListener('click', function(event) {
+  document.addEventListener('click', function (event) {
     const target = event.target;
-    
+
     // 클릭된 요소가 드롭다운 영역인지 확인
     if (!dropOptionBox.contains(target) && target !== dropIcon) {
       dropOptionBox.style.display = 'none';
     }
   });
-  
+
   // Main Board를 담은 div 생성
   const mainBoardDiv = document.createElement('div');
   mainBoardDiv.id = 'main_board';
