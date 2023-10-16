@@ -112,7 +112,7 @@ export async function pinSimpleSaveRequest(board, place) {
     method: 'POST',
     body: JSON.stringify({
       category: place.categoryGroupName,
-      board_id: board.id,
+      board_id: typeof board === 'number' ? board : board.id,
       title: place.title,
       place_id: place.place_id,
       new_address: place.roadAddressName,
@@ -166,5 +166,6 @@ export async function boardSimpleSaveRequest(title, tags) {
     alert(error);
   });
 
-  return response;
+  const resJson = await response.json();
+  return resJson;
 }
