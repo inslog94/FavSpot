@@ -85,10 +85,18 @@ export function mapSetup() {
   MAP_OPTIONS.level = INIT_MAP_LEVEL;
 
   // 지도 타입, 확대/축소
-  let mapTypeControl = new kakao.maps.MapTypeControl();
-  let zoomControl = new kakao.maps.ZoomControl();
-  MAP.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-  MAP.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+  const currentPathname = window.location.pathname;
+  if (
+    !(
+      currentPathname == '/frontend/index.html' ||
+      currentPathname == '/frontend/'
+    )
+  ) {
+    let mapTypeControl = new kakao.maps.MapTypeControl();
+    let zoomControl = new kakao.maps.ZoomControl();
+    MAP.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+    MAP.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+  }
 
   kakao.maps.event.addListener(MAP, 'click', (mouseEvent) => {
     removeAllOverlay();
