@@ -1,7 +1,7 @@
 import {
   getPinContentsRequest,
   pinSimpleSaveRequest,
-} from '../request/content.js';
+} from '/frontend/assets/js/content.js';
 import { setMyBoard } from './board.js';
 import {
   MAP,

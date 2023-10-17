@@ -1,6 +1,6 @@
-import { origin } from '../maps/data.js';
-import { sortMouseEvent, sortClickEvent } from '../maps/event.js';
-import { notification } from '../maps/websocket.js';
+import { origin } from '/frontend/assets/js/data.js';
+import { sortMouseEvent, sortClickEvent } from './event.js';
+import { notification } from './websocket.js';
 
 
 export async function getPinContentsRequest(id) {

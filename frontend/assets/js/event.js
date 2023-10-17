@@ -1,11 +1,11 @@
-import { getLoginUserInfoRequest } from '../request/content.js';
+import { getLoginUserInfoRequest } from '/frontend/assets/js/content.js';
 import {
   boardSimpleSave,
   displayMainBoards,
   getBoards,
   setMyBoard,
-} from './board.js';
-import { boardDetail } from './boardDetail.js';
+} from '/frontend/assets/js/board.js';
+import { boardDetail } from '/frontend/assets/js/boardDetail.js';
 import {
   MAP,
   MAP_OPTIONS,
@@ -40,7 +40,7 @@ import {
   ACCOUNT,
   requestUser,
   CURRENT_PINS,
-} from './data.js';
+} from '/frontend/assets/js/data.js';
 import {
   displayGeoLocationMap,
   closeZoomInLocation,
@@ -48,14 +48,14 @@ import {
   fullScreenEnd,
   move,
   displayMarkers,
-} from './map.js';
+} from '/frontend/assets/js/map.js';
 import {
   displayPinOverlay,
   setMarkersFromServer,
   pinSimpleSave,
-} from './pin.js';
-import { pinDetail } from './pinDetail.js';
-import { searchPlaceAsKeyword } from './search.js';
+} from '/frontend/assets/js/pin.js';
+import { pinDetail } from '/frontend/assets/js/pinDetail.js';
+import { searchPlaceAsKeyword } from '/frontend/assets/js/search.js';
 
 let currentMarker = null;
 

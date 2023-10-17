@@ -28,9 +28,9 @@
       src="//dapi.kakao.com/v2/maps/sdk.js?appkey=db5b73af306ab23a5a023f575a474746&libraries=services,clusterer,drawing"
     ></script>
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=db5b73af306ab23a5a023f575a474746"></script>
-    <script type="module" src="../js/maps/event.js"></script>
-    <script type="module" src="../js/maps/data.js"></script>
-    <script type="module" src="../js/maps/map.js"></script>
+    <script type="module" src="../js/event.js"></script>
+    <script type="module" src="../js/data.js"></script>
+    <script type="module" src="../js/map.js"></script>
     <link rel="stylesheet" href="../css/map.css" />
     <link rel="stylesheet" href="../css/board-detail.css" />
   </head>
@@ -193,7 +193,7 @@
                 aria-labelledby="myLargeModalLabel"
                 aria-hidden="true"
               >
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-lg" style="margin-top: 30px;">
                   <div class="modal-content">
                     <div class="modal-header align-items-start">
                       <div
@@ -464,7 +464,7 @@
       import { createPinDetail } from '../js/util/pinDetailModal.js';
       import { createHeader } from '../js/util/header.js';
       import { createFooter } from '../js/util/footer.js';
-      import { createBoardDetail } from '../js/maps/boardDetail.js';
+      import { createBoardDetail } from '../js/boardDetail.js';
       loadAllScripts();
       createPreloader();
       createPinDetail();

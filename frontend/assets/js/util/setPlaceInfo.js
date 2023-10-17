@@ -1,4 +1,4 @@
-import { PIN_DETAIL, origin, CURRENT_PIN, MARKER_IMG } from '../maps/data.js';
+import { PIN_DETAIL, origin, CURRENT_PIN, MARKER_IMG } from '../data.js';
 import { createAddress, createMenu, createPinData, createThumbnailImg } from './getPlaceInfo.js';
 import { createStaticMap } from './staticMap.js';
 
