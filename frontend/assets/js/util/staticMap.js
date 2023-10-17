@@ -1,4 +1,4 @@
-import { PIN_DETAIL, CURRENT_PIN, MARKER_IMG } from '../maps/data.js';
+import { PIN_DETAIL, CURRENT_PIN, MARKER_IMG } from '../data.js';
 
 export function createStaticMap(pinData = PIN_DETAIL) {
   const lat_lng = pinData.lat_lng.split(',');

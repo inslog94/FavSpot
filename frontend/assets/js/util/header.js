@@ -1,10 +1,10 @@
-import { notification } from '../maps/websocket.js';
-import { createFollower } from '../maps/follower.js';
-import { createFollowing } from '../maps/following.js';
-import { createUserLikedBoard } from '../maps/userLikedBoard.js';
-import { createUserTaggedBoard } from '../maps/userTaggedBoard.js';
-import { createPinList } from '../maps/pinList.js';
-import { createUserInfo } from '../maps/userInfo.js';
+import { notification } from '../websocket.js';
+import { createFollower } from '../follower.js';
+import { createFollowing } from '../following.js';
+import { createUserLikedBoard } from '../userLikedBoard.js';
+import { createUserTaggedBoard } from '../userTaggedBoard.js';
+import { createPinList } from '../pinList.js';
+import { createUserInfo } from '../userInfo.js';
 import { customFetch } from './customFetch.js';
 
 let loginCheckCookieValue;
