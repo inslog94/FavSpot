@@ -21,26 +21,45 @@
 #photoUpload {
   width: 200px;
   height: 40px;
-  border-radius: 5px;
 }
 
 #textUpload {
-  width: 400px;
+  width: 300px;
   padding-left: 10px;
   resize: vertical;
 }
 
 .submitbtn {
-  background-color: indigo;
+  background-color: darkorange;
   color: white;
   padding: 14px, 20 px;
   margin: 8 px, 0;
   border: none;
   cursor: pointer;
-  width: 100px;
-  height: 43px;
+  width: 72px;
+  height: 43.5px;
 }
 
 .read-notification {
   background-color: #f0f0f0; /* 연한 회색 */
+}
+
+.inputImage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: none !important;
+}
+
+.inputDiv {
+  display: flex;
+  flex-direction: column;
+}
+
+#uploadButton {
+  border: none;
+  border-radius: 5px;
+  padding: 5px 0px 5px 0px;
+  color: white;
+  background-color: royalblue;
 }
