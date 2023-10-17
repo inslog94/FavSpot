@@ -94,6 +94,7 @@ def google_callback(request):
     response.set_cookie('access_token', accept_json['access_token'], httponly=True)
     response.set_cookie('refresh_token', accept_json['refresh_token'], httponly=True)
     response.set_cookie('login_check', True)
+    response.set_cookie('social_login', True)
     return response
 
 
@@ -171,6 +172,7 @@ def kakao_callback(request):
     response.set_cookie('access_token', accept_json['access_token'], httponly=True)
     response.set_cookie('refresh_token', accept_json['refresh_token'], httponly=True)
     response.set_cookie('login_check', True)
+    response.set_cookie('social_login', True)
     return response
 
 
@@ -201,6 +203,7 @@ class SignupView(APIView):
             response.set_cookie('access_token', str(refresh.access_token), httponly=True)
             response.set_cookie('refresh_token', str(refresh), httponly=True)
             response.set_cookie('login_check', True)
+            response.set_cookie('social_login', False)
             return response
         
         try:
@@ -252,6 +255,7 @@ class LoginView(APIView):
                 response.set_cookie('access_token', str(refresh.access_token), httponly=True)
                 response.set_cookie('refresh_token', str(refresh), httponly=True)
                 response.set_cookie('login_check', True)
+                response.set_cookie('social_login', False)
                 return response
             return JsonResponse({'err_msg': '비밀번호를 확인해주세요.'}, status=status.HTTP_401_UNAUTHORIZED)
         return JsonResponse({'err_msg': 'Email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -266,6 +270,7 @@ class LogoutView(APIView):
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
         response.delete_cookie('login_check')
+        response.delete_cookie('social_login')
         return response
 
 # 유저정보
@@ -275,13 +280,11 @@ class UserInfoView(APIView):
     def get(self, request, pk=None):
         # 본인인지 다른 유저인지 구분
         if request.user.is_anonymous:
-            print('비로그인 유저')
             return JsonResponse({'err_msg': '로그인이 필요합니다.'}, status=status.HTTP_401_UNAUTHORIZED)
         
         if not pk:
             user = request.user
         elif request.user == User.objects.get(id=pk):
-            print('로그인 유저 본인 프로필')
             user = request.user
         else:
             user = User.objects.get(id=pk)
