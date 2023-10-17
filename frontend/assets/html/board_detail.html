@@ -806,10 +806,12 @@
     <script src="../js/template/jquery-3.6.0.min.js"></script>
 
     <script type="module">
+      import { loadAllScripts } from '/frontend/assets/js/util/script.js';
       import { createPreloader } from '../js/util/preloader.js';
       import { createPinDetail } from '../js/util/pinDetailModal.js';
       import { createHeader } from '../js/util/header.js';
       import { createFooter } from '../js/util/footer.js';
+      loadAllScripts();
       createPreloader();
       createPinDetail();
       createHeader();
