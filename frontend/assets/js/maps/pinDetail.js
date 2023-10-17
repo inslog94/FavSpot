@@ -144,7 +144,12 @@ export function pinDetail() {
 
           // 핀 콘텐츠 텍스트 p 요소 생성 및 추가
           const pinContentP = document.createElement('p');
-          pinContentP.textContent = pinContent.text;
+          pinContentP.className = 'mt-20';
+          if (pinContent.text) {
+            pinContentP.textContent = pinContent.text;
+          } else {
+            pinContentP.textContent = "입력된 코멘트가 없습니다";
+          }
 
           infoContainer.appendChild(pinContentP);
 

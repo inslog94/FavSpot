@@ -186,7 +186,7 @@ export async function boardDetail(data) {
       imgElement.src = pin.thumbnail_img;
       } else {
         imgElement.src =
-          'https://favspot-fin.s3.amazonaws.com/images/default/default_place.png';
+          'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
       }
       imgElement.classList.add('pin-thumbnail-img');
 
