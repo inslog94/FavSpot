@@ -1,4 +1,10 @@
 import { notification } from '../maps/websocket.js';
+import { createFollower } from '../maps/follower.js';
+import { createFollowing } from '../maps/following.js';
+import { createUserLikedBoard } from '../maps/userLikedBoard.js';
+import { createUserTaggedBoard } from '../maps/userTaggedBoard.js';
+import { createPinList } from '../maps/pinList.js';
+import { createUserInfo } from '../maps/userInfo.js';
 import { customFetch } from './customFetch.js';
 
 let loginCheckCookieValue;
@@ -264,7 +270,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'Content-Type': 'application/json',
       },
     })
-      // .then((response) => response.json())
       .then((data) => {
         const requestUser = data.results.User.email;
         const requestUserPk = data.results.User.id;
@@ -274,13 +279,118 @@ document.addEventListener('DOMContentLoaded', function () {
         if (requestUser) {
           const email = document.querySelector('#headerEmail');
           email.textContent = requestUser;
-          notification(requestUserPk);
-          const profileImg = document.querySelector('.profileImg');
           if (requestUserProfileImg) {
+            const profileImg = document.querySelector('.profileImg');
             profileImg.src = requestUserProfileImg;
             profileImg.style.borderRadius = '50%';
           }
         }
+        const logout = document.querySelector('#logout');
+        logout.addEventListener('click', (event) => {
+          fetch(`http://127.0.0.1:8000/user/logout/`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => {
+              if (response.status === 200) {
+                console.log('로그아웃 성공');
+                location.reload(); // 페이지 새로고침
+              }
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+        });
+
+        // 가져온 사용자 데이터를 사이드바에 채워줍니다.
+        const currentPathname = window.location.pathname;
+        if (
+          currentPathname == '/frontend/assets/html/notification.html#' ||
+          currentPathname == '/frontend/assets/html/notification.html'
+        ) {
+          const email = document.querySelector('#email');
+          email.textContent = data['results']['User']['email'];
+          const nickname = document.querySelector('#nickname');
+
+          if (data['results']['User']['nickname']) {
+            nickname.textContent = data['results']['User']['nickname'];
+          } else {
+            nickname.textContent = 'None';
+          }
+          const profileImg = document.getElementById('profileImg');
+          if (requestUserProfileImg) {
+            profileImg.src = requestUserProfileImg;
+          }
+          let followers = document.querySelector('.followers');
+          followers.textContent = data['results']['User']['followers'];
+          followers = document.querySelector('#followers');
+          followers.addEventListener('click', (event) => {
+            console.log('click');
+            window.location.href = `follower.html`;
+          });
+          let following = document.querySelector('.following');
+          following.textContent = data['results']['User']['following'];
+          following = document.querySelector('#following');
+          following.addEventListener('click', (event) => {
+            window.location.href = `following.html`;
+          });
+        } else if (
+          currentPathname == '/frontend/assets/html/profile_edit.html#' ||
+          currentPathname == '/frontend/assets/html/profile_edit.html'
+        ) {
+          // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
+          const nickname = (document.querySelector('#nickname').value =
+            data['results']['User']['nickname']);
+          const imagePreview = document.getElementById('imagePreview');
+          if (profileImg) {
+            imagePreview.src = requestUserProfileImg;
+          }
+        } else if (
+          currentPathname.startsWith('/frontend/assets/html/follower.html#') ||
+          currentPathname.startsWith('/frontend/assets/html/follower.html')
+        ) {
+          createFollower(requestUserPk, followingList);
+        } else if (
+          currentPathname.startsWith('/frontend/assets/html/following.html#') ||
+          currentPathname.startsWith('/frontend/assets/html/following.html')
+        ) {
+          createFollowing(requestUserPk, followingList);
+        } else if (
+          currentPathname.startsWith(
+            '/frontend/assets/html/user_liked_board.html#'
+          ) ||
+          currentPathname.startsWith(
+            '/frontend/assets/html/user_liked_board.html'
+          )
+        ) {
+          createUserLikedBoard(requestUser, requestUserPk);
+        } else if (
+          currentPathname.startsWith(
+            '/frontend/assets/html/user_tagged_board.html#'
+          ) ||
+          currentPathname.startsWith(
+            '/frontend/assets/html/user_tagged_board.html'
+          )
+        ) {
+          createUserTaggedBoard(requestUser, requestUserPk);
+        } else if (
+          currentPathname == '/frontend/assets/html/pin_list.html#' ||
+          currentPathname == '/frontend/assets/html/pin_list.html'
+        ) {
+          createPinList(data);
+        } else if (
+          currentPathname.startsWith('/frontend/assets/html/user_info.html#') ||
+          currentPathname.startsWith('/frontend/assets/html/user_info.html')
+        ) {
+          createUserInfo(requestUser, requestUserPk, followingList);
+        }
+        notification(requestUserPk);
+      })
+      .catch((error) => {
+        console.error('Failed to retrieve user data.', error);
       });
   }
 });

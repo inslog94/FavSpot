@@ -20,17 +20,8 @@
       rel="shortcut icon"
       href="https://favspot-fin.s3.amazonaws.com/images/default/favicon.png"
     />
-
     <link rel="stylesheet" href="../css/template/bootstrap.css" />
-    <style>
-      body {
-        overflow: auto;
-      }
-    </style>
   </head>
-
-  <!--=================================
-login-->
   <body>
     <div id="main-container">
       <section class="white-bg page-section-ptb" style="height: 98.75%; padding-bottom: 140px;">
@@ -105,74 +96,17 @@ login-->
         </div>
       </section>
     </div>
-    <!--=================================
- login-->
-
-    <!--=================================
- jquery -->
-
-    <!-- jquery -->
-    <script src="../js/template/jquery-3.6.0.min.js"></script>
-
-    <!-- plugins-jquery -->
-    <script src="../js/template/plugins-jquery.js"></script>
-
-    <!-- plugin_path -->
-    <script>
-      var plugin_path = '../js/template/';
-    </script>
-
-    <!-- custom -->
-    <script src="../js/template/custom.js"></script>
-
     <script type="module">
       import { loadAllScripts } from '/frontend/assets/js/util/script.js';
       import { createPreloader } from '/frontend/assets/js/util/preloader.js';
       import { createHeader } from '/frontend/assets/js/util/header.js';
       import { createFooter } from '/frontend/assets/js/util/footer.js';
+      import { createLogin } from '/frontend/assets/js/maps/login.js';
       loadAllScripts();
       createPreloader();
       createHeader();
       createFooter();
-    </script>
-    <script>
-      const $login = document.querySelector('#login');
-      console.log($login);
-      $login.addEventListener('submit', (event) => {
-        console.log('로그인');
-        event.preventDefault();
-        const email = document.querySelector('#email').value;
-        const password = document.querySelector('#password').value;
-
-        login(email, password);
-      });
-
-      function login(email, password) {
-        const loginError = document.getElementById('loginError');
-        fetch('http://127.0.0.1:8000/user/login/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
-          credentials: 'include',
-        })
-          .then((response) => {
-            if (!response.ok) {
-              return response.json().then((data) => {
-                throw new Error(data.err_msg);
-              });
-            }
-            return response.json();
-          })
-          .then((data) => {
-            // 로그인 성공 시 처리
-            window.location.href = '/frontend/index.html';
-          })
-          .catch((error) => {
-            loginError.textContent = error.message;
-          });
-      }
+      createLogin();
     </script>
   </body>
 </html>
