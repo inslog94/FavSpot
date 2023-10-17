@@ -50,8 +50,9 @@ NOTE: This file contains all scripts for the actual Template.
 ======================================
 [ End table content ]
 ======================================*/
-//POTENZA var
+var plugin_path = '/frontend/assets/js/';
 
+//POTENZA var
 (function ($) {
   'use strict';
   var POTENZA = {};

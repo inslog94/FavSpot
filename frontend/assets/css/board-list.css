@@ -1,0 +1,191 @@
+body {
+  overflow: auto;
+}
+
+.masonry-item {
+  display: inline-block;
+  max-width: 375px;
+}
+/* Swiper 컨테이너 스타일 */
+.swiper-container {
+  width: 100%; /* 슬라이더 컨테이너의 너비를 100%로 설정 */
+  overflow: hidden; /* 넘치는 부분을 숨김 */
+  position: relative; /* 포지션을 상대적으로 설정하여 내부 요소의 위치를 조정 */
+}
+
+/* 슬라이더 영역 스타일 */
+.swiper-wrapper {
+  display: flex; /* 슬라이드를 가로로 나열하기 위해 플렉스 디스플레이 사용 */
+  transition: transform 0.3s ease-in-out; /* 슬라이더 이동에 트랜지션 효과 적용 */
+}
+
+/* 슬라이드 스타일 */
+.swiper-slide {
+  width: 100%; /* 슬라이드 너비를 100%로 설정하여 한 번에 하나만 보이도록 함 */
+  display: flex;
+  justify-content: center;
+}
+
+/* 좋아요한 보드 목록 버튼 스타일 */
+.liked-board-btn {
+  background-color: #ffc107;
+  border: none;
+}
+
+/* 보드 생성 버튼 스타일 */
+.board-plus-text,
+.board-plus-text:active,
+.board-plus-text:focus {
+  width: 220px;
+  padding: 10px;
+  text-align: center;
+  background-color: #beceff;
+  color: black;
+  border: 2px solid transparent;
+  box-shadow: none !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board-plus-text:hover {
+  background-color: black !important;
+  color: white !important;
+  border-color: none !important;
+}
+
+.board-plus-box {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.fa-plus {
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 보드 생성 모달 스타일 */
+.modal-title-text {
+  text-align: center;
+  border-radius: 30px;
+  padding: 5px;
+  background-color: #84ba3f;
+  color: white;
+}
+
+.board-box-modal {
+  border: 5px solid #84ba3f;
+  border-radius: 30px;
+  padding: 20px;
+  margin-top: 50px;
+  background-color: white;
+}
+
+.fa-times {
+  font-size: 18px;
+  margin-left: 7px;
+}
+
+.fa-lock,
+.fa-unlock {
+  font-size: 20px;
+}
+
+.icons-box,
+.icons-box1 {
+  display: flex;
+  /* justify-content: space-between; */
+}
+
+.icons-box button {
+  border: none;
+  background: none;
+}
+
+.input-board-title-02 {
+  border: 3px solid gray;
+  border-radius: 10px;
+  background-color: #beceff;
+  color: black;
+  padding: 10px;
+  width: 100%;
+}
+
+.input-tag-box {
+  display: flex;
+}
+
+.input-tag {
+  padding: 10px;
+  border-radius: 10px;
+  font-size: medium;
+  color: black;
+  border: 3px solid gray;
+  flex: 70;
+}
+
+.button-tag-02 {
+  padding: 10px;
+  margin-left: 10px;
+  border: 3px solid gray;
+  border-radius: 10px;
+  color: black;
+  background-color: #beceff;
+  font-weight: bold;
+  flex: 20;
+  font-size: medium;
+}
+
+.fa-lock,
+.fa-unlock {
+  color: #626262;
+}
+
+.fa-lock:hover,
+.fa-unlock:hover {
+  color: #84ba3f;
+}
+
+.modal-content {
+  width: 900px;
+  position: absolute;
+  top: 50%;
+  right: -3%;
+}
+
+.modal-title {
+  width: 800px;
+}
+
+.lock-desc {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  margin-top: 10px;
+  color: gray;
+  font-size: 15px;
+}
+
+.no-pins-message {
+  display: flex;
+  justify-content: center;
+}
+
+/* 뒤로가기 버튼 스타일 */
+.go-back-btn {
+  background-color: #b18ec4;
+  border: none;
+}
+
+/* 상단 안내문구의 태그 이름 스타일*/
+.tag-name {
+  background: #f6f7f8;
+  color: #323232;
+  border-radius: 3px;
+  padding: 8px 16px;
+  line-height: 40px;
+  font-size: 16px;
+  margin-right: 2px;
+}

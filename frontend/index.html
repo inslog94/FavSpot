@@ -9,16 +9,19 @@
       href="https://favspot-fin.s3.amazonaws.com/images/default/favicon.png"
     />
     <link rel="stylesheet" href="assets/css/template/bootstrap.css" />
+    <link rel="stylesheet" href="assets/css/index.css" />
   </head>
   <body>
     <div id="main-container"></div>
     <script type="module">
+      import { loadAllScripts } from '/frontend/assets/js/util/script.js';
       import { createPreloader } from './assets/js/util/preloader.js';
       import { createPinDetail } from './assets/js/util/pinDetailModal.js';
       import { createHeader } from './assets/js/util/header.js';
       import { createMainPage } from './assets/js/maps/index.js';
       import { createFooter } from './assets/js/util/footer.js';
       import { createBoard } from './assets/js/util/boardCreateModal.js';
+      loadAllScripts();
       createPreloader();
       createPinDetail();
       createHeader();
@@ -26,22 +29,6 @@
       createFooter();
       createBoard();
     </script>
-    <!-- jquery -->
-    <script src="assets/js/template/jquery-3.6.0.min.js"></script>
-
-    <!-- plugins-jquery -->
-    <script src="assets/js/template/plugins-jquery.js"></script>
-
-    <!-- plugin_path -->
-    <script>
-      var plugin_path = 'assets/js/';
-    </script>
-
-    <!-- custom -->
-    <script src="assets/js/template/custom.js"></script>
-
-    <!-- swiper -->
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
     <!-- kakao map -->
     <script
@@ -50,7 +37,7 @@
     ></script>
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=db5b73af306ab23a5a023f575a474746"></script>
 
-    <!-- custom -->
+    <!-- map -->
     <script type="module" src="assets/js/maps/event.js"></script>
     <script type="module" src="assets/js/maps/data.js"></script>
     <script type="module" src="assets/js/maps/map.js"></script>
