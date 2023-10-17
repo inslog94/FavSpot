@@ -434,9 +434,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector('.drop3')
   ];
 
-  // 각 드롭다운 메뉴 항목에 대해 이벤트 리스너 추가
-  dropOptions.forEach((dropOption, index) => {
-    sortMouseEvent(dropOption);
-    sortClickEvent(dropOption, index, "http://127.0.0.1:8000/board");
-  });
+  const currentPathname = window.location.pathname;
+  if (
+    currentPathname == '/frontend/assets/html/index.html#' ||
+    currentPathname == '/frontend/assets/html/index.html'
+  ) {
+    // 각 드롭다운 메뉴 항목에 대해 이벤트 리스너 추가
+    dropOptions.forEach((dropOption, index) => {
+      sortMouseEvent(dropOption);
+      sortClickEvent(dropOption, index, 'http://127.0.0.1:8000/board');
+    });
+  }
 });
