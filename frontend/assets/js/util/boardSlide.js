@@ -78,6 +78,7 @@ export function createBlogEntry(board) {
     const lock = document.createElement('i');
     lock.className = 'fa fa-solid fa-lock mr-10';
     lock.style.color = '#bf6447';
+    lock.style.fontSize = '18px';
     entryLock.appendChild(lock);
     entryTitle.appendChild(entryLock);
   }
