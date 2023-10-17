@@ -2219,3 +2219,8 @@ img.bottom-img { top: 0; }
 #logo-img:hover {
   cursor: pointer;
 }
+
+.user-info-btn {
+  background-color: #f57979;
+  border: none;
+}

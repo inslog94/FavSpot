@@ -12,7 +12,15 @@
 
 /* Style */
 @import url('style.css');
+
+/* Modal */
 @import url('/frontend/assets/css/modal.css');
+
+/* Shop */
+@import url('/frontend/assets/css/template/shop.css');
+
+/* Pin-list */
+@import url('/frontend/assets/css/pin-list.css');
 
 /* Responsive */
 @import url('responsive.css');
@@ -20,5 +28,16 @@
 /* Swiper */
 @import url('https://unpkg.com/swiper/swiper-bundle.min.css');
 
+/* Map */
 @import url('/frontend/assets/css/map.css');
-@import url('/frontend/assets/css/index.css');
+
+/* Index */
+/* @import url('/frontend/assets/css/index.css'); */
+
+body {
+  overflow: auto;
+}
+
+.o-hidden {
+  overflow: initial;
+}
