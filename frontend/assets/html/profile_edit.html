@@ -94,52 +94,54 @@
                     />
                   </div>
 
-                  <hr class="mt-50" />
-                  <h4 class="title-effect mt-20 mb-20">Password Change</h4>
-                  <div class="section-field">
-                    <label class="form-label" for="currentPassword"
-                      >Current Password*
-                    </label>
-                    <div class="field-widget">
-                      <input
-                        id="currentPassword"
-                        class="Password form-control"
-                        type="password"
-                        placeholder="Current Password"
-                        name="currentPassword"
-                      />
+                  <div class="pwChange">
+                    <hr class="mt-50" />
+                    <h4 class="title-effect mt-20 mb-20">Password Change</h4>
+                    <div class="section-field">
+                      <label class="form-label" for="currentPassword"
+                        >Current Password*
+                      </label>
+                      <div class="field-widget">
+                        <input
+                          id="currentPassword"
+                          class="Password form-control"
+                          type="password"
+                          placeholder="Current Password"
+                          name="currentPassword"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div class="section-field mt-40">
-                    <label class="form-label" for="newPassword1"
-                      >New Password1*
-                    </label>
-                    <div class="field-widget">
-                      <input
-                        id="newPassword1"
-                        class="Password form-control"
-                        type="password"
-                        placeholder="New Password"
-                        name="newPassword1"
-                      />
+                    <div class="section-field mt-40">
+                      <label class="form-label" for="newPassword1"
+                        >New Password1*
+                      </label>
+                      <div class="field-widget">
+                        <input
+                          id="newPassword1"
+                          class="Password form-control"
+                          type="password"
+                          placeholder="New Password"
+                          name="newPassword1"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div class="section-field">
-                    <label class="form-label" for="newPassword2"
-                      >New Password2*
-                    </label>
-                    <div class="field-widget">
-                      <input
-                        id="newPassword2"
-                        class="Password form-control"
-                        type="password"
-                        placeholder="New Password Check"
-                        name="newPassword2"
-                      />
+                    <div class="section-field">
+                      <label class="form-label" for="newPassword2"
+                        >New Password2*
+                      </label>
+                      <div class="field-widget">
+                        <input
+                          id="newPassword2"
+                          class="Password form-control"
+                          type="password"
+                          placeholder="New Password Check"
+                          name="newPassword2"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <p id="passwordError" class="text-danger"></p>
+                    <div>
+                      <p id="passwordError" class="text-danger"></p>
+                    </div>
                   </div>
                   <button class="button mt-40" type="submit">
                     <span>Update</span>
@@ -201,6 +203,7 @@
       });
 
       // 비밀번호 유효성 검사
+      const pwChange = document.querySelector('.pwChange');
       document.addEventListener('DOMContentLoaded', function () {
         const currentPassword = document.getElementById('currentPassword');
         const newPassword1 = document.getElementById('newPassword1');
@@ -208,6 +211,30 @@
         const passwordError = document.getElementById('passwordError');
         const profileEdit = document.querySelector('.profileEdit');
         const passwordInputs = [currentPassword, newPassword1, newPassword2];
+
+        // 쿠키 문자열 가져오기
+        const cookiesString = document.cookie;
+
+        // 쿠키 문자열을 파싱하여 객체로 변환
+        const cookiesArray = cookiesString.split('; ');
+        const cookies = {};
+
+        cookiesArray.forEach((cookie) => {
+          const [name, value] = cookie.split('=');
+          cookies[name] = value;
+        });
+
+        // social_login 쿠키 값 가져오기
+        const socialLoginCookieValue = cookies['social_login'];
+
+        // social_login 쿠키 값이 'True'인지 'False'인지 확인
+        if (socialLoginCookieValue === 'True') {
+          // 소셜 로그인 상태
+          pwChange.style.display = 'none';
+        } else {
+          // 일반 로그인 상태
+          pwChange.style.display = 'block';
+        }
 
         // 입력 이벤트를 감지하여 required 옵션을 동적으로 설정/해제
         passwordInputs.forEach((input) => {
