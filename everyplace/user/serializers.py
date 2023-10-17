@@ -11,11 +11,10 @@ class UserSerializer(serializers.ModelSerializer):
     following = serializers.SerializerMethodField()
     following_list = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
-    pin_contents = serializers.SerializerMethodField()
     
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'password', 'nickname', 'profile_img', 'pin_contents', 'followers', 'following', 'following_list', 'tags')
+        fields = ('id', 'email', 'password', 'nickname', 'profile_img', 'followers', 'following', 'following_list', 'tags')
         extra_kwargs = {'password': {'write_only': True}}
 
     def get_followers(self, obj):
@@ -34,11 +33,6 @@ class UserSerializer(serializers.ModelSerializer):
         board_tags = set(BoardTag.objects.filter(board__user_id=obj, board__is_deleted=False))
         tag_contents = [tag.content for tag in board_tags if tag.content]
         return tag_contents
-    
-    def get_pin_contents(self, obj):
-        pin_contents = PinContent.objects.filter(user_id=obj.id, is_deleted=False).order_by(('-updated_at'))
-        serializer = PinContentSerializer(pin_contents, many=True)
-        return serializer.data
 
 
 class FollowingSerializer(serializers.ModelSerializer):
