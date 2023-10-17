@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function () {
             '/frontend/assets/html/user_liked_board.html'
           )
         ) {
-          createUserLikedBoard(requestUser, requestUserPk);
+          createUserLikedBoard(requestUser, requestUserPk, followingList);
         } else if (
           currentPathname.startsWith(
             '/frontend/assets/html/user_tagged_board.html#'
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function () {
             '/frontend/assets/html/user_tagged_board.html'
           )
         ) {
-          createUserTaggedBoard(requestUser, requestUserPk);
+          createUserTaggedBoard(requestUser, requestUserPk, followingList);
         } else if (
           currentPathname == '/frontend/assets/html/pin_list.html#' ||
           currentPathname == '/frontend/assets/html/pin_list.html'
