@@ -323,7 +323,7 @@ export async function displayPinOverlay(markerInfo) {
   imgBox.style.marginLeft = '20px';
   imgBox.appendChild(img);
 
-  fetch(`http://127.0.0.1:8000/pin/no-content/${markerInfo.place_id}/`, {
+  fetch(`http://favspot.site:8000/pin/no-content/${markerInfo.place_id}/`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -427,7 +427,7 @@ export async function displayPinOverlay(markerInfo) {
     }
 
     // 유저의 모든 보드 목록 가져오기 위해 함수 호출
-    fetchAllBoards(`http://127.0.0.1:8000/user/me/`)
+    fetchAllBoards(`http://favspot.site:8000/user/me/`)
       .then(() => {
         displayBoardsOnOverlay(markerInfo);
       })

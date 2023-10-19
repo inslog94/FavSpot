@@ -1,5 +1,5 @@
 export function createNotifications() {
-  const url = 'http://127.0.0.1:8000';
+  const url = 'http://favspot.site:8000';
   const tagList = document.getElementById('tagList');
 
   // 알림 목록

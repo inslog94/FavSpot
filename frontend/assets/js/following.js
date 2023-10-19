@@ -5,7 +5,7 @@ export function createFollowing(requestUserPk, followingList) {
     pk = 'me';
   }
 
-  fetch(`http://127.0.0.1:8000/user/${pk}/`, {
+  fetch(`http://favspot.site:8000/user/${pk}/`, {
     method: 'GET',
     credentials: 'include',
   })
@@ -56,7 +56,7 @@ export function createFollowing(requestUserPk, followingList) {
         button.textContent = 'Unfollow';
         button.classList.add('btn-primary');
         button.addEventListener('click', () => {
-          fetch(`http://127.0.0.1:8000/user/follow/${pk}/`, {
+          fetch(`http://favspot.site:8000/user/follow/${pk}/`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -75,7 +75,7 @@ export function createFollowing(requestUserPk, followingList) {
       } else {
         button.textContent = 'Follow';
         button.addEventListener('click', () => {
-          fetch(`http://127.0.0.1:8000/user/follow/`, {
+          fetch(`http://favspot.site:8000/user/follow/`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -101,8 +101,8 @@ export function createFollowing(requestUserPk, followingList) {
 
   const url =
     pk === 'me'
-      ? `http://127.0.0.1:8000/user/following/`
-      : `http://127.0.0.1:8000/user/${pk}/following/`;
+      ? `http://favspot.site:8000/user/following/`
+      : `http://favspot.site:8000/user/${pk}/following/`;
   // 팔로워 목록
   fetch(url, {
     method: 'GET',
@@ -196,7 +196,7 @@ export function createFollowing(requestUserPk, followingList) {
 
       unfollowLink.textContent = 'Unfollow';
       unfollowLink.addEventListener('click', () => {
-        fetch(`http://127.0.0.1:8000/user/follow/${followingPk}/`, {
+        fetch(`http://favspot.site:8000/user/follow/${followingPk}/`, {
           method: 'DELETE',
           credentials: 'include',
           headers: {

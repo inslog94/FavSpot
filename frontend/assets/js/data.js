@@ -4,7 +4,7 @@
 // lat (latitude) : 위도, y축
 // lng (longitude) : 경도, x축
 
-export const origin = 'http://127.0.0.1:8000';
+export const origin = 'http://favspot.site:8000';
 
 const DEFAULT_LATITUDE = 37.566968;
 const DEFAULT_LONGITUDE = 126.978154;

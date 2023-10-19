@@ -329,7 +329,7 @@ export async function boardDetailSetUp() {
   const selectedPk = window.localStorage.getItem('selectedPk');
   console.log(selectedPk);
 
-  await fetch(`http://127.0.0.1:8000/board/${selectedPk}/`, {
+  await fetch(`http://favspot.site:8000/board/${selectedPk}/`, {
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 각 드롭다운 메뉴 항목에 대해 이벤트 리스너 추가
     dropOptions.forEach((dropOption, index) => {
       sortMouseEvent(dropOption);
-      sortClickEvent(dropOption, index, 'http://127.0.0.1:8000/board');
+      sortClickEvent(dropOption, index, 'http://favspot.site:8000/board');
     });
   }
 });

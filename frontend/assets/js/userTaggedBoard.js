@@ -11,7 +11,7 @@ export function createUserTaggedBoard(
     pk = 'me';
   }
   const tagList = document.getElementById('tagList');
-  fetch(`http://127.0.0.1:8000/user/${pk}/`, {
+  fetch(`http://favspot.site:8000/user/${pk}/`, {
     method: 'GET',
     credentials: 'include',
   })
@@ -92,7 +92,7 @@ export function createUserTaggedBoard(
         button3.setAttribute('href', `user_liked_board.html?pk=${pk}`);
 
         button.addEventListener('click', () => {
-          fetch(`http://127.0.0.1:8000/user/follow/${followerPk}/`, {
+          fetch(`http://favspot.site:8000/user/follow/${followerPk}/`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -116,7 +116,7 @@ export function createUserTaggedBoard(
         button3.setAttribute('href', `user_liked_board.html?pk=${pk}`);
 
         button.addEventListener('click', () => {
-          fetch(`http://127.0.0.1:8000/user/follow/`, {
+          fetch(`http://favspot.site:8000/user/follow/`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -185,7 +185,7 @@ export function createUserTaggedBoard(
       // 페이지 상단 안내 문구에 선택된 태그 값 표기
       document.querySelector('.tag-name').textContent = tag;
 
-      fetch(`http://127.0.0.1:8000/board/${pagePk}/tag/?tag=${tag}`, {
+      fetch(`http://favspot.site:8000/board/${pagePk}/tag/?tag=${tag}`, {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -254,7 +254,7 @@ export function createUserTaggedBoard(
       // 데이터를 가져와서 화면에 표시하는 함수
       function fetchDataAndShow() {
         fetch(
-          `http://127.0.0.1:8000/board/${pagePk}/tag/?tag=${tag}&page=${currentPage}`,
+          `http://favspot.site:8000/board/${pagePk}/tag/?tag=${tag}&page=${currentPage}`,
           {
             credentials: 'include',
           }

@@ -12,7 +12,7 @@ export function createLogin() {
 
   function login(email, password) {
     const loginError = document.getElementById('loginError');
-    fetch('http://127.0.0.1:8000/user/login/', {
+    fetch('http://favspot.site:8000/user/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

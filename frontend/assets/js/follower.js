@@ -5,7 +5,7 @@ export function createFollower(requestUserPk, followingList) {
     pk = 'me';
   }
 
-  fetch(`http://127.0.0.1:8000/user/${pk}/`, {
+  fetch(`http://favspot.site:8000/user/${pk}/`, {
     method: 'GET',
     credentials: 'include',
   })
@@ -55,7 +55,7 @@ export function createFollower(requestUserPk, followingList) {
         button.textContent = 'Unfollow';
         button.classList.add('btn-primary');
         button.addEventListener('click', () => {
-          fetch(`http://127.0.0.1:8000/user/follow/${pk}/`, {
+          fetch(`http://favspot.site:8000/user/follow/${pk}/`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -74,7 +74,7 @@ export function createFollower(requestUserPk, followingList) {
       } else {
         button.textContent = 'Follow';
         button.addEventListener('click', () => {
-          fetch(`http://127.0.0.1:8000/user/follow/`, {
+          fetch(`http://favspot.site:8000/user/follow/`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -100,8 +100,8 @@ export function createFollower(requestUserPk, followingList) {
 
   const url =
     pk === 'me'
-      ? `http://127.0.0.1:8000/user/follower/`
-      : `http://127.0.0.1:8000/user/${pk}/follower/`;
+      ? `http://favspot.site:8000/user/follower/`
+      : `http://favspot.site:8000/user/${pk}/follower/`;
   // 팔로워 목록
   fetch(url, {
     method: 'GET',
@@ -196,7 +196,7 @@ export function createFollower(requestUserPk, followingList) {
       if (followingList.includes(follwer.email)) {
         unfollowLink.textContent = 'Unfollow';
         unfollowLink.addEventListener('click', () => {
-          fetch(`http://127.0.0.1:8000/user/follow/${followerPk}/`, {
+          fetch(`http://favspot.site:8000/user/follow/${followerPk}/`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -219,7 +219,7 @@ export function createFollower(requestUserPk, followingList) {
       } else {
         unfollowLink.textContent = 'Follow';
         unfollowLink.addEventListener('click', () => {
-          fetch(`http://127.0.0.1:8000/user/follow/`, {
+          fetch(`http://favspot.site:8000/user/follow/`, {
             method: 'POST',
             credentials: 'include',
             headers: {

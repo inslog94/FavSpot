@@ -341,7 +341,7 @@ export async function boardDetail(data) {
       deleteIconDiv.addEventListener('click', function () {
         // 삭제 확인 메시지
         if (window.confirm('댓글을 삭제하시겠습니까?')) {
-          fetch(`http://127.0.0.1:8000/board/comment/${comment.id}`, {
+          fetch(`http://favspot.site:8000/board/comment/${comment.id}`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -370,7 +370,7 @@ export async function boardDetail(data) {
   likeButton.addEventListener('click', function () {
     if (boardLikePk) {
       // 좋아요 해제
-      fetch(`http://127.0.0.1:8000/board/like/${boardLikePk}/`, {
+      fetch(`http://favspot.site:8000/board/like/${boardLikePk}/`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {
@@ -396,7 +396,7 @@ export async function boardDetail(data) {
         .catch((error) => console.error('Error:', error));
     } else {
       // 아직 좋아요가 안 눌러져 있으면 등록
-      fetch(`http://127.0.0.1:8000/board/${selectedPk}/like/`, {
+      fetch(`http://favspot.site:8000/board/${selectedPk}/like/`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -423,7 +423,7 @@ export async function boardDetail(data) {
   document.getElementById('submit').addEventListener('click', function () {
     var commentText = document.getElementById('commentText').value;
 
-    fetch(`http://127.0.0.1:8000/board/${selectedPk}/comment/`, {
+    fetch(`http://favspot.site:8000/board/${selectedPk}/comment/`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -444,7 +444,7 @@ export async function boardDetail(data) {
     .addEventListener('click', function () {
       // 삭제 확인 메시지
       if (window.confirm('보드를 삭제하시겠습니까?')) {
-        fetch(`http://127.0.0.1:8000/board/${selectedPk}/`, {
+        fetch(`http://favspot.site:8000/board/${selectedPk}/`, {
           method: 'DELETE',
           credentials: 'include',
           headers: {
@@ -472,7 +472,7 @@ export function createBoardDetail() {
     let isPublic;
 
     // 보드 상세 정보 가져오기 위한 통신
-    fetch(`http://127.0.0.1:8000/board/${boardPk}/`, {
+    fetch(`http://favspot.site:8000/board/${boardPk}/`, {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
@@ -666,7 +666,7 @@ export function createBoardDetail() {
           is_public: isPublic,
         };
 
-        fetch(`http://127.0.0.1:8000/board/${boardPk}/`, {
+        fetch(`http://favspot.site:8000/board/${boardPk}/`, {
           method: 'PUT',
           credentials: 'include',
           headers: {

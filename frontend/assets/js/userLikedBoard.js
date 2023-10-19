@@ -11,7 +11,7 @@ export function createUserLikedBoard(
     pk = 'me';
   }
 
-  fetch(`http://127.0.0.1:8000/user/${pk}/`, {
+  fetch(`http://favspot.site:8000/user/${pk}/`, {
     method: 'GET',
     credentials: 'include',
   })
@@ -96,7 +96,7 @@ export function createUserLikedBoard(
         });
 
         button2.addEventListener('click', () => {
-          fetch(`http://127.0.0.1:8000/user/follow/${followerPk}/`, {
+          fetch(`http://favspot.site:8000/user/follow/${followerPk}/`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -124,7 +124,7 @@ export function createUserLikedBoard(
         });
 
         button2.addEventListener('click', () => {
-          fetch(`http://127.0.0.1:8000/user/follow/`, {
+          fetch(`http://favspot.site:8000/user/follow/`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -160,7 +160,7 @@ export function createUserLikedBoard(
       const paramsUserId = new URLSearchParams(window.location.search);
       let userId = params.get('pk');
 
-      fetch(`http://127.0.0.1:8000/board/like/${userId}`, {
+      fetch(`http://favspot.site:8000/board/like/${userId}`, {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -237,9 +237,12 @@ export function createUserLikedBoard(
 
       // 데이터를 가져와서 화면에 표시하는 함수
       function fetchDataAndShow() {
-        fetch(`http://127.0.0.1:8000/board/like/${pk}/?page=${currentPage}`, {
-          credentials: 'include',
-        })
+        fetch(
+          `http://favspot.site:8000/board/like/${pk}/?page=${currentPage}`,
+          {
+            credentials: 'include',
+          }
+        )
           .then((response) => {
             if (!response.ok) {
               throw new Error('Network response was not ok');
