@@ -135,7 +135,7 @@ export function createBlogEntry(board) {
 
   readMoreLink.addEventListener('click', (event) => {
     localStorage.setItem('selectedPk', board.id);
-    window.location.href = '/frontend/assets/html/board_detail.html';
+    window.location.href = '/assets/html/board_detail.html';
   });
 
   const arrowIcon = document.createElement('i');

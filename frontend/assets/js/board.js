@@ -4,7 +4,7 @@ import {
   getLoginUserInfoRequest,
   findBoardRequest,
   pinDeleteRequest,
-} from '/frontend/assets/js/content.js';
+} from '/assets/js/content.js';
 import {
   $boardAddModal,
   $boardAddModalContent,
@@ -17,8 +17,8 @@ import {
   ACCOUNT,
 } from './data.js';
 import { setMarkersFromServer, pinSimpleSave } from './pin.js';
-import { setItemsPerPage } from '/frontend/assets/js/util/responsive.js';
-import { createBlogEntry } from '/frontend/assets/js/util/boardSlide.js';
+import { setItemsPerPage } from '/assets/js/util/responsive.js';
+import { createBlogEntry } from '/assets/js/util/boardSlide.js';
 
 // 타이틀, 태그로 보드 생성
 export async function boardSimpleSave(title, tags) {

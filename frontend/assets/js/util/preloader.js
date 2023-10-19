@@ -6,7 +6,7 @@ export function createPreloader() {
   // 이미지 엘리먼트를 생성합니다.
   const imageElement = document.createElement('img');
   imageElement.classList.add('img-fluid', 'd-block', 'mx-auto');
-  imageElement.src = '/frontend/assets/img/pre-loader/loader-03.svg';
+  imageElement.src = '/assets/img/pre-loader/loader-03.svg';
   imageElement.alt = '';
 
   // 이미지 엘리먼트를 div 엘리먼트의 자식으로 추가합니다.

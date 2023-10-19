@@ -6,10 +6,7 @@ export function createFooter() {
   const footer = document.createElement('footer');
 
   const currentPathname = window.location.pathname;
-  if (
-    currentPathname == '/frontend/index.html' ||
-    currentPathname == '/frontend/'
-  ) {
+  if (currentPathname == '/index.html' || currentPathname == '/') {
     footer.className = 'footer footer-topbar';
   } else {
     footer.className = 'footer footer-topbar fixed-bottom';

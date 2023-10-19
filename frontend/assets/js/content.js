@@ -1,4 +1,4 @@
-import { origin } from '/frontend/assets/js/data.js';
+import { origin } from '/assets/js/data.js';
 import { sortMouseEvent, sortClickEvent } from './event.js';
 import { notification } from './websocket.js';
 

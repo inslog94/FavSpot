@@ -30,7 +30,7 @@ export function createLogin() {
       })
       .then((data) => {
         // 로그인 성공 시 처리
-        window.location.href = '/frontend/index.html';
+        window.location.href = '/index.html';
       })
       .catch((error) => {
         loginError.textContent = error.message;

@@ -83,7 +83,7 @@ export function createHeader() {
   cartName.className = 'cart-name clearfix';
 
   const userDetailLink = document.createElement('a');
-  userDetailLink.href = '/frontend/assets/html/user_info.html';
+  userDetailLink.href = '/assets/html/user_info.html';
   userDetailLink.textContent = 'User Detail';
 
   cartName.appendChild(userDetailLink);
@@ -97,7 +97,7 @@ export function createHeader() {
   cartName2.classList.add('cart-name', 'clearfix');
 
   const link2 = document.createElement('a');
-  link2.href = '/frontend/assets/html/notification.html';
+  link2.href = '/assets/html/notification.html';
   link2.textContent = 'Notification';
 
   cartName2.appendChild(link2);
@@ -122,7 +122,7 @@ export function createHeader() {
 
   const profileEditLink = document.createElement('a');
   profileEditLink.className = 'button me-1';
-  profileEditLink.href = '/frontend/assets/html/profile_edit.html';
+  profileEditLink.href = '/assets/html/profile_edit.html';
   profileEditLink.textContent = 'Profile Edit';
 
   const logoutLink = document.createElement('a');
@@ -174,13 +174,13 @@ export function createHeader() {
   const login = document.createElement('a');
   login.className = 'login';
   login.textContent = 'Login';
-  login.href = '/frontend/assets/html/login.html';
+  login.href = '/assets/html/login.html';
 
   const signup = document.createElement('a');
   signup.id = 'signup';
   signup.className = 'signup ms-3';
   signup.textContent = 'Signup';
-  signup.href = '/frontend/assets/html/signup.html';
+  signup.href = '/assets/html/signup.html';
 
   div.appendChild(login);
   div.appendChild(signup);
@@ -195,7 +195,7 @@ export function createHeader() {
   logoImg.className = 'mx-auto d-block';
 
   logoImg.addEventListener('click', () => {
-    window.location.href = '/frontend/index.html';
+    window.location.href = '/index.html';
   });
 
   headerContent.appendChild(logoImg);
@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function () {
     (page === 'signup.html' && loginCheckCookieValue === 'True')
   ) {
     // 이미 로그인된 유저가 로그인 또는 회원가입 페이지에 접근하려 할 경우 메인 페이지로 리다이렉트
-    window.location.href = '/frontend/index.html';
+    window.location.href = '/index.html';
     return;
   }
 
@@ -315,8 +315,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // 가져온 사용자 데이터를 사이드바에 채워줍니다.
         const currentPathname = window.location.pathname;
         if (
-          currentPathname == '/frontend/assets/html/notification.html#' ||
-          currentPathname == '/frontend/assets/html/notification.html'
+          currentPathname == '/assets/html/notification.html#' ||
+          currentPathname == '/assets/html/notification.html'
         ) {
           const email = document.querySelector('#email');
           email.textContent = data['results']['User']['email'];
@@ -345,8 +345,8 @@ document.addEventListener('DOMContentLoaded', function () {
             window.location.href = `following.html`;
           });
         } else if (
-          currentPathname == '/frontend/assets/html/profile_edit.html#' ||
-          currentPathname == '/frontend/assets/html/profile_edit.html'
+          currentPathname == '/assets/html/profile_edit.html#' ||
+          currentPathname == '/assets/html/profile_edit.html'
         ) {
           // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
           const nickname = (document.querySelector('#nickname').value =
@@ -356,41 +356,33 @@ document.addEventListener('DOMContentLoaded', function () {
             imagePreview.src = requestUserProfileImg;
           }
         } else if (
-          currentPathname.startsWith('/frontend/assets/html/follower.html#') ||
-          currentPathname.startsWith('/frontend/assets/html/follower.html')
+          currentPathname.startsWith('/assets/html/follower.html#') ||
+          currentPathname.startsWith('/assets/html/follower.html')
         ) {
           createFollower(requestUserPk, followingList);
         } else if (
-          currentPathname.startsWith('/frontend/assets/html/following.html#') ||
-          currentPathname.startsWith('/frontend/assets/html/following.html')
+          currentPathname.startsWith('/assets/html/following.html#') ||
+          currentPathname.startsWith('/assets/html/following.html')
         ) {
           createFollowing(requestUserPk, followingList);
         } else if (
-          currentPathname.startsWith(
-            '/frontend/assets/html/user_liked_board.html#'
-          ) ||
-          currentPathname.startsWith(
-            '/frontend/assets/html/user_liked_board.html'
-          )
+          currentPathname.startsWith('/assets/html/user_liked_board.html#') ||
+          currentPathname.startsWith('/assets/html/user_liked_board.html')
         ) {
           createUserLikedBoard(requestUser, requestUserPk, followingList);
         } else if (
-          currentPathname.startsWith(
-            '/frontend/assets/html/user_tagged_board.html#'
-          ) ||
-          currentPathname.startsWith(
-            '/frontend/assets/html/user_tagged_board.html'
-          )
+          currentPathname.startsWith('/assets/html/user_tagged_board.html#') ||
+          currentPathname.startsWith('/assets/html/user_tagged_board.html')
         ) {
           createUserTaggedBoard(requestUser, requestUserPk, followingList);
         } else if (
-          currentPathname == '/frontend/assets/html/pin_list.html#' ||
-          currentPathname == '/frontend/assets/html/pin_list.html'
+          currentPathname == '/assets/html/pin_list.html#' ||
+          currentPathname == '/assets/html/pin_list.html'
         ) {
           createPinList(data);
         } else if (
-          currentPathname.startsWith('/frontend/assets/html/user_info.html#') ||
-          currentPathname.startsWith('/frontend/assets/html/user_info.html')
+          currentPathname.startsWith('/assets/html/user_info.html#') ||
+          currentPathname.startsWith('/assets/html/user_info.html')
         ) {
           createUserInfo(requestUser, requestUserPk, followingList);
         }

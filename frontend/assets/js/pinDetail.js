@@ -1,6 +1,6 @@
 import { PIN_DETAIL, origin } from './data.js';
 import { requestUser } from './data.js';
-import { createPlaceInfo } from '/frontend/assets/js/util/setPlaceInfo.js';
+import { createPlaceInfo } from '/assets/js/util/setPlaceInfo.js';
 
 export function pinDetail() {
   let pinData = null;

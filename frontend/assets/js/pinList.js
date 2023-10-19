@@ -3,7 +3,7 @@ import {
   createMenu,
   createPinData,
   createThumbnailImg,
-} from '/frontend/assets/js/util/getPlaceInfo.js';
+} from '/assets/js/util/getPlaceInfo.js';
 
 export function createPinList(data) {
   const url = 'http://127.0.0.1:8000';

@@ -1,4 +1,4 @@
-import { createBlogEntry } from '/frontend/assets/js/util/boardSlide.js';
+import { createBlogEntry } from '/assets/js/util/boardSlide.js';
 
 export function createTaggedBoard() {
   const params = new URLSearchParams(window.location.search);

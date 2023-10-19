@@ -28,7 +28,7 @@ function signup(email, password) {
     })
     .then((data) => {
       // 회원가입 성공 시 처리
-      window.location.href = '/frontend/index.html';
+      window.location.href = '/index.html';
     })
     .catch((error) => {
       console.log(error, error.message);
