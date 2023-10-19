@@ -26,10 +26,13 @@ export function pinDetail() {
       .then((response) => response.json())
       .then((data) => {
         const newBoards = boards.concat(data.results.Boards);
-        if (data.links.next) { // 다음 페이지가 있다면
+        if (data.links.next) {
+          // 다음 페이지가 있다면
           return fetchUserInfo(data.links.next, newBoards); // 다음 페이지 데이터를 재귀적으로 요청
-        } else { // 더 이상 다음 페이지가 없다면
-          const boardSelectionElement = document.getElementById('boardSelection');
+        } else {
+          // 더 이상 다음 페이지가 없다면
+          const boardSelectionElement =
+            document.getElementById('boardSelection');
 
           while (boardSelectionElement.firstChild) {
             boardSelectionElement.removeChild(boardSelectionElement.firstChild);
@@ -148,7 +151,7 @@ export function pinDetail() {
           if (pinContent.text) {
             pinContentP.textContent = pinContent.text;
           } else {
-            pinContentP.textContent = "입력된 코멘트가 없습니다";
+            pinContentP.textContent = '입력된 코멘트가 없습니다';
           }
 
           infoContainer.appendChild(pinContentP);
@@ -319,61 +322,63 @@ export function pinDetail() {
     });
 
   // 저장 버튼 클릭 이벤트
-  const createButton = document.getElementById('createButton')
+  const createButton = document.getElementById('createButton');
   // 기존의 모든 이벤트 핸들러 제거
   createButton.replaceWith(createButton.cloneNode(true));
   const newCreateButton = document.getElementById('createButton');
   newCreateButton.addEventListener('click', function () {
-      // FormData 객체 생성
-      const formData = new FormData();
+    // FormData 객체 생성
+    const formData = new FormData();
 
-      // 선택된 보드 ID 추가
-      const selectedBoard = document.getElementById('boardSelection').value;
-      formData.append('board_id', selectedBoard);
-      
-      // 입력된 텍스트 추가
-      const textInput = document.getElementById('textInput').value;
-      if (textInput) {
-        formData.append('text', textInput);
-      }
+    // 선택된 보드 ID 추가
+    const selectedBoard = document.getElementById('boardSelection').value;
+    formData.append('board_id', selectedBoard);
 
-      // 업로드된 이미지 추가
-      const uploadedImage = document.getElementById('photoUpload').files[0];
-      if (uploadedImage) {
-        formData.append('photo', uploadedImage);
-      }
+    // 입력된 텍스트 추가
+    const textInput = document.getElementById('textInput').value;
+    if (textInput) {
+      formData.append('text', textInput);
+    }
 
-      if (pinData) {
-        // 필요한 정보들만 선택적으로 추가하기
-        [
-          'category',
-          'title',
-          'place_id',
-          'new_address',
-          'old_address',
-          'lat_lng',
-        ].forEach((key) => {
-          if (pinData.hasOwnProperty(key)) {
-            formData.append(key, pinData[key]);
-          }
-        });
-      }
+    // 업로드된 이미지 추가
+    const uploadedImage = document.getElementById('photoUpload').files[0];
+    if (uploadedImage) {
+      formData.append('photo', uploadedImage);
+    }
 
-      fetch(`${origin}/pin/`, {
-        method: 'POST',
-        credentials: 'include',
-        body: formData,
+    if (pinData) {
+      // 필요한 정보들만 선택적으로 추가하기
+      [
+        'category',
+        'title',
+        'place_id',
+        'new_address',
+        'old_address',
+        'lat_lng',
+      ].forEach((key) => {
+        if (pinData.hasOwnProperty(key)) {
+          formData.append(key, pinData[key]);
+        }
+      });
+    }
+
+    fetch(`${origin}/pin/`, {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // 성공 메시지 출력
+        alert(
+          `'${pinData.title}' 핀을 '${boardData[selectedBoard].title}' 보드에 담았습니다.`
+        );
+        // 페이지 새로 고침
+        displayPinDetail();
+        displayPinContents(1);
       })
-        .then((response) => response.json())
-        .then((data) => {
-          // 성공 메시지 출력
-          alert(`'${pinData.title}' 핀을 '${boardData[selectedBoard].title}' 보드에 담았습니다.`);
-          // 페이지 새로 고침
-          displayPinDetail();
-          displayPinContents(1);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    });
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  });
 }

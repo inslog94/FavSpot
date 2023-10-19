@@ -2,7 +2,6 @@ import { origin } from '/frontend/assets/js/data.js';
 import { sortMouseEvent, sortClickEvent } from './event.js';
 import { notification } from './websocket.js';
 
-
 export async function getPinContentsRequest(id) {
   let url = origin + '/pin/' + id + '/';
 
@@ -28,7 +27,7 @@ export async function getBoardRequest(keyword) {
   const dropOptions = [
     document.querySelector('.drop1'),
     document.querySelector('.drop2'),
-    document.querySelector('.drop3')
+    document.querySelector('.drop3'),
   ];
 
   // 기존의 모든 클릭 이벤트 리스너 제거
@@ -41,13 +40,18 @@ export async function getBoardRequest(keyword) {
   const newDropOptions = [
     document.querySelector('.drop1'),
     document.querySelector('.drop2'),
-    document.querySelector('.drop3')
+    document.querySelector('.drop3'),
   ];
 
   // 각 드롭다운 메뉴 항목에 대해 새로운 마우스 오버/아웃 및 클릭 이벤트 리스너 추가
   newDropOptions.forEach((newDropOption, index) => {
     sortMouseEvent(newDropOption);
-    sortClickEvent(newDropOption, index, "http://127.0.0.1:8000/board", keyword);
+    sortClickEvent(
+      newDropOption,
+      index,
+      'http://127.0.0.1:8000/board',
+      keyword
+    );
   });
 
   const response = await fetch(url, {

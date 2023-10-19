@@ -10,10 +10,12 @@ export function notification(requestUserPk) {
     console.log('WebSocket connection established.');
 
     // 웹소켓 연결 후 읽지 않은 알림 요청 메시지 전송
-    socket.send(JSON.stringify({
-      type: 'check_unread_notifications',
-      user_id: requestUserPk,
-    }));
+    socket.send(
+      JSON.stringify({
+        type: 'check_unread_notifications',
+        user_id: requestUserPk,
+      })
+    );
   });
 
   socket.addEventListener('message', (event) => {
@@ -21,11 +23,13 @@ export function notification(requestUserPk) {
     const message = JSON.parse(event.data);
 
     // 받아온 unread_status에 따라 붉은 점 표시 여부 결정
-    if (message.type === "unread_status") { 
-      document.querySelector('.notification-dot').style.display = message.status ? 'inline' : 'none';
-      
-    // 받아온 알림 메시지 처리
-    } else { 
+    if (message.type === 'unread_status') {
+      document.querySelector('.notification-dot').style.display = message.status
+        ? 'inline'
+        : 'none';
+
+      // 받아온 알림 메시지 처리
+    } else {
       console.log('Received notification:', message.message);
 
       // 받은 알림 메시지를 배열에 추가

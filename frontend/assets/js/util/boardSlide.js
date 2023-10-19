@@ -82,7 +82,7 @@ export function createBlogEntry(board) {
     entryLock.appendChild(lock);
     entryTitle.appendChild(entryLock);
   }
-  
+
   entryTitle.appendChild(titleLink);
   blogDetail.appendChild(entryTitle);
 

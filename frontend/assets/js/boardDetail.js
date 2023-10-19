@@ -43,7 +43,7 @@ export async function boardDetail(data) {
   // 로그인된 유저 이메일 저장
   loggedInUserEmail = data.request_user.email;
   console.log(loggedInUserEmail);
-  
+
   // 유저 이름 설정
   const nameInput = document.querySelector('#headerEmail');
   console.log(nameInput);
@@ -183,7 +183,7 @@ export async function boardDetail(data) {
 
       const imgElement = document.createElement('img');
       if (pin.thumbnail_img) {
-      imgElement.src = pin.thumbnail_img;
+        imgElement.src = pin.thumbnail_img;
       } else {
         imgElement.src =
           'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
@@ -251,7 +251,10 @@ export async function boardDetail(data) {
 
   // 댓글 작성란 유저 프로필 이미지 설정
   const replyprofileImg = document.querySelector('.img-profile');
-  if (data.request_user.profileImg && data.request_user.profileImg != "https://favspot-fin.s3.amazonaws.com/") {
+  if (
+    data.request_user.profileImg &&
+    data.request_user.profileImg != 'https://favspot-fin.s3.amazonaws.com/'
+  ) {
     replyprofileImg.src = data.request_user.profileImg;
   }
 
@@ -360,7 +363,7 @@ export async function boardDetail(data) {
 
   // 좋아요 등록과 해제 기능
   // 로그인하지 않은 유저는 이용할 수 없도록 좋아요 버튼 숨김 처리
-  if (!loggedInUserEmail){
+  if (!loggedInUserEmail) {
     likeButton.style.display = 'none';
   }
 
@@ -413,10 +416,10 @@ export async function boardDetail(data) {
 
   // 댓글 등록 기능
   // 로그인하지 않은 유저는 이용할 수 없도록 댓글 작성란 숨김 처리
-  if (!loggedInUserEmail){
+  if (!loggedInUserEmail) {
     document.getElementById('commentWriteBox').style.display = 'none';
   }
-  
+
   document.getElementById('submit').addEventListener('click', function () {
     var commentText = document.getElementById('commentText').value;
 
@@ -432,32 +435,32 @@ export async function boardDetail(data) {
       .then((data) => {
         location.reload(); // 페이지 새로고침
       })
-      .catch((error) => 
-      console.error('Error:', error
-      ));
+      .catch((error) => console.error('Error:', error));
   });
 
   // 보드 삭제 기능
-  document.getElementById('deleteButton').addEventListener('click', function () {
-    // 삭제 확인 메시지
-    if (window.confirm('보드를 삭제하시겠습니까?')) {
-      fetch(`http://127.0.0.1:8000/board/${selectedPk}/`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((response) => {
-          if (response.status === 204) {
-            window.location.href = 'user_info.html';
-          } else {
-            return response.json();
-          }
+  document
+    .getElementById('deleteButton')
+    .addEventListener('click', function () {
+      // 삭제 확인 메시지
+      if (window.confirm('보드를 삭제하시겠습니까?')) {
+        fetch(`http://127.0.0.1:8000/board/${selectedPk}/`, {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         })
-        .catch((error) => console.error('Error:', error));
-    }
-  });
+          .then((response) => {
+            if (response.status === 204) {
+              window.location.href = 'user_info.html';
+            } else {
+              return response.json();
+            }
+          })
+          .catch((error) => console.error('Error:', error));
+      }
+    });
 }
 
 export function createBoardDetail() {

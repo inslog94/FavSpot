@@ -49,7 +49,7 @@ export function createFollower(requestUserPk, followingList) {
       const changeBtnDiv = document.querySelector('.changeBtn');
       if ((requestUserPk === parseInt(pk)) | (pk == 'me')) {
         button.textContent = 'User Info';
-        button.classList.add('user-info-btn'); 
+        button.classList.add('user-info-btn');
         button.setAttribute('href', 'user_info.html');
       } else if (followingList.includes(data['results']['User']['email'])) {
         button.textContent = 'Unfollow';

@@ -97,7 +97,7 @@ export function displayMainBoards(boards) {
     pageSetting(currentPage);
 
     // 보드 목록 존재에 따른 정렬 기능 표시 여부
-    const sortSelectElement= document.getElementById("sortSelect");
+    const sortSelectElement = document.getElementById('sortSelect');
     if (boards.length === 0) {
       sortSelectElement.style.display = 'none';
     } else {

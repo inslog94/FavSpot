@@ -1,5 +1,10 @@
 import { PIN_DETAIL, origin, CURRENT_PIN, MARKER_IMG } from '../data.js';
-import { createAddress, createMenu, createPinData, createThumbnailImg } from './getPlaceInfo.js';
+import {
+  createAddress,
+  createMenu,
+  createPinData,
+  createThumbnailImg,
+} from './getPlaceInfo.js';
 import { createStaticMap } from './staticMap.js';
 
 export function createPlaceInfo(data = PIN_DETAIL) {

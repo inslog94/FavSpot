@@ -1,6 +1,10 @@
 import { createBlogEntry } from '/frontend/assets/js/util/boardSlide.js';
 
-export function createUserTaggedBoard(requestUser, requestUserPk, followingList) {
+export function createUserTaggedBoard(
+  requestUser,
+  requestUserPk,
+  followingList
+) {
   const params = new URLSearchParams(window.location.search);
   let pk = params.get('pk');
   if (!pk) {

@@ -68,12 +68,18 @@
                             ></span>
                             <span class="small">following</span>
                           </a>
-                          <a id="unfollow" type="button" class="btn btn-primary mt-1 user-info-btn" href="user_info.html" style="display: block;">User Info</a>
+                          <a
+                            id="unfollow"
+                            type="button"
+                            class="btn btn-primary mt-1 user-info-btn"
+                            href="user_info.html"
+                            style="display: block"
+                            >User Info</a
+                          >
                         </div>
                       </div>
                     </div>
                   </div>
-
                 </div>
                 <!-- 리스트 -->
                 <div
@@ -82,13 +88,26 @@
                 >
                   <div class="d-flex align-items-end mb-3">
                     <div id="checkedCountContainer" class="flex-grow-1">
-                        <span id="checkedCount" class="h6"></span>
+                      <span id="checkedCount" class="h6"></span>
                     </div>
-                    <div id="buttonContainer" class="d-flex justify-content-end flex-grow-1">
-                        <button class="readAllButton btn btn-primary" style="visibility: hidden">읽음</button>
-                        <button class="deleteAllButton btn btn-danger ml-10" style="visibility: hidden">삭제</button>
+                    <div
+                      id="buttonContainer"
+                      class="d-flex justify-content-end flex-grow-1"
+                    >
+                      <button
+                        class="readAllButton btn btn-primary"
+                        style="visibility: hidden"
+                      >
+                        읽음
+                      </button>
+                      <button
+                        class="deleteAllButton btn btn-danger ml-10"
+                        style="visibility: hidden"
+                      >
+                        삭제
+                      </button>
                     </div>
-                </div>
+                  </div>
                   <table class="table">
                     <thead>
                       <tr>
@@ -97,7 +116,7 @@
                         <th>Type</th>
                         <th>Sender</th>
                         <th>Time</th>
-                        <th><input type="checkbox" id="checkAll"></th>
+                        <th><input type="checkbox" id="checkAll" /></th>
                       </tr>
                     </thead>
                     <tbody id="notificationList"></tbody>

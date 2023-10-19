@@ -218,7 +218,7 @@ function boardCloseModalBtnEvent() {
   // 보드 생성 모달 '생성' 클릭 이벤트
   $boardModalSaveBtn.addEventListener('click', async () => {
     let title = $boardModalTitleInput.value;
-    let tagsInput  = $boardModalTagsInput.value
+    let tagsInput = $boardModalTagsInput.value;
 
     // 태그 입력값이 비어 있지 않은 경우에만 split 실행
     let tags = tagsInput ? tagsInput.split(',') : [];
@@ -344,7 +344,8 @@ export async function boardDetailSetUp() {
     .then(async (data) => {
       // 핀이 존재하지 않는 보드의 경우 지도 미표시
       if (data.pins.length === 0) {
-        document.querySelector(".entry-image.clearfix.map").style.display = 'none';
+        document.querySelector('.entry-image.clearfix.map').style.display =
+          'none';
       }
       await boardDetail(data);
       setMarkersFromServer(CURRENT_PINS.value);
@@ -388,28 +389,28 @@ window.onload = function init() {
 // 메인페이지 보드 목록 정렬
 // 마우스 오버/아웃 이벤트 핸들러
 export function sortMouseEvent(dropOption) {
-  dropOption.addEventListener('mouseover', function() {
+  dropOption.addEventListener('mouseover', function () {
     this.style.backgroundColor = '#FFFFFF';
     this.style.color = '#000000';
     this.style.cursor = 'pointer';
   });
 
-  dropOption.addEventListener('mouseout', function() {
+  dropOption.addEventListener('mouseout', function () {
     this.style.backgroundColor = 'rgb(247 224 224)';
   });
 }
 
 // 클릭 이벤트 핸들러
 export function sortClickEvent(dropOption, index, base_url, keyword = null) {
-  dropOption.addEventListener('click', function() {
+  dropOption.addEventListener('click', function () {
     let sort;
     let url;
 
-    if (index === 0) { 
+    if (index === 0) {
       sort = 'created';
-    } else if (index === 1) { 
+    } else if (index === 1) {
       sort = 'like';
-    } else if (index ===2) { 
+    } else if (index === 2) {
       sort = 'pin';
     }
 
@@ -421,17 +422,17 @@ export function sortClickEvent(dropOption, index, base_url, keyword = null) {
     }
 
     fetch(url)
-      .then(response => response.json())
-      .then(data => displayMainBoards(data.boards))
-      .catch(error => console.error('Error:', error));
+      .then((response) => response.json())
+      .then((data) => displayMainBoards(data.boards))
+      .catch((error) => console.error('Error:', error));
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   const dropOptions = [
     document.querySelector('.drop1'),
     document.querySelector('.drop2'),
-    document.querySelector('.drop3')
+    document.querySelector('.drop3'),
   ];
 
   const currentPathname = window.location.pathname;

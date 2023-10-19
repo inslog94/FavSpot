@@ -244,13 +244,20 @@ document.addEventListener('DOMContentLoaded', function () {
   let path = window.location.pathname;
   let page = path.split('/').pop();
 
-  if (page === 'login.html' && loginCheckCookieValue === 'True' || page === 'signup.html' && loginCheckCookieValue === 'True') {
+  if (
+    (page === 'login.html' && loginCheckCookieValue === 'True') ||
+    (page === 'signup.html' && loginCheckCookieValue === 'True')
+  ) {
     // 이미 로그인된 유저가 로그인 또는 회원가입 페이지에 접근하려 할 경우 메인 페이지로 리다이렉트
     window.location.href = '/frontend/index.html';
     return;
   }
 
-  if (page === 'login.html' || (loginCheckCookieValue === 'False' && page === 'board_detail.html') || page === 'signup.html') {
+  if (
+    page === 'login.html' ||
+    (loginCheckCookieValue === 'False' && page === 'board_detail.html') ||
+    page === 'signup.html'
+  ) {
     return;
   }
 
