@@ -1,0 +1,65 @@
+.text-cell {
+  width: 350px; /* 원하는 너비로 설정 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: keep-all;
+}
+
+.pin-cell {
+  width: 170px; /* 원하는 너비로 설정 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#edit-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+#photoUpload {
+  width: 200px;
+  height: 40px;
+}
+
+#textUpload {
+  width: 300px;
+  padding-left: 10px;
+  resize: vertical;
+}
+
+.submitbtn {
+  background-color: darkorange;
+  color: white;
+  padding: 14px, 20 px;
+  margin: 8 px, 0;
+  border: none;
+  cursor: pointer;
+  width: 72px;
+  height: 43.5px;
+}
+
+.read-notification {
+  background-color: #f0f0f0; /* 연한 회색 */
+}
+
+.inputImage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: none !important;
+}
+
+.inputDiv {
+  display: flex;
+  flex-direction: column;
+}
+
+#uploadButton {
+  border: none;
+  border-radius: 5px;
+  padding: 5px 0px 5px 0px;
+  color: white;
+  background-color: royalblue;
+}
