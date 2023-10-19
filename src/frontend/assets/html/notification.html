@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="keywords" content="HTML5 Template" />
+    <meta
+      name="description"
+      content="Webster - Responsive Multi-purpose HTML5 Template"
+    />
+    <meta name="author" content="potenzaglobalsolutions.com" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <title>FavSpot - Notification</title>
+
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      href="https://favspot-fin.s3.amazonaws.com/images/default/favicon.png"
+    />
+    <link rel="stylesheet" href="../css/template/bootstrap.css" />
+  </head>
+  <body>
+    <div id="main-container">
+      <section class="wishlist-page page-section-ptb" style="height: 98.75%">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 col-md-12">
+              <div class="section-title text-center">
+                <h6 class="">Check Your Notifications</h6>
+                <h2 class="title-effect">Notifications</h2>
+              </div>
+
+              <div id="main" class="row">
+                <div class="col-lg-3">
+                  <div class="sidebar-widget">
+                    <div class="team team-round full-border">
+                      <div class="team-photo">
+                        <img
+                          id="profileImg"
+                          class="img-fluid mx-auto"
+                          style="object-fit: cover; width: 215px; height: 215px"
+                          src="https://favspot-fin.s3.amazonaws.com/images/default/default_user_clear.png"
+                          alt=""
+                        />
+                      </div>
+                      <div class="team-description">
+                        <div class="team-info">
+                          <h6 id="email"></h6>
+                          <span id="nickname"></span>
+                        </div>
+                        <div>
+                          <i class="fa fa-user"></i>
+                          <a id="followers" href="#">
+                            <span
+                              class="followers"
+                              class="fw-bold small"
+                            ></span>
+                            <span class="small">followers</span>
+                          </a>
+                          <span>|</span>
+                          <a id="following" href="#">
+                            <span
+                              class="following"
+                              class="fw-bold small"
+                            ></span>
+                            <span class="small">following</span>
+                          </a>
+                          <a
+                            id="unfollow"
+                            type="button"
+                            class="btn btn-primary mt-1 user-info-btn"
+                            href="user_info.html"
+                            style="display: block"
+                            >User Info</a
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 리스트 -->
+                <div
+                  class="table-responsive col-lg-9"
+                  style="padding-bottom: 140px"
+                >
+                  <div class="d-flex align-items-end mb-3">
+                    <div id="checkedCountContainer" class="flex-grow-1">
+                      <span id="checkedCount" class="h6"></span>
+                    </div>
+                    <div
+                      id="buttonContainer"
+                      class="d-flex justify-content-end flex-grow-1"
+                    >
+                      <button
+                        class="readAllButton btn btn-primary"
+                        style="visibility: hidden"
+                      >
+                        읽음
+                      </button>
+                      <button
+                        class="deleteAllButton btn btn-danger ml-10"
+                        style="visibility: hidden"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </div>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Read</th>
+                        <th>Message</th>
+                        <th>Type</th>
+                        <th>Sender</th>
+                        <th>Time</th>
+                        <th><input type="checkbox" id="checkAll" /></th>
+                      </tr>
+                    </thead>
+                    <tbody id="notificationList"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script type="module">
+      import { loadAllScripts } from '/assets/js/util/script.js';
+      import { createPreloader } from '/assets/js/util/preloader.js';
+      import { createHeader } from '/assets/js/util/header.js';
+      import { createFooter } from '/assets/js/util/footer.js';
+      import { createNotifications } from '/assets/js/notifications.js';
+      loadAllScripts();
+      createPreloader();
+      createHeader();
+      createFooter();
+      createNotifications();
+    </script>
+  </body>
+</html>

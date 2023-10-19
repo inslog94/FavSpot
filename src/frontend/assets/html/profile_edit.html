@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="keywords" content="HTML5 Template" />
+    <meta
+      name="description"
+      content="Webster - Responsive Multi-purpose HTML5 Template"
+    />
+    <meta name="author" content="potenzaglobalsolutions.com" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <title>FavSpot - User Profile Edit</title>
+
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      href="https://favspot-fin.s3.amazonaws.com/images/default/favicon.png"
+    />
+    <link rel="stylesheet" href="../css/template/bootstrap.css" />
+  </head>
+  <body>
+    <div id="main-container">
+      <!--=================================
+ Register-->
+
+      <section
+        class="white-bg page-section-ptb o-hidden pt-30"
+        style="height: 98.75%"
+      >
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 col-md-12">
+              <div class="section-title text-center">
+                <h6 class="">Can change your Profile and Password</h6>
+                <h2 class="title-effect">User Profile Edit</h2>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center" style="padding-bottom: 140px">
+            <div class="col-lg-8 col-md-10">
+              <div id="register-form" class="register-form">
+                <form class="profileEdit" method="post">
+                  <hr class="mt-50" />
+                  <h4 class="title-effect mt-20 mb-20">Profile Update</h4>
+                  <div class="section-field">
+                    <label class="form-label" for="nickname">Nickname</label>
+                    <div class="field-widget">
+                      <input
+                        id="nickname"
+                        class="web form-control"
+                        type="text"
+                        placeholder="Enter your nickname"
+                        name="nickname"
+                      />
+                    </div>
+                  </div>
+                  <label class="form-label mr-3" for="profileImg"
+                    >Profile Image</label
+                  >
+                  <div class="section-field d-flex align-items-end">
+                    <div style="width: 120px; height: 100px">
+                      <img
+                        id="imagePreview"
+                        style="
+                          object-fit: cover;
+                          width: 100%;
+                          height: 100%;
+                          border-radius: 3px;
+                        "
+                        src="https://favspot-fin.s3.amazonaws.com/images/default/default_user.png"
+                        alt="profileImg"
+                      />
+                    </div>
+                    <input
+                      id="profileImg"
+                      class="profileImg gui-input form-control"
+                      type="file"
+                      accept=".jpg, .jpeg, .png"
+                      placeholder="Upload your Profile Image"
+                      name="profileImg"
+                    />
+                  </div>
+
+                  <div class="pwChange">
+                    <hr class="mt-50" />
+                    <h4 class="title-effect mt-20 mb-20">Password Change</h4>
+                    <div class="section-field">
+                      <label class="form-label" for="currentPassword"
+                        >Current Password*
+                      </label>
+                      <div class="field-widget">
+                        <input
+                          id="currentPassword"
+                          class="Password form-control"
+                          type="password"
+                          placeholder="Current Password"
+                          name="currentPassword"
+                        />
+                      </div>
+                    </div>
+                    <div class="section-field mt-40">
+                      <label class="form-label" for="newPassword1"
+                        >New Password1*
+                      </label>
+                      <div class="field-widget">
+                        <input
+                          id="newPassword1"
+                          class="Password form-control"
+                          type="password"
+                          placeholder="New Password"
+                          name="newPassword1"
+                        />
+                      </div>
+                    </div>
+                    <div class="section-field">
+                      <label class="form-label" for="newPassword2"
+                        >New Password2*
+                      </label>
+                      <div class="field-widget">
+                        <input
+                          id="newPassword2"
+                          class="Password form-control"
+                          type="password"
+                          placeholder="New Password Check"
+                          name="newPassword2"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <p id="passwordError" class="text-danger"></p>
+                    </div>
+                  </div>
+                  <button class="button mt-40" type="submit">
+                    <span>Update</span>
+                    <i class="fa fa-check"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script type="module">
+      import { loadAllScripts } from '/assets/js/util/script.js';
+      import { createPreloader } from '../js/util/preloader.js';
+      import { createHeader } from '../js/util/header.js';
+      import { createFooter } from '../js/util/footer.js';
+      import { createProfileEdit } from '../js/profileEdit.js';
+      loadAllScripts();
+      createPreloader();
+      createHeader();
+      createFooter();
+      createProfileEdit();
+    </script>
+  </body>
+</html>
