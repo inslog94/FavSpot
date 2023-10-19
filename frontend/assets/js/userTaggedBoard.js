@@ -106,6 +106,11 @@ export function createUserTaggedBoard(requestUser, requestUserPk, followingList)
         });
       } else {
         button.textContent = 'Follow';
+
+        button3.textContent = 'Liked Board';
+        button3.style.display = 'block';
+        button3.setAttribute('href', `user_liked_board.html?pk=${pk}`);
+
         button.addEventListener('click', () => {
           fetch(`http://127.0.0.1:8000/user/follow/`, {
             method: 'POST',
@@ -125,8 +130,8 @@ export function createUserTaggedBoard(requestUser, requestUserPk, followingList)
             .catch((error) => console.error('Error:', error));
         });
       }
-      changeBtnDiv.appendChild(button3);
       changeBtnDiv.appendChild(button);
+      changeBtnDiv.appendChild(button3);
 
       const tags = data['results']['User']['tags'];
       tags.forEach((tag) => {

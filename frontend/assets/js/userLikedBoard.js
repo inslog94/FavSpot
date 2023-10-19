@@ -162,7 +162,10 @@ export function createUserLikedBoard(requestUser, requestUserPk, followingList) 
           'Content-Type': 'application/json',
         },
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
         .then((data2) => {
           // 데이터를 보여주는 함수에 가져온 데이터 전달
           fetchdata = data2;
@@ -172,6 +175,12 @@ export function createUserLikedBoard(requestUser, requestUserPk, followingList) 
 
       // 데이터를 보여주는 함수
       function showBoards(boards) {
+        // boards가 undefined인 경우, 함수 종료
+        if (!boards) {
+          // console.error('Error: boards is undefined');
+          return;
+        }
+
         // 기존 데이터를 모두 제거
         while (parentElement.firstChild) {
           parentElement.removeChild(parentElement.firstChild);
