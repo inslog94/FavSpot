@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const nickname = (document.querySelector('#nickname').value =
             data['results']['User']['nickname']);
           const imagePreview = document.getElementById('imagePreview');
-          if (profileImg) {
+          if (requestUserProfileImg) {
             imagePreview.src = requestUserProfileImg;
           }
         } else if (
