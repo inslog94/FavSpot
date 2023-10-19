@@ -1,0 +1,211 @@
+body {
+  overflow: hidden;
+}
+
+.modal-content {
+  width: 900px;
+  position: absolute;
+  top: 50%;
+  right: -3%;
+}
+
+.modal-title {
+  width: 800px;
+}
+
+.blog-entry .entry-image img {
+  width: 800px;
+  height: 400px;
+}
+.masonry-item {
+  display: inline-block;
+  width: 250px;
+}
+img {
+  object-fit: cover !important;
+}
+.swiper-slide {
+  height: 250px;
+}
+
+/* Flex 컨테이너 스타일 */
+#main-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* 헤더 스타일 */
+header {
+  text-align: center;
+}
+
+/* 메인 콘텐츠 스타일 */
+main {
+  flex: 1; /* 남은 공간을 채우도록 설정 */
+  align-items: center;
+}
+
+/* 푸터 스타일 */
+footer {
+  position: sticky;
+  bottom: 0;
+}
+
+.row div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.text-start {
+  text-align: right !important;
+}
+
+#main_board {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: auto;
+  width: auto;
+  padding: 0 5px 0 5px;
+  margin-top: 8px;
+}
+
+@media (max-width: 1835px) {
+  #main_board {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1835px) and (max-width: 2850px) {
+  #main_board {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 2850px) {
+  #main_board {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 3150px) {
+  #main_board {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
+
+/* 가로폭과 세로폭(1310px)이 함께 작아질 때 */
+@media (max-height: 1310px) and (max-width: 1835px) {
+  #main_board {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+}
+
+@media (max-height: 1310px) and (min-width: 1835px) and (max-width: 2850px) {
+  #main_board {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+}
+
+@media (max-height: 1310px) and (min-width: 2850px) and (max-width: 3150px) {
+  #main_board {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+}
+
+@media (max-height: 1310px) and (min-width: 3150px) {
+  #main_board {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+}
+
+/* 가로폭과 세로폭(935px)이 함께 작아질 때 */
+@media (max-height: 935px) and (max-width: 1835px) {
+  #main_board {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+  }
+}
+
+@media (max-height: 935px) and (min-width: 1835px) and (max-width: 2850px) {
+  #main_board {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+  }
+}
+@media (max-height: 935px) and (min-width: 2850px) and (max-width: 3150px) {
+  #main_board {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+  }
+}
+
+@media (max-height: 935px) and (min-width: 3150px) {
+  #main_board {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+  }
+}
+
+@media (max-width: 888px) {
+  .right-footer {
+    display: none;
+  }
+  footer {
+    text-align: center;
+  }
+  .left-footer {
+    width: 100% !important;
+  }
+}
+
+@media (max-height: 569px) {
+  body {
+    display: none;
+  }
+}
+.blog-detail {
+  padding: 10px 30px 10px 30px !important;
+}
+.entry-title a {
+  font-size: 16px !important;
+  font-weight: bold !important;
+}
+/* Swiper 컨테이너 스타일 */
+.swiper-container {
+  width: 100%; /* 슬라이더 컨테이너의 너비를 100%로 설정 */
+  overflow: hidden; /* 넘치는 부분을 숨김 */
+  position: relative; /* 포지션을 상대적으로 설정하여 내부 요소의 위치를 조정 */
+}
+
+/* 슬라이더 영역 스타일 */
+.swiper-wrapper {
+  display: flex; /* 슬라이드를 가로로 나열하기 위해 플렉스 디스플레이 사용 */
+  transition: transform 0.3s ease-in-out; /* 슬라이더 이동에 트랜지션 효과 적용 */
+}
+
+/* 슬라이드 스타일 */
+.swiper-slide {
+  width: 100%; /* 슬라이드 너비를 100%로 설정하여 한 번에 하나만 보이도록 함 */
+}
+
+#logo-img:hover {
+  cursor: pointer;
+}
+
+.drop1,
+.drop2,
+.drop3 {
+  color: #000000 !important;
+  padding: 10px 30px;
+}

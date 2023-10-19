@@ -1,0 +1,90 @@
+.port-post-photo img {
+  width: 170px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.entry-image img {
+  border-radius: 2px;
+}
+
+.title-wrap {
+  padding-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#myModalLabel {
+  margin-bottom: 20px;
+}
+
+#saveButton {
+  position: relative;
+  top: -10px; /* 원하는 만큼의 상단 이동 값 */
+  width: 100px;
+}
+
+#pinCreationSteps {
+  border: solid 1px #ccc;
+  padding: 10px;
+  margin: 10px 0 30px 0;
+}
+
+#pinCreationSteps .step {
+  margin-bottom: 20px; /* 각 단계 사이의 간격 */
+}
+
+.buttons-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.buttons-wrap button {
+  margin: 0 100px 0 100px;
+}
+
+.pin-con .fa-times {
+  display: flex;
+  flex-direction: row-reverse;
+  color: red;
+  cursor: pointer;
+}
+
+.section-title .blog-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.section-title .blog-entry .blog-detail {
+  position: relative;
+  top: -60px; /* 원하는 만큼의 상단 이동 값 */
+  width: 740px;
+}
+
+.modal-content {
+  width: 900px;
+  position: absolute;
+  top: 50%;
+  right: -3%;
+}
+
+.modal-title {
+  width: 800px;
+}
+
+.blog-entry .entry-image img {
+  width: 800px;
+  height: 400px;
+}
+
+.blog-detail {
+  padding: 10px 30px 10px 30px !important;
+}
+
+.entry-title a {
+  font-size: 16px !important;
+  font-weight: bold !important;
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>FavSpot</title>
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      href="https://favspot-fin.s3.amazonaws.com/images/default/favicon.png"
+    />
+    <link rel="stylesheet" href="assets/css/template/bootstrap.css" />
+    <link rel="stylesheet" href="assets/css/index.css" />
+  </head>
+  <body>
+    <div id="main-container"></div>
+    <script type="module">
+      import { loadAllScripts } from '/assets/js/util/script.js';
+      import { createPreloader } from '/assets/js/util/preloader.js';
+      import { createPinDetail } from '/assets/js/util/pinDetailModal.js';
+      import { createHeader } from '/assets/js/util/header.js';
+      import { createMainPage } from '/assets/js/index.js';
+      import { createFooter } from '/assets/js/util/footer.js';
+      import { createBoard } from '/assets/js/util/boardCreateModal.js';
+      loadAllScripts();
+      createPreloader();
+      createPinDetail();
+      createHeader();
+      createMainPage();
+      createFooter();
+      createBoard();
+    </script>
+
+    <!-- kakao map -->
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=db5b73af306ab23a5a023f575a474746&libraries=services,clusterer,drawing"
+    ></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=db5b73af306ab23a5a023f575a474746"></script>
+
+    <!-- map -->
+    <script type="module" src="/assets/js/event.js"></script>
+    <script type="module" src="/assets/js/data.js"></script>
+    <script type="module" src="/assets/js/map.js"></script>
+  </body>
+</html>

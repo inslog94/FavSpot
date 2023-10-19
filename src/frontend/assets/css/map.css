@@ -1,0 +1,670 @@
+a {
+  text-decoration: none;
+}
+/* a:visited {
+  color: black;
+} */
+.map_wrap,
+.map_wrap * {
+  margin: 0;
+  padding: 0;
+  font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+  font-size: 12px;
+}
+.map_wrap a,
+.map_wrap a:hover,
+.map_wrap a:active {
+  color: #000;
+  text-decoration: none;
+}
+.map_wrap {
+  display: inline-block;
+  position: relative;
+  width: 90%;
+  height: 90vh;
+  border-radius: 15px;
+}
+#map {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+}
+#static_map {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+}
+#search_result_box {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  margin: 10px 0 30px 10px;
+  padding: 5px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+  font-size: 12px;
+  border-radius: 10px;
+}
+.bg_white {
+  background: #fff;
+}
+#search_result_box hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 2px solid #5f5f5f;
+  margin: 3px 0;
+}
+#search_result_box .option {
+  text-align: center;
+}
+#search_result_box .option p {
+  margin: 10px 0;
+}
+#search_result_box .option button {
+  margin-left: 5px;
+}
+#search_results li {
+  list-style: none;
+}
+#search_results .item {
+  position: relative;
+  border-bottom: 1px solid #888;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 65px;
+}
+#search_results .item span {
+  display: block;
+  margin-top: 4px;
+}
+#search_results .item h5,
+#search_results .item .info {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#search_results .item .info {
+  padding: 10px 0 10px 55px;
+}
+#search_results .info .gray {
+  color: #8a8a8a;
+}
+#search_results .info .jibun {
+  padding-left: 26px;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png)
+    no-repeat;
+}
+#search_results .info .tel {
+  color: #009900;
+}
+#search_results .item .markerbg {
+  float: left;
+  position: absolute;
+  width: 36px;
+  height: 37px;
+  margin: 10px 0 0 10px;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
+    no-repeat;
+}
+#search_results .item .marker_1 {
+  background-position: 0 -10px;
+}
+#search_results .item .marker_2 {
+  background-position: 0 -56px;
+}
+#search_results .item .marker_3 {
+  background-position: 0 -102px;
+}
+#search_results .item .marker_4 {
+  background-position: 0 -148px;
+}
+#search_results .item .marker_5 {
+  background-position: 0 -194px;
+}
+#search_results .item .marker_6 {
+  background-position: 0 -240px;
+}
+#search_results .item .marker_7 {
+  background-position: 0 -286px;
+}
+#search_results .item .marker_8 {
+  background-position: 0 -332px;
+}
+#search_results .item .marker_9 {
+  background-position: 0 -378px;
+}
+#search_results .item .marker_10 {
+  background-position: 0 -423px;
+}
+#search_results .item .marker_11 {
+  background-position: 0 -470px;
+}
+#search_results .item .marker_12 {
+  background-position: 0 -516px;
+}
+#search_results .item .marker_13 {
+  background-position: 0 -562px;
+}
+#search_results .item .marker_14 {
+  background-position: 0 -608px;
+}
+#search_results .item .marker_15 {
+  background-position: 0 -654px;
+}
+#search_pagination {
+  margin: 10px auto;
+  text-align: center;
+}
+#search_pagination a {
+  display: inline-block;
+  margin-right: 10px;
+}
+#search_pagination .on {
+  font-weight: bold;
+  cursor: default;
+  color: #777;
+}
+
+.overlaybox {
+  width: 130%;
+  height: 120px;
+  border: 1px solid lightgray;
+  border-radius: 6px;
+  background-color: white;
+  overflow: scroll;
+}
+.overlayinfo:not(:last-child) {
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid lightgray;
+}
+.overlayinfo:last-child {
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.marker_overlay_box {
+  position: absolute;
+  left: 0;
+  bottom: 40px;
+  min-width: 380px;
+  min-height: 190px;
+  margin-left: -188px;
+  text-align: left;
+  overflow: hidden;
+  font-size: 12px;
+  font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+  line-height: 1.5;
+}
+.marker_overlay_box * {
+  padding: 0;
+  margin: 0;
+}
+.marker_overlay_box .marker_overlay_content {
+  min-width: 380px;
+  min-height: 180px;
+  border-radius: 20px;
+  border-bottom: 2px solid #ccc;
+  border-right: 1px solid #ccc;
+  overflow: hidden;
+  background: #fff;
+}
+.marker_overlay_box .marker_overlay_content:nth-child(1) {
+  border: 0;
+  box-shadow: 0px 1px 2px #888;
+}
+.marker_overlay_content .title_box {
+  padding: 2% 6%;
+  background: #eee;
+  border-bottom: 1px solid #ddd;
+}
+.marker_overlay_content .title_box .title {
+  font-size: 18px;
+  font-weight: bold;
+}
+.marker_overlay_content .title_box .category {
+  margin-left: 5px;
+  color: gray;
+}
+.marker_overlay_content .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #888;
+  width: 17px;
+  height: 17px;
+  background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+}
+.marker_overlay_content .close:hover {
+  cursor: pointer;
+}
+.marker_overlay_content .body {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+.marker_overlay_content .desc {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 130px;
+}
+.desc .ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.desc .jibun {
+  font-size: 11px;
+  color: #888;
+  margin-top: -0.5px;
+}
+.desc .phone {
+  margin-top: 5px;
+}
+.desc .func {
+  margin-top: 20px;
+  display: flex;
+}
+.desc .func .btn {
+  display: block;
+  width: 58px;
+  height: 27px;
+  background: white;
+  padding: 0px;
+  text-align: center;
+  color: black;
+  line-height: 25px;
+  border: 1px solid #ff5757;
+  border-radius: 10px;
+}
+.desc .func .btn:hover {
+  width: 58px;
+  height: 27px;
+  background: #ff5757;
+  color: white;
+}
+.desc .func .btn:nth-child(n + 2) {
+  margin-left: 7px;
+}
+.marker_overlay_content .img {
+  width: 140px;
+  height: 130px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  color: #888;
+  overflow: hidden;
+}
+.marker_overlay_content .img > img {
+  width: 140px;
+  height: 130px;
+  object-fit: cover;
+}
+.marker_overlay_content:after {
+  content: '';
+  position: absolute;
+  margin-left: -12px;
+  left: 50%;
+  bottom: 0;
+  width: 22px;
+  height: 12px;
+  background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
+}
+.marker_overlay_content .link {
+  color: #5085bb;
+}
+
+.pin_save_overlay {
+  width: 300px;
+  min-height: 150px;
+  max-height: 300px;
+  background-color: white;
+  border: 1px solid gray;
+  border-radius: 10px;
+  overflow-y: scroll;
+  padding: 0px 10px 10px 10px;
+}
+.pin_save_overlay::-webkit-scrollbar {
+  width: 6px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.pin_save_overlay::-webkit-scrollbar-thumb {
+  background: lightsteelblue;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.pin_save_board {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  align-items: center;
+  border-radius: 5px;
+  padding: 5px;
+}
+.pin_save_board > div:first-child {
+  display: flex;
+  align-items: center;
+}
+.pin_save_board:hover {
+  background: #e9e9e9;
+}
+.pin_save_btn {
+  width: 40px;
+  height: 30px;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #ff5757;
+  color: black;
+  text-align: center;
+  line-height: 30px;
+}
+.pin_save_btn:hover {
+  background: #ff5757;
+  color: white;
+}
+.pin_save_btn:active {
+  width: 38px;
+  height: 28px;
+}
+.pin_saved_btn {
+  width: 50px;
+  height: 30px;
+  background: #ff5757;
+  border-radius: 10px;
+  color: white;
+  text-align: center;
+  line-height: 30px;
+  font-size: 13px;
+}
+.pin_saved_btn:hover {
+  background: #b54d4d;
+  color: white;
+}
+
+.board_add_box {
+  display: flex;
+  align-items: center;
+  box-shadow: 2px -4px 2px rgba(0, 0, 0, 0.2);
+  margin-top: 10px;
+  border-radius: 5px;
+  padding: 5px;
+  height: 50px;
+}
+.board_add_box:hover {
+  background: #e9e9e9;
+}
+
+.board_add_box > span:first-child {
+  font-size: 18px;
+}
+.board_add_modal_cls {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.board_add_modal_content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 55px 70px 100px 70px;
+  border-radius: 20px;
+  height: 300px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation-duration: 0.5s;
+  animation-name: board_modal_display;
+}
+@keyframes board_modal_display {
+  from {
+    margin-top: 18%;
+  }
+
+  to {
+    margin-top: 15%;
+  }
+}
+
+.board_add_modal_content > div:first-child {
+  margin-bottom: 40px;
+  font-size: 25px;
+}
+.board_add_modal_content > div:nth-child(2) > div:nth-child(2) {
+  display: none;
+}
+.board_add_modal_content > div:nth-child(2) > div:nth-child(2) span {
+  font-size: 12px;
+}
+
+.board_add_modal_content > div:nth-child(2) div {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  animation-duration: 0.8s;
+  animation-name: input_box_in;
+}
+@keyframes input_box_in {
+  from {
+    margin-left: 5%;
+  }
+
+  to {
+    margin-left: 0px;
+  }
+}
+.board_add_modal_content > div:nth-child(2) div > *:first-child {
+  color: gray;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+.board_add_modal_content > div:nth-child(2) input {
+  width: 300px;
+  height: 32px;
+  border: 1px solid gray;
+  border-radius: 20px;
+  text-indent: 15px;
+}
+
+.board_add_modal_content > div:nth-child(n + 3) {
+  width: 60px;
+  line-height: 40px;
+  background: #ff5757;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  margin-top: 30px;
+  margin-left: 245px;
+}
+.board_add_modal_content > div:nth-child(n + 3):hover {
+  background: #b54d4d;
+  cursor: pointer;
+}
+.board_add_modal_content > div:nth-child(n + 3):active {
+  width: 58px;
+  height: 38px;
+}
+.board_add_modal_content > div:nth-child(4) {
+  display: none;
+  position: absolute;
+  top: 197px;
+}
+
+#board_add_confirm_btn {
+  width: 60px;
+  line-height: 40px;
+  background: #ff5757;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  margin-top: 30px;
+}
+#board_add_confirm_btn:hover {
+  background: #b54d4d;
+  cursor: pointer;
+}
+#board_add_confirm_btn:active {
+  width: 58px;
+  height: 38px;
+}
+
+header {
+  display: flex;
+  height: 4.5rem;
+  align-items: center;
+}
+header > div:first-child {
+  width: 48%;
+}
+header > div:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+header .img_box {
+  display: flex;
+  width: 100px;
+  height: 100%;
+  margin: 0 auto;
+}
+header .img_box > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.account_box {
+  width: 200px;
+  height: 45px;
+  margin-left: 450px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.account_login_cls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50px;
+  height: 60px;
+}
+.account_login_cls img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+#account_login_btn:hover {
+  cursor: pointer;
+}
+.account_login_option_cls {
+  display: none;
+  width: 90px;
+  margin-top: 10px;
+  border: 1px solid black;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  border-radius: 10px;
+}
+.account_login_option_cls > div {
+  height: 25px;
+  margin: 7px 0px;
+  line-height: 20px;
+}
+.account_login_option_cls > div:hover {
+  cursor: pointer;
+  border-bottom: 1px solid gray;
+}
+
+.account_anonymous_cls {
+  display: none;
+  width: 200px;
+  align-items: center;
+  justify-content: center;
+}
+.account_anonymous_cls a:nth-child(2) {
+  margin-left: 20px;
+}
+
+.main_board_list {
+  width: 38%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+  padding-left: 20px;
+}
+.main_board_list .board_set {
+  width: 100%;
+  display: flex;
+  height: 25vh;
+  margin-top: 1rem;
+  animation-duration: 0.4s;
+  animation-name: border_set_in;
+}
+@keyframes border_set_in {
+  from {
+    margin-top: 1.5rem;
+  }
+
+  to {
+    margin-top: 1rem;
+  }
+}
+.board_set .board {
+  width: 48%;
+  margin-right: 20px;
+  height: 100%;
+}
+.board .img_box {
+  height: 80%;
+  border: 1px solid black;
+  border-radius: 15px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+.board .img_box:hover {
+  cursor: pointer;
+}
+.img_box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.board .info {
+  height: 20%;
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+.board .info > div:first-child {
+  display: flex;
+  justify-content: space-between;
+}
+.board .info > div:last-child {
+  margin-top: -1px;
+  color: gray;
+  font-size: 14px;
+}
+
+.full_screen_btn {
+  display: none;
+}
