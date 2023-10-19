@@ -251,7 +251,7 @@ export async function boardDetail(data) {
 
   // 댓글 작성란 유저 프로필 이미지 설정
   const replyprofileImg = document.querySelector('.img-profile');
-  if (data.request_user.profileImg) {
+  if (data.request_user.profileImg && data.request_user.profileImg != "https://favspot-fin.s3.amazonaws.com/") {
     replyprofileImg.src = data.request_user.profileImg;
   }
 

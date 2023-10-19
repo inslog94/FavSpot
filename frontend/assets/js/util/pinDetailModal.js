@@ -14,6 +14,13 @@ export function createPinDetail() {
       <div class="modal-title" id="exampleModalLongTitle">
         <div class="section-title mb-10">
           <div class="blog-entry mb-10">
+            <div class="entry-image clearfix">
+            <img
+            class="img-fluid subscribe-icon"
+            src=""
+            alt="thumbnail img"
+          />
+            </div>
             <div class="blog-detail">
               <div class="title-wrap">
                 <h1 id="myModalLabel">Pin title</h1>
@@ -111,6 +118,9 @@ export function createPinDetail() {
     <!-- 핀 콘텐츠가 만들어질 컨테이너 -->
     <div id="pinContentsContainer" class="modal-body">
       <div class="port-post clearfix">
+        <div class="port-post-photo">
+        <img src="" alt="pin-comment-photo" />
+        </div>
         <div class="port-post-info">
           <h3 class="theme-color">Kevin Martin</h3>
           <button type="button" class="close btn btn-lg p-0">
