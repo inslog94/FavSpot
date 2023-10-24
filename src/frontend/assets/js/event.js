@@ -167,7 +167,15 @@ export function markerInfoClickEvent(markerInfo) {
   }
 
   kakao.maps.event.addListener(markerInfo.marker, 'click', function () {
-    displayMarkerDetailInfo(markerInfo);
+    const currentPathname = window.location.pathname;
+    if (
+      !(
+        currentPathname == '/assets/html/board_detail.html#' ||
+        currentPathname == '/assets/html/board_detail.html'
+      )
+    ) {
+      displayMarkerDetailInfo(markerInfo);
+    }
   });
 }
 
