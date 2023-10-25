@@ -95,7 +95,6 @@ export function createProfileEdit() {
   const $profileEdit = document.querySelector('.profileEdit');
   $profileEdit.addEventListener('submit', (event) => {
     event.preventDefault();
-    console.log('제출');
     const profileImg = document.querySelector('#profileImg');
     const nickname = document.querySelector('#nickname').value;
     const currentPassword = document.querySelector('#currentPassword').value;
@@ -136,17 +135,14 @@ export function createProfileEdit() {
         throw new Error(error);
       }
       const data = await response.json();
-      console.log(data);
       alert('Profile Update success.');
       location.reload();
     } catch (error) {
       const errData = JSON.parse(error.message);
-      console.log(errData);
 
       for (const key in errData['err_msg']) {
         if (Array.isArray(errData['err_msg'][key])) {
           const messages = errData['err_msg'][key];
-          console.log(typeof messages);
           passwordError.textContent = messages.join(' ');
         } else {
           const messages = errData['err_msg'];

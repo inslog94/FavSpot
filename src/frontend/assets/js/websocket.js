@@ -7,8 +7,6 @@ export function notification(requestUserPk) {
   );
 
   socket.addEventListener('open', (event) => {
-    console.log('WebSocket connection established.');
-
     // 웹소켓 연결 후 읽지 않은 알림 요청 메시지 전송
     socket.send(
       JSON.stringify({
@@ -30,8 +28,6 @@ export function notification(requestUserPk) {
 
       // 받아온 알림 메시지 처리
     } else {
-      console.log('Received notification:', message.message);
-
       // 받은 알림 메시지를 배열에 추가
       notifications.push(message.message);
       // 만약 알림이 세 개 이상이라면, 가장 오래된 것부터 제거
@@ -56,9 +52,5 @@ export function notification(requestUserPk) {
         notificationList.appendChild(listItem);
       }
     }
-  });
-
-  socket.addEventListener('close', (event) => {
-    console.log('WebSocket connection closed.', event);
   });
 }

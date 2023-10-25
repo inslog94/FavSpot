@@ -16,7 +16,7 @@ export function createBlogEntry(board) {
   // Swiper 슬라이드들을 감싸는 div를 생성합니다.
   const swiperWrapper = document.createElement('div');
   swiperWrapper.classList.add('swiper-wrapper');
-  // console.log(board);
+
   if (!board) {
     return;
   } else if (board.thumbnail_imgs.length === 0) {

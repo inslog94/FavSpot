@@ -87,7 +87,6 @@ export function displayMainBoards(boards) {
       document.body.clientHeight;
 
     // 브라우저 크기에 따라 보여지는 보드 개수 조절
-    // console.log('Browser size:', browserWidth, browserHeight);
     itemsPerPage = setItemsPerPage(browserWidth, browserHeight, itemsPerPage);
 
     // 페이지 수 계산
@@ -109,14 +108,11 @@ export function displayMainBoards(boards) {
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     $mainBoard.textContent = '';
-    // console.log(boards);
 
-    // console.log('check', boards);
     if (boards.length === 0) {
       return;
     }
     for (let i = startIndex; i < endIndex && i < boards.length; i++) {
-      // console.log(boards[i]);
       const data = createBlogEntry(boards[i]);
       $mainBoard.appendChild(data);
     }

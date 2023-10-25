@@ -31,7 +31,6 @@ export function createUserLikedBoard(
       }
       const img = data['results']['User']['profile_img'];
       const profileImg = document.getElementById('profileImg');
-      console.log('img', img, !!img, profileImg);
       if (img) {
         profileImg.src = img;
       }

@@ -205,7 +205,6 @@ export function createFollower(requestUserPk, followingList) {
           })
             .then((response) => {
               if (response.status === 204) {
-                console.log('제거');
                 location.reload(); // 페이지 새로고침
               } else {
                 return response.json();

@@ -335,7 +335,6 @@ async function mainBoardSetup() {
 
 export async function boardDetailSetUp() {
   const selectedPk = window.localStorage.getItem('selectedPk');
-  console.log(selectedPk);
 
   await fetch(`http://favspot.site:8000/board/${selectedPk}/`, {
     credentials: 'include',

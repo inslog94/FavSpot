@@ -18,7 +18,6 @@ export function createPinList(data) {
     nickname.textContent = 'None';
   }
   const img = data['results']['User']['profile_img'];
-  console.log(img);
   const profileImg = document.getElementById('profileImg');
   if (img) {
     profileImg.src = img;
@@ -28,7 +27,6 @@ export function createPinList(data) {
   followers.textContent = data['results']['User']['followers'];
   followers = document.querySelector('#followers');
   followers.addEventListener('click', (event) => {
-    console.log('click');
     window.location.href = `follower.html`;
   });
   let following = document.querySelector('.following');
@@ -219,7 +217,6 @@ export function createPinList(data) {
   // 핀 콘텐츠 수정 칸 생성
   function createEditForm(data, newFormRow, tableRow) {
     const container = newFormRow;
-    console.log(container);
 
     // 이미지 프리뷰 생성
     const inputImage = document.createElement('td');
