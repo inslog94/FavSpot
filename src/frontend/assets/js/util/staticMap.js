@@ -65,7 +65,6 @@ export function createStaticMap(pinData = PIN_DETAIL) {
   }
 
   const newSrc = updateImgSrc(currentSrc, width, height);
-  console.log(newSrc);
   imgTag.src = newSrc;
   imgTag.style.width = `${width}px`;
   imgTag.style.height = `${height}px`;

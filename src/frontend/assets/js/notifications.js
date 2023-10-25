@@ -12,7 +12,6 @@ export function createNotifications() {
     .then((response) => response.json())
     .then((data) => {
       // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
-      console.log(data[0]);
       const tbody = document.querySelector('#notificationList');
       const notifications = data;
       notifications.forEach((data) => {

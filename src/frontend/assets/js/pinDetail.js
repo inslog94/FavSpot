@@ -82,6 +82,7 @@ export function pinDetail() {
         document.getElementById('step1').style.display = 'block';
         document.getElementById('step2').style.display = 'none';
         document.getElementById('saveNextButton').style.display = 'block';
+        document.getElementById('textInput').value = '';
 
         pinData = data.results.pin; // 데이터 저장
         createPlaceInfo(data.results);

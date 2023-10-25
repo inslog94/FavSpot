@@ -167,7 +167,15 @@ export function markerInfoClickEvent(markerInfo) {
   }
 
   kakao.maps.event.addListener(markerInfo.marker, 'click', function () {
-    displayMarkerDetailInfo(markerInfo);
+    const currentPathname = window.location.pathname;
+    if (
+      !(
+        currentPathname == '/assets/html/board_detail.html#' ||
+        currentPathname == '/assets/html/board_detail.html'
+      )
+    ) {
+      displayMarkerDetailInfo(markerInfo);
+    }
   });
 }
 
@@ -327,7 +335,6 @@ async function mainBoardSetup() {
 
 export async function boardDetailSetUp() {
   const selectedPk = window.localStorage.getItem('selectedPk');
-  console.log(selectedPk);
 
   await fetch(`http://favspot.site:8000/board/${selectedPk}/`, {
     credentials: 'include',

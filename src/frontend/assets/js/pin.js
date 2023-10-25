@@ -384,7 +384,7 @@ export async function displayPinOverlay(markerInfo) {
   });
 
   // 유저의 보드 목록 가져오기 위한 함수
-  function fetchAllBoards(url) {
+  function fetchAllBoards(url, recursion = false) {
     return new Promise((resolve, reject) => {
       fetch(url, {
         method: 'GET',
@@ -396,7 +396,9 @@ export async function displayPinOverlay(markerInfo) {
         .then((response) => response.json())
         .then((data) => {
           let boards = data.results.Boards;
-
+          if (!recursion) {
+            MY_BOARDS.length = 0;
+          }
           boards.forEach((board) => {
             // MY_BOARDS 업데이트
             MY_BOARDS.push(board);
@@ -404,7 +406,7 @@ export async function displayPinOverlay(markerInfo) {
 
           // 다음 페이지가 있다면 재귀 호출
           if (data.links.next) {
-            resolve(fetchAllBoards(data.links.next));
+            resolve(fetchAllBoards(data.links.next, true));
           } else {
             // 다음 페이지가 없다면 현재 Promise 해결
             resolve();

@@ -141,7 +141,6 @@ export function createHeader() {
     })
       .then((response) => {
         if (response.status === 200) {
-          console.log('로그아웃 성공');
           location.reload(); // 페이지 새로고침
         }
       })
@@ -303,7 +302,6 @@ document.addEventListener('DOMContentLoaded', function () {
           })
             .then((response) => {
               if (response.status === 200) {
-                console.log('로그아웃 성공');
                 location.reload(); // 페이지 새로고침
               }
             })
@@ -335,7 +333,6 @@ document.addEventListener('DOMContentLoaded', function () {
           followers.textContent = data['results']['User']['followers'];
           followers = document.querySelector('#followers');
           followers.addEventListener('click', (event) => {
-            console.log('click');
             window.location.href = `follower.html`;
           });
           let following = document.querySelector('.following');

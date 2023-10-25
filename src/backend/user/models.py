@@ -34,7 +34,6 @@ def profile_img_upload_path(instance, filename):
     
     # 유저 생성하면서 프로필 사진 등록하는 경우
     if not instance.id:
-        print("생성시 프로필 등록")
         last_user = User.objects.last()
         if last_user:
             id_folder = str(last_user.id + 1)

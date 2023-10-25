@@ -1,8 +1,6 @@
 export function createLogin() {
   const $login = document.querySelector('#login');
-  console.log($login);
   $login.addEventListener('submit', (event) => {
-    console.log('로그인');
     event.preventDefault();
     const email = document.querySelector('#email').value;
     const password = document.querySelector('#password').value;

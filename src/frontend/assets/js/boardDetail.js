@@ -42,11 +42,9 @@ export async function boardDetail(data) {
 
   // 로그인된 유저 이메일 저장
   loggedInUserEmail = data.request_user.email;
-  console.log(loggedInUserEmail);
 
   // 유저 이름 설정
   const nameInput = document.querySelector('#headerEmail');
-  console.log(nameInput);
   nameInput.textContent = data.request_user.email;
 
   // 프로필 이미지 설정
@@ -240,7 +238,6 @@ export async function boardDetail(data) {
       postElement.addEventListener('click', function () {
         $('#myModal').modal('show');
         let place_id = pin.place_id;
-        console.log(place_id);
         PIN_DETAIL.place_id = place_id;
         pinDetail();
       });

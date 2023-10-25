@@ -62,6 +62,9 @@ export async function getBoardRequest(keyword) {
     },
   });
 
+  if (!response.ok) {
+    location.reload();
+  }
   const resJson = await response.json();
   const requestUser = resJson.request_user.email;
   const requestUserPk = resJson.request_user.requestUserPk;

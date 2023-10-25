@@ -1,7 +1,5 @@
 const $signup = document.querySelector('#signup');
-console.log($signup);
 $signup.addEventListener('submit', (event) => {
-  console.log('회원가입');
   event.preventDefault();
   const email = document.querySelector('#email').value;
   const password = document.querySelector('#password').value;
@@ -31,7 +29,6 @@ function signup(email, password) {
       window.location.href = '/index.html';
     })
     .catch((error) => {
-      console.log(error, error.message);
       signupError.textContent = error.message;
     });
 }
