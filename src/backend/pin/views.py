@@ -49,6 +49,8 @@ def get_thumbnail_img(place_id):
     # "list" 하위 첫번째 사진의 url 값 가져오기
     try:
         thumbnail_img = data["photoViewer"]["list"][0]['url']
+        if len(thumbnail_img) > 150:
+            thumbnail_img = ''
     except KeyError:
         thumbnail_img = ''
 
