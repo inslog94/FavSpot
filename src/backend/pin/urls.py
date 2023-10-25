@@ -4,8 +4,8 @@ from . import views
 app_name = 'pin'
 
 urlpatterns = [
-    # 핀 생성
-    path('', views.PinCreateView.as_view(), name='pin-create'),
+    # 핀 생성, 제거
+    path('', views.PinView.as_view(), name='pin'),
     # 핀 컨텐츠 수정, 삭제
     path('content/<int:pk>/',
          views.PinContentView.as_view(), name='pin-content'),

@@ -1,8 +1,9 @@
 import {
   getPinContentsRequest,
   pinSimpleSaveRequest,
+  pinDeleteRequest,
 } from '/assets/js/content.js';
-import { setMyBoard } from './board.js';
+import { setMyBoard, displayRelatedBoards } from './board.js';
 import {
   MAP,
   $searchResultList,
@@ -21,6 +22,7 @@ import {
   $staticContainer,
   $boardAddModal,
   $boardAddModalContent,
+  $keyword,
 } from './data.js';
 import { displayMarkerDetailInfo } from './event.js';
 import { removeAllMarker, displayMarkers, move } from './map.js';
@@ -32,7 +34,7 @@ export async function pinSimpleSave(board, place) {
   if (response.status >= 400 && response.status <= 500) {
     return false;
   }
-
+  displayRelatedBoards($keyword.value);
   return true;
 }
 
@@ -536,12 +538,13 @@ function pinSimpleSaveEvent(element, board, place, pinsaved) {
       }
     } else {
       if (confirm('핀을 삭제하시겠습니까?')) {
-        // let response = await pinDeleteRequest(place.id);
+        let response = await pinDeleteRequest(board, place.place_id);
 
         element.innerText = '생성';
         element.classList.remove('pin_saved_btn');
         element.classList.add('pin_save_btn');
         pinsaved = false;
+        displayRelatedBoards($keyword.value);
       }
     }
   });

@@ -62,7 +62,7 @@ export async function getBoardRequest(keyword) {
     },
   });
 
-  if (!response.ok) {
+if (!response.ok) {
     location.reload();
   }
   const resJson = await response.json();
@@ -138,18 +138,22 @@ export async function pinSimpleSaveRequest(board, place) {
   return response;
 }
 
-export async function pinDeleteRequest(id) {
-  let url = origin + '/pin/content/' + id + '/';
+export async function pinDeleteRequest(board, place_id) {
+  let url = origin + '/pin/';
 
   const response = await fetch(url, {
     method: 'DELETE',
+    body: JSON.stringify({
+      board_id: typeof board === 'number' ? board : board.id,
+      place_id: place_id
+    }),
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
     },
   }).catch((error) => {
-    alert(error);
+    console.error(error);
   });
 
   return response;
