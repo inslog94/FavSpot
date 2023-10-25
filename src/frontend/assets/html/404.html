@@ -1,22 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-      }
-      img {
-        max-width: 100%;
-        max-height: 100%;
-      }
-    </style>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="keywords" content="HTML5 Template" />
+    <meta
+      name="description"
+      content="Webster - Responsive Multi-purpose HTML5 Template"
+    />
+    <meta name="author" content="potenzaglobalsolutions.com" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <title>FavSpot - 404 Not Found</title>
+
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      href="https://favspot-fin.s3.amazonaws.com/images/default/favicon.png"
+    />
+    <link rel="stylesheet" href="/assets/css/template/bootstrap.css" />
   </head>
   <body>
-    <img src="../img/404.png" alt="" />
+    <div
+      id="main-container"
+      style="
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        justify-content: space-around;
+      "
+    >
+      <header
+        id="header"
+        class="header light logo-center"
+        style="background-color: beige; height: 65px"
+      >
+        <nav
+          id="menu"
+          class="mega-menu d-flex align-items-center"
+          style="min-height: 60px"
+        >
+          <div class="col-lg-12 col-md-12">
+            <div
+              id="headerContent"
+              class="position-relative"
+              style="width: 95vw"
+            >
+              <a href="index.html">
+                <img
+                  id="logo-img"
+                  src="https://favspot-fin.s3.amazonaws.com/images/default/header_logo.png"
+                  alt="logo"
+                  class="mx-auto d-block"
+                  style="height: 60px"
+                />
+              </a>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <section
+        class="white-bg page-section-ptb"
+        style="height: 98.75%; padding: 0"
+      >
+        <div
+          class="container"
+          style="
+            height: 85vh;
+            display: flex;
+            width: 100vw;
+            flex-direction: column;
+            justify-content: space-around;
+          "
+        >
+          <div style="position: relative">
+            <img src="/assets/img/404.png" alt="" style="width: 100%" />
+            <a
+              class="btn btn-warning"
+              style="
+                position: absolute;
+                top: 58%;
+                left: 50%;
+                transform: translate(-32%, 30%);
+                color: #734228;
+                font-weight: bold;
+                width: 150px;
+              "
+              href="index.html"
+              >Back to Home</a
+            >
+          </div>
+        </div>
+      </section>
+    </div>
+    <script type="module">
+      import { loadAllScripts } from '/assets/js/util/script.js';
+      import { createPreloader } from '/assets/js/util/preloader.js';
+      import { createFooter } from '/assets/js/util/footer.js';
+      loadAllScripts();
+      createPreloader();
+      createFooter();
+    </script>
   </body>
 </html>
