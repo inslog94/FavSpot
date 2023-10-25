@@ -1,6 +1,7 @@
 import {
   getPinContentsRequest,
   pinSimpleSaveRequest,
+  pinDeleteRequest,
 } from '/assets/js/content.js';
 import { setMyBoard } from './board.js';
 import {
@@ -536,7 +537,7 @@ function pinSimpleSaveEvent(element, board, place, pinsaved) {
       }
     } else {
       if (confirm('핀을 삭제하시겠습니까?')) {
-        // let response = await pinDeleteRequest(place.id);
+        let response = await pinDeleteRequest(board, place.place_id);
 
         element.innerText = '생성';
         element.classList.remove('pin_saved_btn');

@@ -131,7 +131,7 @@ class PinDetailView(APIView):
         })
 
 
-class PinCreateView(APIView):
+class PinView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     @extend_schema(
@@ -241,6 +241,17 @@ class PinCreateView(APIView):
             'pin_errors': pin_serializer.errors,
             'pin_content_errors': {}
         }, status=status.HTTP_400_BAD_REQUEST)
+
+    # 핀과 연결된 특정 보드 제거
+    def delete(self, request):
+        board_id = request.data.get('board_id')
+        place_id = request.data.get('place_id')
+        pin = Pin.objects.get(place_id=place_id)
+        pin.board_id.remove(board_id)
+        pin.save()
+        serializer = PinSerializer(pin)
+
+        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
 
 
 class PinContentView(APIView):
