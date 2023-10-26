@@ -8,7 +8,7 @@ $signup.addEventListener('submit', (event) => {
 
 function signup(email, password) {
   const signupError = document.getElementById('signupError');
-  fetch('http://favspot.site:8000/user/signup/', {
+  fetch('https://favspot.site:8443/user/signup/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -132,7 +132,7 @@ export function createHeader() {
   logoutLink.textContent = 'Logout';
 
   logoutLink.addEventListener('click', (event) => {
-    fetch(`http://favspot.site:8000/user/logout/`, {
+    fetch(`https://favspot.site:8443/user/logout/`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
       page === null
     )
   ) {
-    customFetch(`http://favspot.site:8000/user/me/`, {
+    customFetch(`https://favspot.site:8443/user/me/`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const logout = document.querySelector('#logout');
         logout.addEventListener('click', (event) => {
-          fetch(`http://favspot.site:8000/user/logout/`, {
+          fetch(`https://favspot.site:8443/user/logout/`, {
             method: 'GET',
             credentials: 'include',
             headers: {

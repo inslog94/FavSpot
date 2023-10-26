@@ -49,7 +49,7 @@ export async function getBoardRequest(keyword) {
     sortClickEvent(
       newDropOption,
       index,
-      'http://favspot.site:8000/board',
+      'https://favspot.site:8443/board',
       keyword
     );
   });

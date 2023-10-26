@@ -20,7 +20,7 @@ export function createUserInfo(requestUser, requestUserPk, followingList) {
   }
 
   const tagList = document.getElementById('tagList');
-  fetch(`http://favspot.site:8000/user/${pk}/`, {
+  fetch(`https://favspot.site:8443/user/${pk}/`, {
     method: 'GET',
     credentials: 'include',
   })
@@ -101,7 +101,7 @@ export function createUserInfo(requestUser, requestUserPk, followingList) {
         button3.setAttribute('href', `user_liked_board.html?pk=${pk}`);
 
         button.addEventListener('click', () => {
-          fetch(`http://favspot.site:8000/user/follow/${followerPk}/`, {
+          fetch(`https://favspot.site:8443/user/follow/${followerPk}/`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -125,7 +125,7 @@ export function createUserInfo(requestUser, requestUserPk, followingList) {
         button3.setAttribute('href', `user_liked_board.html?pk=${pk}`);
 
         button.addEventListener('click', () => {
-          fetch(`http://favspot.site:8000/user/follow/`, {
+          fetch(`https://favspot.site:8443/user/follow/`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -227,7 +227,7 @@ export function createUserInfo(requestUser, requestUserPk, followingList) {
 
       // 데이터를 가져와서 화면에 표시하는 함수
       function fetchDataAndShow() {
-        fetch(`http://favspot.site:8000/user/${pk}/?page=${currentPage}`, {
+        fetch(`https://favspot.site:8443/user/${pk}/?page=${currentPage}`, {
           credentials: 'include',
         })
           .then((response) => response.json())
@@ -334,7 +334,7 @@ export function createUserInfo(requestUser, requestUserPk, followingList) {
         is_public: isPublic,
       };
 
-      fetch(`http://favspot.site:8000/board/`, {
+      fetch(`https://favspot.site:8443/board/`, {
         method: 'POST',
         credentials: 'include',
         headers: {
