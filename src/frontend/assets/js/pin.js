@@ -325,7 +325,7 @@ export async function displayPinOverlay(markerInfo) {
   imgBox.style.marginLeft = '20px';
   imgBox.appendChild(img);
 
-  fetch(`http://favspot.site:8000/pin/no-content/${markerInfo.place_id}/`, {
+  fetch(`https://favspot.site:8443/pin/no-content/${markerInfo.place_id}/`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -343,7 +343,6 @@ export async function displayPinOverlay(markerInfo) {
         img.src =
           'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
       } else if (pinData.thumbnail_img) {
-        console.error(pinData.thumbnail_img);
         img.src = pinData.thumbnail_img;
       } else {
         img.src =
@@ -431,7 +430,7 @@ export async function displayPinOverlay(markerInfo) {
     }
 
     // 유저의 모든 보드 목록 가져오기 위해 함수 호출
-    fetchAllBoards(`http://favspot.site:8000/user/me/`)
+    fetchAllBoards(`https://favspot.site:8443/user/me/`)
       .then(() => {
         displayBoardsOnOverlay(markerInfo);
       })

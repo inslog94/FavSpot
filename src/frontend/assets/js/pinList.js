@@ -6,7 +6,7 @@ import {
 } from '/assets/js/util/getPlaceInfo.js';
 
 export function createPinList(data) {
-  const url = 'http://favspot.site:8000';
+  const url = 'https://favspot.site:8443';
   // 가져온 사용자 데이터를 폼 필드에 채워줍니다.
   const email = document.querySelector('#email');
   email.textContent = data['results']['User']['email'];
@@ -344,7 +344,7 @@ export function createPinList(data) {
 
 /// 백엔드에서 핀 상세보기 정보 가져오기
 function displayPinDetail(place_id) {
-  fetch(`http://favspot.site:8000/pin/${place_id}/`, {
+  fetch(`https://favspot.site:8443/pin/${place_id}/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

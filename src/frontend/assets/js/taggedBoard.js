@@ -7,7 +7,7 @@ export function createTaggedBoard() {
     pk = 'me';
   }
   const tagList = document.getElementById('tagList');
-  fetch(`http://favspot.site:8000/user/${pk}/`, {
+  fetch(`https://favspot.site:8443/user/${pk}/`, {
     method: 'GET',
     credentials: 'include',
   })
@@ -37,7 +37,7 @@ export function createTaggedBoard() {
       document.querySelector('.tag-name').textContent = tag;
 
       fetch(
-        `http://favspot.site:8000/board/search/?search_field=tag&search=${tag}`,
+        `https://favspot.site:8443/board/search/?search_field=tag&search=${tag}`,
         {
           credentials: 'include',
           headers: {
@@ -114,7 +114,7 @@ export function createTaggedBoard() {
 
       // 데이터를 가져와서 화면에 표시하는 함수
       function fetchDataAndShow() {
-        fetch(`http://favspot.site:8000/user/${pk}/?page=${currentPage}`, {
+        fetch(`https://favspot.site:8443/user/${pk}/?page=${currentPage}`, {
           credentials: 'include',
         })
           .then((response) => response.json())

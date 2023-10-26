@@ -10,7 +10,7 @@ export function createLogin() {
 
   function login(email, password) {
     const loginError = document.getElementById('loginError');
-    fetch('http://favspot.site:8000/user/login/', {
+    fetch('https://favspot.site:8443/user/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

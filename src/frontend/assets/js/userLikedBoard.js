@@ -11,7 +11,7 @@ export function createUserLikedBoard(
     pk = 'me';
   }
 
-  fetch(`http://favspot.site:8000/user/${pk}/`, {
+  fetch(`https://favspot.site:8443/user/${pk}/`, {
     method: 'GET',
     credentials: 'include',
   })
@@ -95,7 +95,7 @@ export function createUserLikedBoard(
         });
 
         button2.addEventListener('click', () => {
-          fetch(`http://favspot.site:8000/user/follow/${followerPk}/`, {
+          fetch(`https://favspot.site:8443/user/follow/${followerPk}/`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -123,7 +123,7 @@ export function createUserLikedBoard(
         });
 
         button2.addEventListener('click', () => {
-          fetch(`http://favspot.site:8000/user/follow/`, {
+          fetch(`https://favspot.site:8443/user/follow/`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -159,7 +159,7 @@ export function createUserLikedBoard(
       const paramsUserId = new URLSearchParams(window.location.search);
       let userId = params.get('pk');
 
-      fetch(`http://favspot.site:8000/board/like/${userId}`, {
+      fetch(`https://favspot.site:8443/board/like/${userId}`, {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -237,7 +237,7 @@ export function createUserLikedBoard(
       // 데이터를 가져와서 화면에 표시하는 함수
       function fetchDataAndShow() {
         fetch(
-          `http://favspot.site:8000/board/like/${pk}/?page=${currentPage}`,
+          `https://favspot.site:8443/board/like/${pk}/?page=${currentPage}`,
           {
             credentials: 'include',
           }

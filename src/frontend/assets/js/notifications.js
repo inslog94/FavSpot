@@ -1,5 +1,5 @@
 export function createNotifications() {
-  const url = 'http://favspot.site:8000';
+  const url = 'https://favspot.site:8443';
   const tagList = document.getElementById('tagList');
 
   // 알림 목록

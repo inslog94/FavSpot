@@ -124,7 +124,7 @@ export function createProfileEdit() {
   async function profileEdit(formdata) {
     const passwordError = document.getElementById('passwordError');
     try {
-      const response = await fetch('http://favspot.site:8000/user/me/', {
+      const response = await fetch('https://favspot.site:8443/user/me/', {
         method: 'PATCH',
         body: formdata,
         credentials: 'include',
