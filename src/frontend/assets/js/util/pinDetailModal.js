@@ -19,6 +19,7 @@ export function createPinDetail() {
             class="img-fluid subscribe-icon"
             src=""
             alt="thumbnail img"
+            style="object-fit: cover;"
           />
             </div>
             <div class="blog-detail">
