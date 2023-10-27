@@ -3,7 +3,7 @@ export function notification(requestUserPk) {
 
   // 웹소켓 연결 url
   const socket = new WebSocket(
-    `wss://favspot.site:8000/ws/notifications/${requestUserPk}/`
+    `wss://favspot.site:8443/ws/notifications/${requestUserPk}/`
   );
 
   socket.addEventListener('open', (event) => {
