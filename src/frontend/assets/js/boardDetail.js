@@ -547,7 +547,11 @@ export function createBoardDetail() {
             photoDivElement.classList.add('port-post-photo');
 
             const imgElement = document.createElement('img');
-            imgElement.src = pin.thumbnail_img;
+            if (pin.thumbnail_img) {
+              imgElement.src = pin.thumbnail_img;
+            } else {
+              imgElement.src = 'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
+            }
             imgElement.classList.add('pin-thumbnail-img');
 
             photoDivElement.appendChild(imgElement);
