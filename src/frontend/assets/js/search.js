@@ -5,6 +5,7 @@ import {
   CURRENT_POSITION,
   PIN_SAVE_OVERLAY,
   MARKER_OVERLAY,
+  MARKERS,
 } from './data.js';
 import { removeAllOverlay } from './event.js';
 import { displaySearchPlace, displayPagination } from './pin.js';
@@ -53,7 +54,7 @@ function searchPlaceAsKeywordCB(data, status, pagination) {
     displayPagination(pagination);
 
     // 검색 결과 관련된 보드 표시
-    displayRelatedBoards($keyword.value);
+    displayRelatedBoards(MARKERS.map(marker => marker.title).concat($keyword.value));
   } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
     alert('검색 결과가 존재하지 않습니다.');
     return;
