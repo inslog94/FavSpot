@@ -34,7 +34,7 @@ export async function pinSimpleSave(board, place) {
   if (response.status >= 400 && response.status <= 500) {
     return false;
   }
-  displayRelatedBoards($keyword.value);
+  displayRelatedBoards(MARKERS.map(marker => marker.title).concat($keyword.value));
   return true;
 }
 
@@ -343,7 +343,7 @@ export async function displayPinOverlay(markerInfo) {
         img.src =
           'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
       } else if (pinData.thumbnail_img) {
-        img.src = pinData.thumbnail_img;
+                img.src = pinData.thumbnail_img;
       } else {
         img.src =
           'https://favspot-fin.s3.amazonaws.com/images/default/main_logo.png';
@@ -397,7 +397,7 @@ export async function displayPinOverlay(markerInfo) {
         .then((response) => response.json())
         .then((data) => {
           let boards = data.results.Boards;
-          if (!recursion) {
+if (!recursion) {
             MY_BOARDS.length = 0;
           }
           boards.forEach((board) => {
@@ -543,7 +543,7 @@ function pinSimpleSaveEvent(element, board, place, pinsaved) {
         element.classList.remove('pin_saved_btn');
         element.classList.add('pin_save_btn');
         pinsaved = false;
-        displayRelatedBoards($keyword.value);
+        displayRelatedBoards(MARKERS.map(marker => marker.title).concat($keyword.value));
       }
     }
   });
