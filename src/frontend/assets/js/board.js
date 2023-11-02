@@ -113,6 +113,11 @@ export function displayMainBoards(boards) {
       return;
     }
     for (let i = startIndex; i < endIndex && i < boards.length; i++) {
+      if (boards[i].pins.length === 2) {
+        boards[i].thumbnail_imgs = boards[i].thumbnail_imgs.concat([
+          ...boards[i].thumbnail_imgs,
+        ]);
+      }
       const data = createBlogEntry(boards[i]);
       $mainBoard.appendChild(data);
     }
