@@ -11,13 +11,8 @@ export function loadAllScripts() {
     loadScript('/assets/js/template/plugins-jquery.js', function () {
       loadScript('/assets/js/template/slick/slick.min.js', function () {
         loadScript('/assets/js/template/custom.js', function () {
-          loadScript(
-            'https://unpkg.com/swiper/swiper-bundle.min.js',
-            function () {
-              // All scripts have been loaded
-              // console.log('All scripts loaded.');
-            }
-          );
+          // All scripts have been loaded
+          // console.log('All scripts loaded.');
         });
       });
     });
