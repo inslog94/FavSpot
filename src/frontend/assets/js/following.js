@@ -42,7 +42,7 @@ export function createFollowing(requestUserPk, followingList) {
 
       const button = document.createElement('a');
       button.type = 'button';
-      button.classList.add('btn', 'mt-1');
+      button.classList.add('btn', 'btn-primary', 'mt-1');
       button.style.display = 'block';
 
       // 기존 요소에 버튼 추가
