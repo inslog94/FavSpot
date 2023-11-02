@@ -105,7 +105,10 @@ export function createUserTaggedBoard(
                 return response.json();
               }
             })
-            .catch((error) => console.error('Error:', error));
+            .catch((error) => console.error('Error:', error))
+            .finally(() => {
+              window.location.reload(true); // 페이지 새로고침
+            });
         });
       } else {
         button.textContent = 'Follow';

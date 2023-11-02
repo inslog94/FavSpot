@@ -212,7 +212,7 @@ export function createFollower(requestUserPk, followingList) {
             })
             .catch((error) => console.error('Error:', error))
             .finally(() => {
-              //   window.location.reload(true); // 페이지 새로고침
+              window.location.reload(true); // 페이지 새로고침
             });
         });
       } else {
