@@ -61,7 +61,9 @@ export function createBlogEntry(board) {
   blogEntry.appendChild(entryImage);
 
   // Swiper 초기화
-  initializeSwiper(swiperContainer); // Swiper 초기화 함수 호출
+  setTimeout(function () {
+    initializeSwiper('.swiper-container');
+  }, 1000);
 
   const blogDetail = document.createElement('div');
   blogDetail.classList.add('blog-detail');
